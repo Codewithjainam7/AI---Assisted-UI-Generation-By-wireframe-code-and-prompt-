@@ -1,48 +1,4 @@
-/**
- * generateFallback(ir)
- * Template-based fallback JSX generator matching the EXACT extracted wireframe/prompt IR.
- * Satisfies ALL R1-R14 rules.
- */
-export function generateFallback(ir) {
-  const sectionName = ir.sectionName || 'Custom';
-  const pageName    = ir.pageName    || 'Home';
-  const accent      = ir.theme?.accent || 'red-500';
-
-  // Build the ids map from IR elements
-  const idsMap = (ir.elements || []).reduce((acc, el) => {
-    acc[el.elementName] = el.fieldId || `TBD-${el.elementName}`;
-    return acc;
-  }, {});
-
-  const allIds = [
-    'heroImage', 'brandBadge', 'headlineMain', 'headlineSub',
-    'description', 'statBadges', 'ctaButton'
-  ];
-  allIds.forEach(name => {
-    if (!idsMap[name]) idsMap[name] = `TBD-${name}`;
-  });
-
-  const getDefault = (name, fallbackText = '') => {
-    const el = (ir.elements || []).find(e => e.elementName === name);
-    return el?.defaultContent || fallbackText;
-  };
-
-  const statBadgesEl = (ir.elements || []).find(e => e.elementName === 'statBadges');
-  const rawCards = statBadgesEl?.statCards || [
-    { field1: "100+", field2: "Active Users" },
-    { field1: "4.9★", field2: "Top Rated" },
-    { field1: "24/7", field2: "Live Support" }
-  ];
-
-  const defaultCardsCode = rawCards.map((c, i) => 
-    `  { field1: "${c.field1 || '100+'}", fieldType1: "Text", fieldId1: "TBD-cardField${i * 2 + 1}", field2: "${c.field2 || 'Metric'}", fieldType2: "Text", fieldId2: "TBD-cardField${i * 2 + 2}" },`
-  ).join('\n');
-
-  const cardFieldIdsList = rawCards.map((_, i) => `"TBD-cardField${i * 2 + 1}","TBD-cardField${i * 2 + 2}"`).join(',');
-
-  const isMediaRight = ir.layout?.mediaPosition === 'right';
-
-  return `import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "primereact/button";
 import { fetchElementsByIds } from "../../features/cms/cmsSlice";
@@ -51,22 +7,24 @@ import { getImage, errorImage } from "../../utils/getImage";
 
 // R1: Stable ids map
 const ids = {
-  heroImage:    "${idsMap.heroImage}",
-  brandBadge:   "${idsMap.brandBadge}",
-  headlineMain: "${idsMap.headlineMain}",
-  headlineSub:  "${idsMap.headlineSub}",
-  description:  "${idsMap.description}",
-  statBadges:   "${idsMap.statBadges}",
-  ctaButton:    "${idsMap.ctaButton}",
+  heroImage:    "2000000134",
+  brandBadge:   "2000000135",
+  headlineMain: "2000000136",
+  headlineSub:  "2000000137",
+  description:  "2000000138",
+  statBadges:   "2000000139",
+  ctaButton:    "2000000140",
 };
 
 // R9: Default stat cards extracted from wireframe
 const DEFAULT_STAT_CARDS = [
-${defaultCardsCode}
+  { field1: "100+", fieldType1: "Text", fieldId1: "3000000115", field2: "Active Users", fieldType2: "Text", fieldId2: "3000000116" },
+  { field1: "4.9★", fieldType1: "Text", fieldId1: "3000000117", field2: "Top Rated", fieldType2: "Text", fieldId2: "3000000118" },
+  { field1: "24/7", fieldType1: "Text", fieldId1: "3000000119", field2: "Live Support", fieldType2: "Text", fieldId2: "3000000120" },
 ];
 
 // R2: pageName prop
-const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
+const NexusHeroSection = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
 
   // R4: Read from Redux store
@@ -86,7 +44,7 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
       elementIds: [
         ids.heroImage, ids.brandBadge, ids.headlineMain, ids.headlineSub,
         ids.description, ids.statBadges, ids.ctaButton,
-        ${cardFieldIdsList}
+        "3000000115","3000000116","3000000117","3000000118","3000000119","3000000120"
       ],
       pageName,
     }));
@@ -105,12 +63,12 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
   return (
     // R11: Responsive split layout with max-width
     <div ref={rootRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
-      <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-${accent} z-0" />
-      <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-${accent} z-0" />
+      <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-red-500 z-0" />
+      <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-red-500 z-0" />
 
       <main className="relative z-10 w-full max-w-[1920px] mx-auto px-4 md:px-12 flex items-center justify-center min-h-screen">
         {/* R11: flex-col on mobile, flex-row on desktop */}
-        <section className="w-full flex flex-col ${isMediaRight ? 'md:flex-row-reverse' : 'md:flex-row'} bg-zinc-950 overflow-hidden py-12 md:py-0">
+        <section className="w-full flex flex-col md:flex-row bg-zinc-950 overflow-hidden py-12 md:py-0">
 
           {/* Hero Media / Image */}
           <div className="md:w-1/2 w-full flex items-center justify-center min-h-[350px] md:min-h-[680px] py-8 px-4">
@@ -118,7 +76,7 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
             <img
               id={ids.heroImage}
               className="dynamicStyle2 max-w-full max-h-[550px] h-auto object-contain mx-auto rounded-3xl shadow-2xl border border-white/10"
-              src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("${getDefault('heroImage', 'default/images/hero-placeholder.jpg')}")}
+              src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("default/images/hero-placeholder.jpg")}
               alt="Section visual representation"
               onError={errorImage}
             />
@@ -131,8 +89,8 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
             <div>
               <span
                 id={ids.brandBadge}
-                className="dynamicStyle inline-block px-4 py-1.5 rounded-full glass border border-${accent}/30 uppercase text-${accent} font-bold text-xs tracking-[0.2em]"
-                dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "${getDefault('brandBadge', 'FEATURED')}" }}
+                className="dynamicStyle inline-block px-4 py-1.5 rounded-full glass border border-red-500/30 uppercase text-red-500 font-bold text-xs tracking-[0.2em]"
+                dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "AI STUDIO" }}
               />
             </div>
 
@@ -140,21 +98,21 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
             <h1
               id={ids.headlineMain}
               className="dynamicStyle text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1] uppercase"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "${getDefault('headlineMain', 'MODERN HERO SECTION')}" }}
+              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "NEXT-GEN UI GENERATION" }}
             />
 
             {/* Headline Sub */}
             <h2
               id={ids.headlineSub}
-              className="dynamicStyle text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-${accent} to-orange-400"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "${getDefault('headlineSub', 'Built with AI & Live CMS Bindings')}" }}
+              className="dynamicStyle text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400"
+              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Transform ideas and wireframes into production React components." }}
             />
 
             {/* Description */}
             <p
               id={ids.description}
               className="dynamicStyle text-gray-400 text-sm md:text-base max-w-xl leading-relaxed font-normal"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "${getDefault('description', 'Custom styled React component generated directly from your wireframe.')}" }}
+              dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Built with automated CMS bindings, responsive layout system, and modern iOS-inspired aesthetics." }}
             />
 
             {/* Stat Cards */}
@@ -181,7 +139,7 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
                 id={ids.ctaButton}
                 className="dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none"
                 aria-label="Primary call to action"
-                label={data?.[ids.ctaButton] || "${getDefault('ctaButton', 'EXPLORE NOW')}"}
+                label={data?.[ids.ctaButton] || "GET STARTED"}
                 onClick={() => {}}
               />
             </div>
@@ -193,6 +151,4 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
 };
 
 // R14: Default export
-export default ${sectionName}Section;
-`;
-}
+export default NexusHeroSection;

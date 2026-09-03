@@ -17,16 +17,29 @@ export async function generate(ir) {
       model: process.env.LLM_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b',
       messages: [
         { role: 'system', content: getJSXSystemPrompt() },
-        { role: 'user', content: JSON.stringify(ir) }
+        { role: 'user', content: `Generate the React section component for this IR JSON:\n${JSON.stringify(ir, null, 2)}` }
       ],
-      temperature: 0.3,
+      temperature: 0.2,
       max_tokens: 2500
     });
     
     let jsx = completion.choices?.[0]?.message?.content || '';
-    jsx = jsx.replace(/^```[\w]*\n?/gm,'').replace(/\n?```$/gm,'').trim();
     
-    return { jsx, warnings: [] };
+    // Extract code block if wrapped in markdown
+    const fenceMatch = jsx.match(/```(?:jsx|javascript|js)?\s*([\s\S]*?)```/i);
+    if (fenceMatch && fenceMatch[1]) {
+      jsx = fenceMatch[1];
+    } else {
+      jsx = jsx.replace(/^```[\w]*\n?/gm, '').replace(/\n?```$/gm, '');
+    }
+    
+    // Strip any leading non-code text
+    const importIdx = jsx.search(/(?:^|\n)\s*(?:import|export|const|function)\s/);
+    if (importIdx > 0) {
+      jsx = jsx.slice(importIdx);
+    }
+    
+    return { jsx: jsx.trim(), warnings: [] };
   } catch (e) {
     console.warn('Nemotron JSX synthesis warning:', e.message);
     return { jsx: '', warnings: [e.message] };

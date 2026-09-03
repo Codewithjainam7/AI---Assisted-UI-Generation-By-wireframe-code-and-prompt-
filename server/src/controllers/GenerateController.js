@@ -8,6 +8,10 @@ import { SectionStore, ElementStore } from '../services/dbStore.js';
 import { generateFallback } from '../templates/heroFallback.js';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function generate(req, res, next) {
   try {
@@ -24,8 +28,19 @@ export async function generate(req, res, next) {
     const promises = [];
     let wireframeIR = null;
     let codeIR = null;
+    let uploadedImageRelativePath = null;
     
     if (req.file) {
+      // Copy uploaded image to storage/uploads so frontend can display it
+      const storageUploadsDir = path.join(__dirname, '../../storage/uploads');
+      if (!fs.existsSync(storageUploadsDir)) {
+        fs.mkdirSync(storageUploadsDir, { recursive: true });
+      }
+      const cleanFileName = `${Date.now()}-${path.basename(req.file.path)}`;
+      const destPath = path.join(storageUploadsDir, cleanFileName);
+      fs.copyFileSync(req.file.path, destPath);
+      uploadedImageRelativePath = `uploads/${cleanFileName}`;
+
       promises.push(WireframeParser.parse(req.file).then(r => wireframeIR = r));
     }
     if (req.body.code) {
@@ -41,6 +56,14 @@ export async function generate(req, res, next) {
       sectionName,
       pageName
     });
+
+    // If a wireframe image was uploaded, point heroImage to it
+    if (uploadedImageRelativePath) {
+      const heroEl = ir.elements.find(e => e.elementName === 'heroImage');
+      if (heroEl) {
+        heroEl.defaultContent = uploadedImageRelativePath;
+      }
+    }
     
     let warnings = [];
     const mainEl = ir.elements.find(e => e.elementName === 'headlineMain');
@@ -58,7 +81,11 @@ export async function generate(req, res, next) {
       if (!synthResult.jsx || !validation.valid) {
         warnings.push('Used fallback template due to generation failure');
         synthResult.jsx = generateFallback(ir);
+      } else {
+        synthResult.jsx = validation.cleaned;
       }
+    } else {
+      synthResult.jsx = validation.cleaned;
     }
     
     let finalJsx = synthResult.jsx;
@@ -70,24 +97,24 @@ export async function generate(req, res, next) {
       
       let loop = [];
       if (e.contentType === 'Cards') {
-        const count = e.statCount || 3;
-        const defaults = [
-          { field1: '1000+', field2: 'Community<br />Members' },
-          { field1: '40+',   field2: 'Fitness<br />Programmes' },
-          { field1: '150+',  field2: 'Fitness<br />Channels' },
+        const rawCards = e.statCards || [
+          { field1: '100+', field2: 'Active Users' },
+          { field1: '4.9★', field2: 'Top Rated' },
+          { field1: '24/7', field2: 'Live Support' }
         ];
-        for (let i = 0; i < count; i++) {
+        
+        for (let i = 0; i < rawCards.length; i++) {
           const pair = IdAllocator.nextCardFieldIdPair();
-          const def = defaults[i] || { field1: `Stat ${i + 1}`, field2: `Label ${i + 1}` };
+          const card = rawCards[i] || { field1: `Metric ${i + 1}`, field2: `Label ${i + 1}` };
           
           finalJsx = finalJsx.replace(new RegExp(`TBD-cardField${i * 2 + 1}`, 'g'), pair.fieldId1);
           finalJsx = finalJsx.replace(new RegExp(`TBD-cardField${i * 2 + 2}`, 'g'), pair.fieldId2);
           
           loop.push({
-            field1:     def.field1,
+            field1:     card.field1 || '100+',
             fieldType1: 'Text',
             fieldId1:   pair.fieldId1,
-            field2:     def.field2,
+            field2:     card.field2 || 'Metric',
             fieldType2: 'Text',
             fieldId2:   pair.fieldId2,
           });
@@ -116,11 +143,12 @@ export async function generate(req, res, next) {
       cardGridColumns: ir.layout?.columns || 3
     };
     
+    // Clear old elements for this page and save new ones
     await SectionStore.create(sectionDoc);
     await ElementStore.insertMany(elementsToInsert);
     
     // Write generated JSX file
-    const generatedDir = path.resolve(process.cwd(), '../client/src/sections/generated');
+    const generatedDir = path.resolve(__dirname, '../../../client/src/sections/generated');
     if (!fs.existsSync(generatedDir)) {
       fs.mkdirSync(generatedDir, { recursive: true });
     }

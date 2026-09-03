@@ -5,53 +5,54 @@ import { fetchElementsByIds } from "../../features/cms/cmsSlice";
 import { getSectionTextContrastClass } from "../../utils/sectionContrast";
 import { getImage, errorImage } from "../../utils/getImage";
 
-// R1: Stable ids map
 const ids = {
-  heroImage:    "2000000113",
-  brandBadge:   "2000000114",
-  headlineMain: "2000000115",
-  headlineSub:  "2000000116",
-  description:  "2000000117",
-  statBadges:   "2000000118",
-  ctaButton:    "2000000119",
+  heroImage: "2000000148",
+  brandBadge: "2000000149",
+  headlineMain: "2000000150",
+  headlineSub: "2000000151",
+  description: "2000000152",
+  statBadges: "2000000153",
+  ctaButton: "2000000154",
 };
 
-// R9: Default stat cards fallback
 const DEFAULT_STAT_CARDS = [
-  { field1: "1000+", fieldType1: "Text", fieldId1: "3000000097", field2: "Community<br />Members",  fieldType2: "Text", fieldId2: "3000000098" },
-  { field1: "40+",   fieldType1: "Text", fieldId1: "3000000099", field2: "Fitness<br />Programmes", fieldType2: "Text", fieldId2: "3000000100" },
-  { field1: "150+",  fieldType1: "Text", fieldId1: "3000000101", field2: "Fitness<br />Channels",   fieldType2: "Text", fieldId2: "3000000102" },
+  { fieldId1: "3000000127", fieldId2: "3000000128", fieldId3: "3000000129" },
+  { fieldId1: "3000000130", fieldId2: "3000000131", fieldId3: "3000000132" },
+  { fieldId1: "TBD-cardField7", fieldId2: "TBD-cardField8", fieldId3: "TBD-cardField9" },
 ];
 
-// R2: pageName prop
 const CustomSection = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
-
-  // R4: Read from Redux store
-  const data    = useSelector((state) => state.cms?.allSections?.[pageName]);
+  const data = useSelector((state) => state.cms?.allSections?.[pageName]);
   const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
-  const rootRef = useRef(null);
+  const contrastClass = getSectionTextContrastClass("white");
 
-  // R9: CMS loop or fallback
-  const statBadgesArr =
-    Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length === 3
-      ? data[ids.statBadges]
-      : DEFAULT_STAT_CARDS;
-
-  // R3: Dispatch all fieldIds on mount
   useEffect(() => {
-    dispatch(fetchElementsByIds({
-      elementIds: [
-        ids.heroImage, ids.brandBadge, ids.headlineMain, ids.headlineSub,
-        ids.description, ids.statBadges, ids.ctaButton,
-        "3000000097","3000000098","3000000099",
-        "3000000100","3000000101","3000000102",
-      ],
-      pageName,
-    }));
+    dispatch(
+      fetchElementsByIds({
+        elementIds: [
+          ids.heroImage,
+          ids.brandBadge,
+          ids.headlineMain,
+          ids.headlineSub,
+          ids.description,
+          ids.statBadges,
+          ids.ctaButton,
+          "3000000127",
+          "3000000128",
+          "3000000129",
+          "3000000130",
+          "3000000131",
+          "3000000132",
+          "TBD-cardField7",
+          "TBD-cardField8",
+          "TBD-cardField9",
+        ],
+        pageName,
+      })
+    );
   }, [dispatch, pageName]);
 
-  // R10: Apply per-element CSS overrides
   useEffect(() => {
     Object.values(ids).forEach((id) => {
       if (id && cssData?.[id]) {
@@ -59,94 +60,115 @@ const CustomSection = ({ pageName = "Home" }) => {
         if (el) el.style.cssText = cssData[id];
       }
     });
+    if (cssData) {
+      Object.keys(cssData).forEach((key) => {
+        if (key.startsWith("TBD-cardField")) {
+          const el = document.getElementById(key);
+          if (el) el.style.cssText = cssData[key];
+        }
+      });
+    }
   }, [cssData]);
 
+  const statBadgesArr =
+    Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
+      ? data[ids.statBadges]
+      : DEFAULT_STAT_CARDS;
+
   return (
-    // R11: Responsive split layout with max-width
-    <div ref={rootRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-950">
-      <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-red-500 z-0" />
-      <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-red-500 z-0" />
+    <section
+      id={ids.heroImage + "-section"}
+      className={`relative w-full max-w-[1920px] mx-auto px-4 md:px-12 py-16 md:py-24 bg-white ${contrastClass}`}
+      style={{ backgroundColor: "white", color: "#1f2937" }}
+    >
+      <div
+        className={`flex flex-col ${"md:flex-row"} items-center gap-12 md:gap-16`}
+        style={{ flexDirection: "row" }}
+      >
+        <div
+          id={ids.heroImage + "-container"}
+          className={`relative w-full ${"md:w-1/2"} flex justify-center items-center order-1 ${"md:order-1"}`}
+        >
+          <img
+            id={ids.heroImage}
+            className="dynamicStyle2 max-w-full max-h-[600px] h-auto object-contain mx-auto rounded-3xl"
+            src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("default/images/hero-placeholder.jpg")}
+            onError={errorImage}
+            alt="Hero visual"
+          />
+        </div>
 
-      <main className="relative z-10 w-full max-w-[1920px] mx-auto px-0 md:px-12 flex items-center justify-center min-h-screen">
-        {/* R11: flex-col on mobile, flex-row on desktop */}
-        <section className="w-full flex flex-col md:flex-row bg-zinc-950 overflow-hidden">
+        <div
+          id={ids.headlineMain + "-container"}
+          className={`w-full ${"md:w-1/2"} flex flex-col items-start text-center md:text-left order-2 ${"md:order-2"}`}
+        >
+          <span
+            id={ids.brandBadge}
+            className="dynamicStyle inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4"
+            style={{ backgroundColor: "#3b82f6", color: "white" }}
+            dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "CYBERGUARD" }}
+          />
+          <h1
+            id={ids.headlineMain}
+            className="dynamicStyle text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4"
+            dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "ZERO TRUST CLOUD SECURITY" }}
+          />
+          <h2
+            id={ids.headlineSub}
+            className="dynamicStyle text-xl md:text-2xl font-medium mb-6"
+            style={{ color: "#3b82f6" }}
+            dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "AI-powered threat detection at scale" }}
+          />
+          <p
+            id={ids.description}
+            className="dynamicStyle text-lg md:text-xl mb-8 max-w-xl"
+            style={{ color: "#4b5563" }}
+            dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Protect your multi-cloud infrastructure with autonomous response" }}
+          />
 
-          {/* Left — Hero Image */}
-          <div className="md:w-1/2 w-full flex items-center justify-center min-h-[400px] md:min-h-[680px] py-8">
-            {/* R5: id, R7: getImage+errorImage, R12: dynamicStyle2 */}
-            <img
-              id={ids.heroImage}
-              className="dynamicStyle2 max-w-full max-h-[600px] h-auto object-contain mx-auto"
-              src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage(null)}
-              alt="Section hero image"
-              onError={errorImage}
-            />
+          <div
+            id={ids.statBadges + "-container"}
+            className="flex flex-wrap justify-center md:justify-start gap-4 mb-8 w-full"
+          >
+            {statBadgesArr.map((item, index) => (
+              <div
+                key={index}
+                id={item.fieldId1}
+                className="dynamicStyle flex flex-col items-center p-4 rounded-2xl min-w-[140px]"
+                style={{ backgroundColor: "#f3f4f6", border: "1px solid #e5e7eb" }}
+              >
+                <span
+                  id={item.fieldId1}
+                  className="dynamicStyle text-3xl font-bold mb-1"
+                  style={{ color: "#3b82f6" }}
+                  dangerouslySetInnerHTML={{ __html: data?.[item.fieldId1] || (index === 0 ? "99.9%" : index === 1 ? "<1s" : "24/7") }}
+                />
+                <span
+                  id={item.fieldId2}
+                  className="dynamicStyle text-sm font-medium text-center"
+                  dangerouslySetInnerHTML={{ __html: data?.[item.fieldId2] || (index === 0 ? "Uptime SLA" : index === 1 ? "Response Time" : "Monitoring") }}
+                />
+                <span
+                  id={item.fieldId3}
+                  className="dynamicStyle text-xs text-gray-500 mt-1"
+                  dangerouslySetInnerHTML={{ __html: data?.[item.fieldId3] || "Industry leading" }}
+                />
+              </div>
+            ))}
           </div>
 
-          {/* Right — Content */}
-          <div className="md:w-1/2 w-full flex flex-col justify-center px-6 md:px-16 py-12 space-y-6">
-
-            {/* Brand Badge — R5 id, R6 html, R12 dynamicStyle */}
-            <span
-              id={ids.brandBadge}
-              className="dynamicStyle uppercase text-red-500 font-bold text-sm tracking-[0.2em]"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "PULSE FIT" }}
-            />
-
-            {/* Headline Main */}
-            <h1
-              id={ids.headlineMain}
-              className="dynamicStyle text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "CHALLENGE YOUR LIMITS" }}
-            />
-
-            {/* Headline Sub */}
-            <h2
-              id={ids.headlineSub}
-              className="dynamicStyle text-lg md:text-xl font-medium text-gray-400"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Be a part of the tribe that's limitless." }}
-            />
-
-            {/* Description */}
-            <p
-              id={ids.description}
-              className="dynamicStyle text-gray-500 text-base md:text-lg max-w-xl leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Join trainer-led workout sessions designed to kickstart your fitness journey, at your convenience." }}
-            />
-
-            {/* Stat Cards — R9 loop, R5 ids on each */}
-            <div id={ids.statBadges} className="dynamicStyle flex flex-col md:flex-row md:justify-between md:gap-x-8 gap-y-6 pt-2">
-              {statBadgesArr.map((item) => (
-                <div key={item.fieldId1} className="flex-1 flex flex-col items-center justify-center">
-                  <div
-                    id={item.fieldId1}
-                    className="dynamicStyle text-3xl md:text-4xl font-extrabold text-white"
-                    dangerouslySetInnerHTML={{ __html: data?.[item.fieldId1] || item.field1 }}
-                  />
-                  <div
-                    id={item.fieldId2}
-                    className="dynamicStyle mt-1 text-gray-500 text-sm text-center"
-                    dangerouslySetInnerHTML={{ __html: data?.[item.fieldId2] || item.field2 }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* CTA Button — R8 PrimeReact, R5 id, R12 dynamicStyle */}
-            <Button
-              id={ids.ctaButton}
-              className="dynamicStyle w-full md:w-auto rounded-full font-bold"
-              severity="danger"
-              aria-label="Primary call to action"
-              label={data?.[ids.ctaButton] || "FIND A WORKOUT"}
-              onClick={() => {}}
-            />
-          </div>
-        </section>
-      </main>
-    </div>
+          <Button
+            id={ids.ctaButton}
+            className="dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold"
+            severity="danger"
+            label={data?.[ids.ctaButton] || "SECURE YOUR CLOUD"}
+            aria-label="Action button"
+            onClick={() => {}}
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 
-// R14: Default export
 export default CustomSection;
