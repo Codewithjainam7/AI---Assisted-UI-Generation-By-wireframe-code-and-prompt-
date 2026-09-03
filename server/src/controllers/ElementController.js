@@ -7,7 +7,7 @@ export async function listElements(req, res, next) {
     if (req.query.sectionId) query.sectionId = req.query.sectionId;
     if (req.query.pageName) query.pageName = req.query.pageName;
     
-    const elements = await Element.find(query).populate('loop');
+    const elements = await Element.find(query).lean();
     res.json({ ok: true, elements });
   } catch (err) {
     next(err);
