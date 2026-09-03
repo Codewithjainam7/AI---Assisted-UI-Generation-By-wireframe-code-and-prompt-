@@ -5,11 +5,26 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export const submitGenerateJob = createAsyncThunk(
   'generate/submitGenerateJob',
-  async (formData) => {
-    const response = await axios.post(`${API_URL}/generate`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
-    return response.data;
+  async (formData, { dispatch, rejectWithValue }) => {
+    try {
+      // Animate progress steps
+      const timer1 = setTimeout(() => dispatch(setStep(1)), 800);
+      const timer2 = setTimeout(() => dispatch(setStep(2)), 2000);
+      const timer3 = setTimeout(() => dispatch(setStep(3)), 4000);
+
+      const response = await axios.post(`${API_URL}/generate`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+
+      return response.data;
+    } catch (err) {
+      const message = err.response?.data?.error?.message || err.response?.data?.message || err.message || 'Generation failed';
+      return rejectWithValue(message);
+    }
   }
 );
 
@@ -53,7 +68,8 @@ const generateSlice = createSlice({
       })
       .addCase(submitGenerateJob.rejected, (state, action) => {
         state.status = 'error';
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message || 'Generation failed';
+        state.currentStep = 0;
       });
   },
 });

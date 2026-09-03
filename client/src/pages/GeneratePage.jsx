@@ -18,7 +18,7 @@ const MODES = [
   { id: 'combined',  label: 'Combined',  icon: '⚡' },
 ];
 
-const STEPS = ['Parsing', 'Building IR', 'Generating JSX', 'Saving', 'Done'];
+const STEPS = ['Parsing Input', 'Building IR', 'Synthesizing JSX', 'Allocating IDs', 'Saved to Store'];
 
 const SAMPLE_PROMPT = `Create a fitness hero for Pulse Fit. Layout: two columns on desktop, stacked on mobile.
 Left: athlete image. Right: uppercase red badge "PULSE FIT", bold headline "CHALLENGE YOUR LIMITS",
@@ -50,10 +50,11 @@ export default function GeneratePage() {
 
   const { status, currentJob, error, jobs, currentStep } = useSelector(state => state.generate);
 
-  const [activeMode,     setActiveMode]     = useState('prompt');
+  const [activeMode,     setActiveMode]     = useState('wireframe');
   const [wireframeFile,  setWireframeFile]  = useState(null);
   const [codeValue,      setCodeValue]      = useState('');
   const [promptValue,    setPromptValue]    = useState('');
+  const [optionalPrompt, setOptionalPrompt] = useState('');
   const [pageName,       setPageName]       = useState('Home');
   const [sectionName,    setSectionName]    = useState('Custom');
   const [showOptions,    setShowOptions]    = useState(false);
@@ -63,16 +64,23 @@ export default function GeneratePage() {
     const formData = new FormData();
     formData.append('mode',        activeMode);
     formData.append('pageName',    pageName);
-    formData.append('sectionName', sectionName.replace(/\s+/g, ''));
+    formData.append('sectionName', sectionName.replace(/\s+/g, '') || 'Custom');
 
-    if (activeMode === 'wireframe' || activeMode === 'combined') {
+    if (activeMode === 'wireframe') {
       if (wireframeFile) formData.append('wireframe', wireframeFile);
+      if (optionalPrompt.trim()) formData.append('prompt', optionalPrompt);
     }
-    if (activeMode === 'code' || activeMode === 'combined') {
+    if (activeMode === 'code') {
       if (codeValue.trim()) formData.append('code', codeValue);
+      if (optionalPrompt.trim()) formData.append('prompt', optionalPrompt);
     }
-    if (activeMode === 'prompt' || activeMode === 'combined') {
+    if (activeMode === 'prompt') {
       if (promptValue.trim()) formData.append('prompt', promptValue);
+    }
+    if (activeMode === 'combined') {
+      if (wireframeFile) formData.append('wireframe', wireframeFile);
+      if (promptValue.trim()) formData.append('prompt', promptValue);
+      if (codeValue.trim()) formData.append('code', codeValue);
     }
 
     dispatch(submitGenerateJob(formData));
@@ -85,19 +93,20 @@ export default function GeneratePage() {
   };
 
   const copyJsx = () => {
-    const text = currentJob?.componentFile || '';
+    const text = currentJob?.jsx || currentJob?.componentFile || '';
     navigator.clipboard.writeText(text).then(() => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     });
   };
 
-  const isDisabled = status === 'loading' || (
-    activeMode === 'wireframe' && !wireframeFile ||
-    activeMode === 'code'      && !codeValue.trim() ||
-    activeMode === 'prompt'    && !promptValue.trim() ||
-    activeMode === 'combined'  && !wireframeFile && !promptValue.trim() && !codeValue.trim()
-  );
+  const isFormValid = () => {
+    if (activeMode === 'wireframe') return !!wireframeFile;
+    if (activeMode === 'code') return !!codeValue.trim();
+    if (activeMode === 'prompt') return !!promptValue.trim();
+    if (activeMode === 'combined') return !!(wireframeFile || promptValue.trim() || codeValue.trim());
+    return false;
+  };
 
   return (
     <PageShell>
@@ -105,10 +114,14 @@ export default function GeneratePage() {
 
         {/* Header */}
         <div className="py-8 md:py-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-white/10 text-xs font-medium text-gray-300 mb-3">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            AI-Assisted UI Studio (Nemotron + Gemini Vision)
+          </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-1">
             ✦ Generation <span className="gradient-text">Studio</span>
           </h1>
-          <p className="text-gray-400 text-sm">Generate CMS-ready React sections in seconds.</p>
+          <p className="text-gray-400 text-sm">Generate production-ready, CMS-connected React sections from wireframes, code, or prompts.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -124,19 +137,43 @@ export default function GeneratePage() {
             {/* Input Panel */}
             <GlassCard className="flex flex-col gap-5">
 
-              {/* Wireframe */}
-              {(activeMode === 'wireframe') && (
-                <div>
-                  <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider">Upload Wireframe</p>
-                  <DropZone onFile={setWireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
+              {/* Wireframe Mode */}
+              {activeMode === 'wireframe' && (
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                        <span>🖼️</span> Upload Wireframe Sketch or Screenshot
+                      </p>
+                      {wireframeFile && (
+                        <span className="text-xs text-green-400 font-medium flex items-center gap-1">
+                          <i className="pi pi-check text-xs" /> Ready to generate
+                        </span>
+                      )}
+                    </div>
+                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1.5 font-medium">Optional: Design Notes / Copy Tweaks</p>
+                    <input
+                      type="text"
+                      value={optionalPrompt}
+                      onChange={(e) => setOptionalPrompt(e.target.value)}
+                      placeholder="e.g. Make CTA red and use 3 stat cards for a fitness brand"
+                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60"
+                    />
+                  </div>
                 </div>
               )}
 
-              {/* Code */}
+              {/* Code Mode */}
               {activeMode === 'code' && (
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Paste JSX / React Code</p>
+                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                      <span>💻</span> Paste Static React / JSX
+                    </p>
                     <button
                       onClick={() => setCodeValue(SAMPLE_CODE)}
                       className="text-xs text-red-400 hover:text-red-300 transition-colors"
@@ -153,11 +190,13 @@ export default function GeneratePage() {
                 </div>
               )}
 
-              {/* Prompt */}
+              {/* Prompt Mode */}
               {activeMode === 'prompt' && (
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Natural Language Prompt</p>
+                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                      <span>✍️</span> Natural Language Prompt
+                    </p>
                     <button
                       onClick={() => setPromptValue(SAMPLE_PROMPT)}
                       className="text-xs text-red-400 hover:text-red-300 transition-colors"
@@ -168,25 +207,33 @@ export default function GeneratePage() {
                   <textarea
                     value={promptValue}
                     onChange={(e) => setPromptValue(e.target.value)}
-                    placeholder="Describe the section you want to generate...&#10;&#10;e.g. Create a fitness hero. Left: athlete image. Right: red badge, bold headline, 3 stats, red CTA."
+                    placeholder="Describe the section you want to generate...&#10;&#10;e.g. Create a fitness hero for Pulse Fit. Left: athlete image. Right: red badge, bold headline, 3 stats, red CTA."
                     className="w-full h-48 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 resize-none text-sm leading-relaxed transition-all"
                   />
                 </div>
               )}
 
-              {/* Combined */}
+              {/* Combined Mode */}
               {activeMode === 'combined' && (
                 <div className="flex flex-col gap-4">
                   <div>
-                    <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider">Wireframe Image</p>
-                    <DropZone onFile={setWireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
+                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-2">1. Wireframe Image (Spatial Layout)</p>
+                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wider">Additional Prompt Instructions</p>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">2. Prompt Overrides (Colours, Copy, CTA)</p>
+                      <button
+                        onClick={() => setPromptValue(SAMPLE_PROMPT)}
+                        className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        Load Sample ↓
+                      </button>
+                    </div>
                     <textarea
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
-                      placeholder="Override colours, copy, CTA label, stat count..."
+                      placeholder="Prompt instructions take precedence for colours, copy, and CTA behaviour..."
                       className="w-full h-28 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 resize-none text-sm transition-all"
                     />
                   </div>
@@ -199,7 +246,7 @@ export default function GeneratePage() {
                   onClick={() => setShowOptions(!showOptions)}
                   className="w-full bg-white/3 px-4 py-3 flex justify-between items-center hover:bg-white/6 transition-colors text-left"
                 >
-                  <span className="text-sm font-medium text-gray-300">⚙️ Generation Options</span>
+                  <span className="text-sm font-medium text-gray-300">⚙️ Target Page & Section Metadata</span>
                   <i className={`pi pi-chevron-${showOptions ? 'up' : 'down'} text-xs text-gray-500`} />
                 </button>
                 {showOptions && (
@@ -211,7 +258,7 @@ export default function GeneratePage() {
                       placeholder="Home"
                     />
                     <GlassInput
-                      label="Section Name (no spaces)"
+                      label="Section Name (PascalCase)"
                       value={sectionName}
                       onChange={(e) => setSectionName(e.target.value)}
                       placeholder="Custom"
@@ -223,45 +270,52 @@ export default function GeneratePage() {
               {/* Generate Button */}
               <button
                 onClick={handleGenerate}
-                disabled={status === 'loading'}
+                disabled={status === 'loading' || !isFormValid()}
                 className={`w-full py-4 rounded-full font-bold text-lg transition-all focus-visible:ring-2 focus-visible:ring-red-500 ${
                   status === 'loading'
                     ? 'bg-zinc-800 text-gray-500 cursor-not-allowed'
+                    : !isFormValid()
+                    ? 'bg-white/5 text-gray-500 border border-white/10 cursor-not-allowed'
                     : 'shimmer-bg text-white hover:shadow-glow-red active:scale-[0.98]'
                 }`}
               >
                 {status === 'loading' ? (
-                  <><i className="pi pi-spin pi-spinner mr-2" />Generating...</>
+                  <><i className="pi pi-spin pi-spinner mr-2" />Generating with AI Pipeline...</>
+                ) : !isFormValid() ? (
+                  activeMode === 'wireframe' ? 'Please upload a wireframe above' : 'Please provide input above'
                 ) : (
-                  'Generate Section ✦'
+                  `Generate Section from ${MODES.find(m => m.id === activeMode)?.label} ✦`
                 )}
               </button>
             </GlassCard>
 
-            {/* Progress */}
+            {/* Progress Bar */}
             {status === 'loading' && (
               <GlassCard className="animate-fade-up">
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-4">Generation Progress</p>
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">AI Generation Pipeline Active</p>
+                  <span className="text-xs text-red-400 font-mono animate-pulse">Processing...</span>
+                </div>
                 <StepProgress currentStep={currentStep} steps={STEPS} />
               </GlassCard>
             )}
 
             {/* Results */}
             {status === 'success' && currentJob && (
-              <GlassCard className="animate-fade-up border border-green-500/20">
+              <GlassCard className="animate-fade-up border border-green-500/30 shadow-glow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                   <div>
                     <h3 className="text-base font-bold text-green-400 flex items-center gap-2">
-                      <span>✅</span> Section Generated
+                      <span>✅</span> Section Generated & Bound to Redux Store
                     </h3>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      ID: <span className="font-mono text-gray-400">{currentJob.sectionId}</span>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Section ID: <span className="font-mono text-white font-bold">{currentJob.sectionId}</span>
                       {currentJob.warnings?.length > 0 && (
-                        <span className="ml-2 text-yellow-500">⚠️ {currentJob.warnings.length} warning(s)</span>
+                        <span className="ml-2 text-yellow-400 font-medium">⚠️ {currentJob.warnings.length} warning(s)</span>
                       )}
                     </p>
                   </div>
-                  <span className="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-gray-400">
+                  <span className="text-xs px-3 py-1 rounded-full bg-white/10 border border-white/10 font-mono text-gray-300">
                     {currentJob.componentFile}
                   </span>
                 </div>
@@ -275,35 +329,38 @@ export default function GeneratePage() {
                   </div>
                 )}
 
-                {/* Element IDs summary */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {(currentJob.elementIds || []).slice(0, 7).map(id => (
-                    <span key={id} className="text-xs font-mono px-2 py-1 rounded-lg bg-white/5 text-gray-400">
-                      {id}
-                    </span>
-                  ))}
+                {/* Element IDs preview */}
+                <div className="mb-4">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Assigned 10-Digit Field IDs:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(currentJob.elementIds || []).map(id => (
+                      <span key={id} className="text-xs font-mono px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-gray-300">
+                        {id}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 pt-2 border-t border-white/10">
                   <button
                     onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
-                    className="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-100 transition-colors"
+                    className="px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-sm hover:shadow-glow-red hover:scale-[1.02] transition-all"
                   >
-                    View Preview →
+                    View Live Preview →
                   </button>
                   <button
                     onClick={downloadZip}
-                    className="px-5 py-2.5 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
+                    className="px-5 py-3 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
                   >
                     <i className="pi pi-download mr-2 text-xs" />Download ZIP
                   </button>
                   <button
                     onClick={copyJsx}
-                    className="px-5 py-2.5 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
+                    className="px-5 py-3 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
                   >
                     <i className={`pi ${copySuccess ? 'pi-check text-green-400' : 'pi-copy'} mr-2 text-xs`} />
-                    {copySuccess ? 'Copied!' : 'Copy Path'}
+                    {copySuccess ? 'Copied JSX!' : 'Copy Code'}
                   </button>
                 </div>
               </GlassCard>
@@ -312,25 +369,25 @@ export default function GeneratePage() {
             {/* Error */}
             {status === 'error' && (
               <GlassCard className="animate-fade-up border border-red-500/30 bg-red-900/10">
-                <h3 className="text-base font-bold text-red-400 mb-2">
-                  <i className="pi pi-exclamation-triangle mr-2" />Generation Failed
+                <h3 className="text-base font-bold text-red-400 mb-2 flex items-center gap-2">
+                  <i className="pi pi-exclamation-triangle" />Generation Failed
                 </h3>
                 <p className="text-gray-300 text-sm">{error}</p>
-                <p className="text-gray-500 text-xs mt-2">Check your API keys in .env and that MongoDB is running.</p>
+                <p className="text-gray-500 text-xs mt-2">Make sure the backend is running on port 4000.</p>
               </GlassCard>
             )}
           </div>
 
           {/* ── Job History Sidebar ──────────────────── */}
           <div className="lg:col-span-1">
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-3 px-1">
-              Recent Jobs
+            <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-3 px-1">
+              Recent Generated Sections
             </p>
             {jobs.length === 0 ? (
               <GlassCard className="text-center py-8">
                 <i className="pi pi-history text-2xl text-gray-600 mb-2 block" />
-                <p className="text-sm text-gray-600">No jobs yet.</p>
-                <p className="text-xs text-gray-700 mt-1">Generate your first section above.</p>
+                <p className="text-sm text-gray-500">No generation jobs yet.</p>
+                <p className="text-xs text-gray-600 mt-1">Upload a wireframe or enter a prompt above.</p>
               </GlassCard>
             ) : (
               <div className="flex flex-col gap-3">
@@ -342,11 +399,22 @@ export default function GeneratePage() {
 
             {/* Quick reference */}
             <GlassCard className="mt-4">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">DOM IDs</p>
-              {['heroImage','brandBadge','headlineMain','headlineSub','description','statBadges','ctaButton'].map(id => (
-                <div key={id} className="flex items-center gap-2 py-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
-                  <span className="text-xs font-mono text-gray-500">{id}</span>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Target CMS Elements</p>
+              {[
+                { name: 'heroImage', type: 'Image' },
+                { name: 'brandBadge', type: 'Text' },
+                { name: 'headlineMain', type: 'Text' },
+                { name: 'headlineSub', type: 'Text' },
+                { name: 'description', type: 'Textfield' },
+                { name: 'statBadges', type: 'Cards (Loop)' },
+                { name: 'ctaButton', type: 'Button' }
+              ].map(item => (
+                <div key={item.name} className="flex items-center justify-between py-1 border-b border-white/5 last:border-0">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                    <span className="text-xs font-mono text-gray-300">{item.name}</span>
+                  </div>
+                  <span className="text-[10px] text-gray-500 uppercase">{item.type}</span>
                 </div>
               ))}
             </GlassCard>
