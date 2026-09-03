@@ -133,13 +133,36 @@ export const SectionStore = {
 // ─── Element Operations ──────────────────────────────────────────────
 export const ElementStore = {
   async find(query = {}) {
+    if (query.sectionId) {
+      if (isMongoConnected()) {
+        return ElementModel.find({ sectionId: query.sectionId }).lean();
+      }
+      return readJson(elementsFile).filter(e => e.sectionId === query.sectionId);
+    }
+
+    if (query.pageName) {
+      // Find the most recent section for this pageName
+      const sections = await SectionStore.find({ pageName: query.pageName });
+      const latestSection = Array.isArray(sections) && sections.length > 0 ? sections[0] : null;
+
+      if (latestSection && latestSection.sectionId) {
+        if (isMongoConnected()) {
+          return ElementModel.find({ sectionId: latestSection.sectionId }).lean();
+        }
+        const filtered = readJson(elementsFile).filter(e => e.sectionId === latestSection.sectionId);
+        if (filtered.length > 0) return filtered;
+      }
+
+      if (isMongoConnected()) {
+        return ElementModel.find({ pageName: query.pageName }).lean();
+      }
+      return readJson(elementsFile).filter(e => e.pageName === query.pageName);
+    }
+
     if (isMongoConnected()) {
       return ElementModel.find(query).lean();
     }
-    let list = readJson(elementsFile);
-    if (query.sectionId) list = list.filter(e => e.sectionId === query.sectionId);
-    if (query.pageName) list = list.filter(e => e.pageName === query.pageName);
-    return list;
+    return readJson(elementsFile);
   },
 
   async findOne(query) {

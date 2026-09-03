@@ -7,20 +7,20 @@ import { getImage, errorImage } from "../../utils/getImage";
 
 // R1: Stable ids map
 const ids = {
-  heroImage:    "2000000064",
-  brandBadge:   "2000000065",
-  headlineMain: "2000000066",
-  headlineSub:  "2000000067",
-  description:  "2000000068",
-  statBadges:   "2000000069",
-  ctaButton:    "2000000070",
+  heroImage:    "2000000078",
+  brandBadge:   "2000000079",
+  headlineMain: "2000000080",
+  headlineSub:  "2000000081",
+  description:  "2000000082",
+  statBadges:   "2000000083",
+  ctaButton:    "2000000084",
 };
 
 // R9: Default stat cards fallback
 const DEFAULT_STAT_CARDS = [
-  { field1: "1000+", fieldType1: "Text", fieldId1: "3000000055", field2: "Community<br />Members",  fieldType2: "Text", fieldId2: "3000000056" },
-  { field1: "40+",   fieldType1: "Text", fieldId1: "3000000057", field2: "Fitness<br />Programmes", fieldType2: "Text", fieldId2: "3000000058" },
-  { field1: "150+",  fieldType1: "Text", fieldId1: "3000000059", field2: "Fitness<br />Channels",   fieldType2: "Text", fieldId2: "3000000060" },
+  { field1: "1000+", fieldType1: "Text", fieldId1: "3000000067", field2: "Community<br />Members",  fieldType2: "Text", fieldId2: "3000000068" },
+  { field1: "40+",   fieldType1: "Text", fieldId1: "3000000069", field2: "Fitness<br />Programmes", fieldType2: "Text", fieldId2: "3000000070" },
+  { field1: "150+",  fieldType1: "Text", fieldId1: "3000000071", field2: "Fitness<br />Channels",   fieldType2: "Text", fieldId2: "3000000072" },
 ];
 
 // R2: pageName prop
@@ -44,8 +44,8 @@ const CustomSection = ({ pageName = "Home" }) => {
       elementIds: [
         ids.heroImage, ids.brandBadge, ids.headlineMain, ids.headlineSub,
         ids.description, ids.statBadges, ids.ctaButton,
-        "3000000055","3000000056","3000000057",
-        "3000000058","3000000059","3000000060",
+        "3000000067","3000000068","3000000069",
+        "3000000070","3000000071","3000000072",
       ],
       pageName,
     }));

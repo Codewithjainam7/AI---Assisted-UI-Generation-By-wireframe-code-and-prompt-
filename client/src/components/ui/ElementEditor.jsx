@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { patchElement } from '../../features/cms/cmsSlice';
 
-export default function ElementEditor({ elements, pageName }) {
+export default function ElementEditor({ elements = [], pageName }) {
   const dispatch = useDispatch();
   const [localValues, setLocalValues] = useState({});
   const [saveStatus, setSaveStatus] = useState({});
@@ -24,7 +24,6 @@ export default function ElementEditor({ elements, pageName }) {
     const currentValue = localValues[fieldId];
     const originalValue = originalEl?.contentType === 'Cards' ? originalEl.loop : originalEl?.content;
     
-    // Simple deep equality check for arrays/objects
     if (JSON.stringify(currentValue) !== JSON.stringify(originalValue)) {
       dispatch(patchElement({ fieldId, pageName, content: currentValue }))
         .unwrap()
@@ -37,64 +36,84 @@ export default function ElementEditor({ elements, pageName }) {
   };
 
   if (!elements || elements.length === 0) {
-    return <div className="text-gray-500 text-sm text-center py-8">No editable elements found for this section.</div>;
+    return (
+      <div className="text-gray-500 text-sm text-center py-8">
+        <i className="pi pi-info-circle text-2xl mb-2 block text-gray-600" />
+        No editable elements found for this section.
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {elements.map((el) => (
-        <div key={el.fieldId} className="flex flex-col gap-2 relative group">
+    <div className="flex flex-col gap-5 pb-6">
+      {elements.map((el, idx) => (
+        <div key={`${el.fieldId}-${idx}`} className="flex flex-col gap-2 relative group bg-black/20 p-3.5 rounded-2xl border border-white/5">
           <div className="flex justify-between items-center">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              {el.elementName || el.fieldId}
-            </label>
-            {saveStatus[el.fieldId] === 'saved' && <i className="pi pi-check text-green-500 text-xs animate-fade-up"></i>}
-            {saveStatus[el.fieldId] === 'error' && <i className="pi pi-times text-red-500 text-xs animate-fade-up"></i>}
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                {el.elementName || el.fieldId}
+              </label>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-mono text-gray-500">{el.fieldId}</span>
+              {saveStatus[el.fieldId] === 'saved' && <i className="pi pi-check text-green-400 text-xs animate-fade-up" />}
+              {saveStatus[el.fieldId] === 'error' && <i className="pi pi-times text-red-400 text-xs animate-fade-up" />}
+            </div>
           </div>
           
           {(el.contentType === 'Text' || el.contentType === 'Textfield' || el.contentType === 'Button') && (
             <textarea
+              rows={el.contentType === 'Textfield' ? 3 : 2}
               value={localValues[el.fieldId] || ''}
               onChange={(e) => handleChange(el.fieldId, e.target.value)}
               onBlur={() => handleBlur(el.fieldId)}
-              className="glass-strong rounded-xl p-3 text-sm text-white w-full resize-y min-h-[40px] focus:outline-none focus:ring-1 focus:ring-red-500"
+              className="bg-black/40 border border-white/10 rounded-xl p-2.5 text-xs text-white w-full resize-none focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 leading-relaxed font-sans"
             />
           )}
 
           {el.contentType === 'Image' && (
-            <div className="flex gap-3">
-              {localValues[el.fieldId] && (
-                <img src={localValues[el.fieldId].startsWith('http') ? localValues[el.fieldId] : `${import.meta.env.VITE_STORAGE_URL || ''}${localValues[el.fieldId]}`} alt="thumb" className="w-12 h-12 rounded-lg object-cover bg-gray-800" />
-              )}
+            <div className="flex flex-col gap-2">
               <input
                 type="text"
                 value={localValues[el.fieldId] || ''}
                 onChange={(e) => handleChange(el.fieldId, e.target.value)}
                 onBlur={() => handleBlur(el.fieldId)}
-                placeholder="Image URL or path"
-                className="glass-strong rounded-xl p-3 text-sm text-white flex-1 focus:outline-none focus:ring-1 focus:ring-red-500"
+                placeholder="Image path or URL"
+                className="bg-black/40 border border-white/10 rounded-xl p-2.5 text-xs text-white w-full focus:outline-none focus:border-red-500/60"
               />
             </div>
           )}
 
           {el.contentType === 'Cards' && Array.isArray(localValues[el.fieldId]) && (
-            <div className="pl-4 border-l-2 border-gray-700 flex flex-col gap-4">
-              {localValues[el.fieldId].map((item, idx) => (
-                <div key={idx} className="flex flex-col gap-2 bg-black/20 p-3 rounded-lg">
-                  <span className="text-xs text-gray-500">Item {idx + 1}</span>
-                  {Object.keys(item).filter(k => k.startsWith('field') && !k.startsWith('fieldType') && !k.startsWith('fieldId')).map(key => (
-                    <input
-                      key={key}
-                      value={item[key] || ''}
-                      onChange={(e) => {
-                        const newArray = [...localValues[el.fieldId]];
-                        newArray[idx] = { ...newArray[idx], [key]: e.target.value };
-                        handleChange(el.fieldId, newArray);
-                      }}
-                      onBlur={() => handleBlur(el.fieldId)}
-                      className="bg-transparent border border-gray-700 rounded-md p-2 text-sm text-white focus:border-red-500 focus:outline-none"
-                    />
-                  ))}
+            <div className="flex flex-col gap-2.5 pt-1">
+              {localValues[el.fieldId].map((item, cIdx) => (
+                <div key={item.fieldId1 || cIdx} className="bg-black/40 p-2.5 rounded-xl border border-white/5 flex flex-col gap-1.5">
+                  <span className="text-[10px] text-gray-400 font-semibold uppercase">Card {cIdx + 1}</span>
+                  <input
+                    type="text"
+                    value={item.field1 || ''}
+                    placeholder="Stat Value (e.g. 1000+)"
+                    onChange={(e) => {
+                      const newArray = [...localValues[el.fieldId]];
+                      newArray[cIdx] = { ...newArray[cIdx], field1: e.target.value };
+                      handleChange(el.fieldId, newArray);
+                    }}
+                    onBlur={() => handleBlur(el.fieldId)}
+                    className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-white font-bold focus:border-red-500/60 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={item.field2 || ''}
+                    placeholder="Stat Label"
+                    onChange={(e) => {
+                      const newArray = [...localValues[el.fieldId]];
+                      newArray[cIdx] = { ...newArray[cIdx], field2: e.target.value };
+                      handleChange(el.fieldId, newArray);
+                    }}
+                    onBlur={() => handleBlur(el.fieldId)}
+                    className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-gray-300 focus:border-red-500/60 focus:outline-none"
+                  />
                 </div>
               ))}
             </div>
