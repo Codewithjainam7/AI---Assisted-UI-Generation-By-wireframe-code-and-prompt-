@@ -9,6 +9,7 @@ import GlassInput from '../components/ui/GlassInput';
 import GlassCard from '../components/ui/GlassCard';
 import StepProgress from '../components/ui/StepProgress';
 import JobHistoryCard from '../components/ui/JobHistoryCard';
+import HeroSection from '../sections/generated/HeroSection';
 import { submitGenerateJob } from '../features/generate/generateSlice';
 
 const MODES = [
@@ -60,6 +61,10 @@ export default function GeneratePage() {
   const [showOptions,    setShowOptions]    = useState(false);
   const [copySuccess,    setCopySuccess]    = useState(false);
   const [loadingSample,  setLoadingSample]  = useState(false);
+  
+  // Results view mode: 'split' | 'preview' | 'code'
+  const [resultViewMode, setResultViewMode] = useState('split');
+  const [previewViewport, setPreviewViewport] = useState('desktop');
 
   // Helper to load sample wireframe
   const loadSampleWireframe = async () => {
@@ -87,7 +92,6 @@ export default function GeneratePage() {
     if (activeMode === 'wireframe') {
       let fileToSend = wireframeFile;
       if (!fileToSend) {
-        // Auto load sample wireframe if user clicked generate directly
         try {
           const storageUrl = import.meta.env.VITE_STORAGE_URL || 'http://localhost:4000/storage/';
           const res = await fetch(`${storageUrl}default/images/hero-placeholder.jpg`);
@@ -121,7 +125,6 @@ export default function GeneratePage() {
       if (codeValue.trim()) formData.append('code', codeValue);
     }
 
-    console.log('Submitting generation job with mode:', activeMode);
     dispatch(submitGenerateJob(formData));
   };
 
@@ -141,30 +144,29 @@ export default function GeneratePage() {
 
   return (
     <PageShell>
-      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
 
         {/* Header */}
-        <div className="py-8 md:py-12">
+        <div className="py-8 md:py-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-white/10 text-xs font-medium text-gray-300 mb-3">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            AI-Assisted UI Studio (Nemotron + Gemini Vision)
+            AI-Assisted UI Studio (Nemotron 3 Ultra + Gemini 2.5 Flash)
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-1">
             ✦ Generation <span className="gradient-text">Studio</span>
           </h1>
-          <p className="text-gray-400 text-sm">Generate production-ready, CMS-connected React sections from wireframes, code, or prompts.</p>
+          <p className="text-gray-400 text-sm">Generate production React components with live CMS bindings from wireframe, code, or prompt.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
           {/* ── Main Workspace ──────────────────────── */}
-          <div className="lg:col-span-3 flex flex-col gap-5">
+          <div className="lg:col-span-3 flex flex-col gap-6">
 
             {/* Mode selector */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <PillTab tabs={MODES} active={activeMode} onChange={setActiveMode} />
 
-              {/* Quick sample loader button */}
               {activeMode === 'wireframe' && (
                 <button
                   onClick={loadSampleWireframe}
@@ -257,7 +259,7 @@ export default function GeneratePage() {
                     value={promptValue}
                     onChange={(e) => setPromptValue(e.target.value)}
                     placeholder="Describe the section you want to generate...&#10;&#10;e.g. Create a fitness hero for Pulse Fit. Left: athlete image. Right: red badge, bold headline, 3 stats, red CTA."
-                    className="w-full h-48 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 resize-none text-sm leading-relaxed transition-all"
+                    className="w-full h-44 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 resize-none text-sm leading-relaxed transition-all"
                   />
                 </div>
               )}
@@ -340,73 +342,150 @@ export default function GeneratePage() {
               </GlassCard>
             )}
 
-            {/* Results */}
-            {status === 'success' && currentJob && (
-              <GlassCard className="animate-fade-up border border-green-500/30 shadow-glow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                  <div>
-                    <h3 className="text-base font-bold text-green-400 flex items-center gap-2">
-                      <span>✅</span> Section Generated & Bound to Redux Store
-                    </h3>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      Section ID: <span className="font-mono text-white font-bold">{currentJob.sectionId}</span>
-                      {currentJob.warnings?.length > 0 && (
-                        <span className="ml-2 text-yellow-400 font-medium">⚠️ {currentJob.warnings.length} warning(s)</span>
-                      )}
-                    </p>
-                  </div>
-                  <span className="text-xs px-3 py-1 rounded-full bg-white/10 border border-white/10 font-mono text-gray-300">
-                    {currentJob.componentFile}
-                  </span>
-                </div>
+            {/* ── Live Generated Studio (Side-by-Side Live Preview + Code) ────────── */}
+            {currentJob && (
+              <div className="flex flex-col gap-4 animate-fade-up">
+                {/* Result Status Banner */}
+                <GlassCard className="border border-green-500/30 shadow-glow-sm py-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-base font-bold text-green-400 flex items-center gap-2">
+                        <span>✅</span> Section Generated & Bound to Redux Store
+                      </h3>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Section ID: <span className="font-mono text-white font-bold">{currentJob.sectionId}</span>
+                        <span className="mx-2">•</span>
+                        Page: <span className="font-mono text-white font-bold">{currentJob.pageName || pageName}</span>
+                      </p>
+                    </div>
 
-                {/* Warnings */}
-                {currentJob.warnings?.length > 0 && (
-                  <div className="mb-4 p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                    {currentJob.warnings.map((w, i) => (
-                      <p key={i} className="text-xs text-yellow-400">⚠️ {w}</p>
-                    ))}
+                    {/* View mode switcher */}
+                    <div className="flex items-center gap-1 bg-black/50 rounded-full p-1 border border-white/10">
+                      <button
+                        onClick={() => setResultViewMode('preview')}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                          resultViewMode === 'preview' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        🖥️ Live Preview
+                      </button>
+                      <button
+                        onClick={() => setResultViewMode('split')}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                          resultViewMode === 'split' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        🌓 Split View
+                      </button>
+                      <button
+                        onClick={() => setResultViewMode('code')}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                          resultViewMode === 'code' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        💻 Code (JSX)
+                      </button>
+                    </div>
                   </div>
-                )}
 
-                {/* Element IDs preview */}
-                <div className="mb-4">
-                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Assigned 10-Digit Field IDs:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {(currentJob.elementIds || []).map(id => (
-                      <span key={id} className="text-xs font-mono px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-gray-300">
-                        {id}
-                      </span>
-                    ))}
+                  {/* Actions Row */}
+                  <div className="flex flex-wrap gap-2.5 pt-3 mt-3 border-t border-white/10 items-center justify-between">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
+                        className="px-4 py-2 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-colors flex items-center gap-1.5"
+                      >
+                        <span>Open Fullscreen Preview</span>
+                        <i className="pi pi-arrow-up-right text-xs" />
+                      </button>
+                      <button
+                        onClick={downloadZip}
+                        className="px-4 py-2 rounded-full glass border border-white/10 text-xs hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                      >
+                        <i className="pi pi-download text-xs" />
+                        <span>Download ZIP</span>
+                      </button>
+                      <button
+                        onClick={copyJsx}
+                        className="px-4 py-2 rounded-full glass border border-white/10 text-xs hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                      >
+                        <i className={`pi ${copySuccess ? 'pi-check text-green-400' : 'pi-copy'} text-xs`} />
+                        <span>{copySuccess ? 'Copied JSX!' : 'Copy Code'}</span>
+                      </button>
+                    </div>
+
+                    {resultViewMode !== 'code' && (
+                      <div className="flex items-center gap-1 bg-black/40 rounded-full p-0.5 border border-white/10">
+                        <button
+                          onClick={() => setPreviewViewport('mobile')}
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
+                            previewViewport === 'mobile' ? 'bg-white/20 text-white' : 'text-gray-400'
+                          }`}
+                        >
+                          📱 375px
+                        </button>
+                        <button
+                          onClick={() => setPreviewViewport('desktop')}
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
+                            previewViewport === 'desktop' ? 'bg-white/20 text-white' : 'text-gray-400'
+                          }`}
+                        >
+                          💻 Desktop
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
+                </GlassCard>
 
-                {/* Actions */}
-                <div className="flex flex-wrap gap-3 pt-2 border-t border-white/10">
-                  <button
-                    onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
-                    className="px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-sm hover:shadow-glow-red hover:scale-[1.02] transition-all"
-                  >
-                    View Live Preview →
-                  </button>
-                  <button
-                    onClick={downloadZip}
-                    className="px-5 py-3 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
-                  >
-                    <i className="pi pi-download mr-2 text-xs" />Download ZIP
-                  </button>
-                  <button
-                    onClick={copyJsx}
-                    className="px-5 py-3 rounded-full glass border border-white/10 text-sm hover:bg-white/10 transition-colors"
-                  >
-                    <i className={`pi ${copySuccess ? 'pi-check text-green-400' : 'pi-copy'} mr-2 text-xs`} />
-                    {copySuccess ? 'Copied JSX!' : 'Copy Code'}
-                  </button>
+                {/* Main View Area: Split / Preview / Code */}
+                <div className={`grid gap-4 ${resultViewMode === 'split' ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1'}`}>
+                  
+                  {/* Live Rendered Canvas */}
+                  {(resultViewMode === 'split' || resultViewMode === 'preview') && (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          Live Interactive Rendered UI
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-mono">React 18 + Redux CMS</span>
+                      </div>
+                      <div className="w-full bg-[#09090b] rounded-2xl border border-white/10 p-2 overflow-hidden shadow-2xl flex justify-center min-h-[550px] max-h-[700px] overflow-y-auto">
+                        <div
+                          className={`bg-zinc-950 rounded-xl overflow-hidden transition-all duration-300 w-full ${
+                            previewViewport === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
+                          }`}
+                        >
+                          <HeroSection pageName={currentJob.pageName || pageName} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Generated Code Editor */}
+                  {(resultViewMode === 'split' || resultViewMode === 'code') && (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                          <span>💻</span> Generated React Component
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-mono">{currentJob.componentFile || 'CustomSection.jsx'}</span>
+                      </div>
+                      <CodeEditor
+                        value={currentJob.jsx || ''}
+                        readOnly={true}
+                        language="jsx"
+                        fileName={currentJob.componentFile || 'CustomSection.jsx'}
+                        maxHeight={resultViewMode === 'split' ? '650px' : '700px'}
+                      />
+                    </div>
+                  )}
+
                 </div>
-              </GlassCard>
+              </div>
             )}
 
-            {/* Error */}
+            {/* Error Message */}
             {status === 'error' && (
               <GlassCard className="animate-fade-up border border-red-500/30 bg-red-900/10">
                 <h3 className="text-base font-bold text-red-400 mb-2 flex items-center gap-2">

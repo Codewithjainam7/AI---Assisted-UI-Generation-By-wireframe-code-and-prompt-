@@ -1,5 +1,23 @@
 [
   {
+    "sectionId": "1000000024",
+    "sectionName": "Portfolio Hero",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:17:29.309Z",
+    "updatedAt": "2026-09-03T11:17:29.309Z"
+  },
+  {
+    "sectionId": "1000000023",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 3,
+    "createdAt": "2026-09-03T11:13:47.673Z",
+    "updatedAt": "2026-09-03T11:13:47.673Z"
+  },
+  {
     "sectionId": "1000000022",
     "sectionName": "Custom",
     "pageName": "Home",
