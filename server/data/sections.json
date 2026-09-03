@@ -1,5 +1,14 @@
 [
   {
+    "sectionId": "1000000010",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T10:53:28.730Z",
+    "updatedAt": "2026-09-03T10:53:28.730Z"
+  },
+  {
     "sectionId": "1000000009",
     "sectionName": "Custom",
     "pageName": "Home",

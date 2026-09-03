@@ -59,30 +59,69 @@ export default function GeneratePage() {
   const [sectionName,    setSectionName]    = useState('Custom');
   const [showOptions,    setShowOptions]    = useState(false);
   const [copySuccess,    setCopySuccess]    = useState(false);
+  const [loadingSample,  setLoadingSample]  = useState(false);
 
-  const handleGenerate = () => {
+  // Helper to load sample wireframe
+  const loadSampleWireframe = async () => {
+    setLoadingSample(true);
+    try {
+      const storageUrl = import.meta.env.VITE_STORAGE_URL || 'http://localhost:4000/storage/';
+      const res = await fetch(`${storageUrl}default/images/hero-placeholder.jpg`);
+      const blob = await res.blob();
+      const sampleFile = new File([blob], 'sample-hero-wireframe.jpg', { type: 'image/jpeg' });
+      setWireframeFile(sampleFile);
+      setOptionalPrompt('Hero section with athlete image on left, pulse fit branding and 3 stats');
+    } catch (e) {
+      console.warn('Failed to load sample wireframe', e);
+    } finally {
+      setLoadingSample(false);
+    }
+  };
+
+  const handleGenerate = async () => {
     const formData = new FormData();
     formData.append('mode',        activeMode);
     formData.append('pageName',    pageName);
     formData.append('sectionName', sectionName.replace(/\s+/g, '') || 'Custom');
 
     if (activeMode === 'wireframe') {
-      if (wireframeFile) formData.append('wireframe', wireframeFile);
+      let fileToSend = wireframeFile;
+      if (!fileToSend) {
+        // Auto load sample wireframe if user clicked generate directly
+        try {
+          const storageUrl = import.meta.env.VITE_STORAGE_URL || 'http://localhost:4000/storage/';
+          const res = await fetch(`${storageUrl}default/images/hero-placeholder.jpg`);
+          const blob = await res.blob();
+          fileToSend = new File([blob], 'sample-wireframe.jpg', { type: 'image/jpeg' });
+          setWireframeFile(fileToSend);
+        } catch (e) {
+          console.warn('Failed to fallback wireframe', e);
+        }
+      }
+      if (fileToSend) formData.append('wireframe', fileToSend);
       if (optionalPrompt.trim()) formData.append('prompt', optionalPrompt);
     }
+    
     if (activeMode === 'code') {
-      if (codeValue.trim()) formData.append('code', codeValue);
+      const codeToSend = codeValue.trim() || SAMPLE_CODE;
+      if (!codeValue.trim()) setCodeValue(SAMPLE_CODE);
+      formData.append('code', codeToSend);
       if (optionalPrompt.trim()) formData.append('prompt', optionalPrompt);
     }
+
     if (activeMode === 'prompt') {
-      if (promptValue.trim()) formData.append('prompt', promptValue);
+      const promptToSend = promptValue.trim() || SAMPLE_PROMPT;
+      if (!promptValue.trim()) setPromptValue(SAMPLE_PROMPT);
+      formData.append('prompt', promptToSend);
     }
+
     if (activeMode === 'combined') {
       if (wireframeFile) formData.append('wireframe', wireframeFile);
-      if (promptValue.trim()) formData.append('prompt', promptValue);
+      formData.append('prompt', promptValue.trim() || SAMPLE_PROMPT);
       if (codeValue.trim()) formData.append('code', codeValue);
     }
 
+    console.log('Submitting generation job with mode:', activeMode);
     dispatch(submitGenerateJob(formData));
   };
 
@@ -98,14 +137,6 @@ export default function GeneratePage() {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     });
-  };
-
-  const isFormValid = () => {
-    if (activeMode === 'wireframe') return !!wireframeFile;
-    if (activeMode === 'code') return !!codeValue.trim();
-    if (activeMode === 'prompt') return !!promptValue.trim();
-    if (activeMode === 'combined') return !!(wireframeFile || promptValue.trim() || codeValue.trim());
-    return false;
   };
 
   return (
@@ -130,8 +161,38 @@ export default function GeneratePage() {
           <div className="lg:col-span-3 flex flex-col gap-5">
 
             {/* Mode selector */}
-            <div className="flex justify-start">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <PillTab tabs={MODES} active={activeMode} onChange={setActiveMode} />
+
+              {/* Quick sample loader button */}
+              {activeMode === 'wireframe' && (
+                <button
+                  onClick={loadSampleWireframe}
+                  disabled={loadingSample}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                >
+                  <i className={`pi ${loadingSample ? 'pi-spin pi-spinner' : 'pi-download'} text-xs`} />
+                  Load Sample Wireframe
+                </button>
+              )}
+              {activeMode === 'prompt' && (
+                <button
+                  onClick={() => setPromptValue(SAMPLE_PROMPT)}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                >
+                  <i className="pi pi-file-edit text-xs" />
+                  Load Sample Prompt
+                </button>
+              )}
+              {activeMode === 'code' && (
+                <button
+                  onClick={() => setCodeValue(SAMPLE_CODE)}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                >
+                  <i className="pi pi-code text-xs" />
+                  Load Sample JSX
+                </button>
+              )}
             </div>
 
             {/* Input Panel */}
@@ -151,7 +212,7 @@ export default function GeneratePage() {
                         </span>
                       )}
                     </div>
-                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
+                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/*" maxSizeMB={8} />
                   </div>
 
                   <div>
@@ -174,18 +235,12 @@ export default function GeneratePage() {
                     <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
                       <span>💻</span> Paste Static React / JSX
                     </p>
-                    <button
-                      onClick={() => setCodeValue(SAMPLE_CODE)}
-                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                    >
-                      Load Sample ↓
-                    </button>
                   </div>
                   <CodeEditor
                     value={codeValue}
                     onChange={setCodeValue}
                     language="jsx"
-                    placeholder="Paste your static JSX here..."
+                    placeholder="Paste your static JSX here... (or click 'Load Sample JSX' above)"
                   />
                 </div>
               )}
@@ -197,12 +252,6 @@ export default function GeneratePage() {
                     <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
                       <span>✍️</span> Natural Language Prompt
                     </p>
-                    <button
-                      onClick={() => setPromptValue(SAMPLE_PROMPT)}
-                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                    >
-                      Load Sample ↓
-                    </button>
                   </div>
                   <textarea
                     value={promptValue}
@@ -218,18 +267,10 @@ export default function GeneratePage() {
                 <div className="flex flex-col gap-4">
                   <div>
                     <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-2">1. Wireframe Image (Spatial Layout)</p>
-                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/png,image/jpeg,image/webp" maxSizeMB={8} />
+                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/*" maxSizeMB={8} />
                   </div>
                   <div>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">2. Prompt Overrides (Colours, Copy, CTA)</p>
-                      <button
-                        onClick={() => setPromptValue(SAMPLE_PROMPT)}
-                        className="text-xs text-red-400 hover:text-red-300 transition-colors"
-                      >
-                        Load Sample ↓
-                      </button>
-                    </div>
+                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-1.5">2. Prompt Overrides (Colours, Copy, CTA)</p>
                     <textarea
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
@@ -270,21 +311,20 @@ export default function GeneratePage() {
               {/* Generate Button */}
               <button
                 onClick={handleGenerate}
-                disabled={status === 'loading' || !isFormValid()}
+                disabled={status === 'loading'}
                 className={`w-full py-4 rounded-full font-bold text-lg transition-all focus-visible:ring-2 focus-visible:ring-red-500 ${
                   status === 'loading'
                     ? 'bg-zinc-800 text-gray-500 cursor-not-allowed'
-                    : !isFormValid()
-                    ? 'bg-white/5 text-gray-500 border border-white/10 cursor-not-allowed'
                     : 'shimmer-bg text-white hover:shadow-glow-red active:scale-[0.98]'
                 }`}
               >
                 {status === 'loading' ? (
-                  <><i className="pi pi-spin pi-spinner mr-2" />Generating with AI Pipeline...</>
-                ) : !isFormValid() ? (
-                  activeMode === 'wireframe' ? 'Please upload a wireframe above' : 'Please provide input above'
+                  <span className="flex items-center justify-center gap-2">
+                    <i className="pi pi-spin pi-spinner" />
+                    <span>Analyzing & Synthesizing React Section...</span>
+                  </span>
                 ) : (
-                  `Generate Section from ${MODES.find(m => m.id === activeMode)?.label} ✦`
+                  <span>Generate Section from {MODES.find(m => m.id === activeMode)?.label} ✦</span>
                 )}
               </button>
             </GlassCard>
@@ -294,7 +334,7 @@ export default function GeneratePage() {
               <GlassCard className="animate-fade-up">
                 <div className="flex justify-between items-center mb-4">
                   <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">AI Generation Pipeline Active</p>
-                  <span className="text-xs text-red-400 font-mono animate-pulse">Processing...</span>
+                  <span className="text-xs text-red-400 font-mono animate-pulse">Running Gemini Vision + Nemotron...</span>
                 </div>
                 <StepProgress currentStep={currentStep} steps={STEPS} />
               </GlassCard>

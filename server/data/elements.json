@@ -1210,5 +1210,128 @@
     "loop": [],
     "createdAt": "2026-09-03T10:50:07.972Z",
     "updatedAt": "2026-09-03T10:50:07.972Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "heroImage",
+    "fieldId": "2000000064",
+    "content": "default/images/hero-placeholder.jpg",
+    "contentType": "Image",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "brandBadge",
+    "fieldId": "2000000065",
+    "content": "PULSE FIT",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "headlineMain",
+    "fieldId": "2000000066",
+    "content": "CHALLENGE YOUR LIMITS",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "headlineSub",
+    "fieldId": "2000000067",
+    "content": "Be a part of the tribe that's limitless.",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "description",
+    "fieldId": "2000000068",
+    "content": "Join trainer-led workout sessions designed to kickstart your fitness journey, at your convenience.",
+    "contentType": "Textfield",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "statBadges",
+    "fieldId": "2000000069",
+    "content": "",
+    "contentType": "Cards",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [
+      {
+        "field1": "1000+",
+        "fieldType1": "Text",
+        "fieldId1": "3000000055",
+        "field2": "Community<br />Members",
+        "fieldType2": "Text",
+        "fieldId2": "3000000056"
+      },
+      {
+        "field1": "40+",
+        "fieldType1": "Text",
+        "fieldId1": "3000000057",
+        "field2": "Fitness<br />Programmes",
+        "fieldType2": "Text",
+        "fieldId2": "3000000058"
+      },
+      {
+        "field1": "150+",
+        "fieldType1": "Text",
+        "fieldId1": "3000000059",
+        "field2": "Fitness<br />Channels",
+        "fieldType2": "Text",
+        "fieldId2": "3000000060"
+      }
+    ],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
+  },
+  {
+    "sectionId": "1000000010",
+    "elementName": "ctaButton",
+    "fieldId": "2000000070",
+    "content": "FIND A WORKOUT",
+    "contentType": "Button",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T10:53:28.736Z",
+    "updatedAt": "2026-09-03T10:53:28.736Z"
   }
 ]
