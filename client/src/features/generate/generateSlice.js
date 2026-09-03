@@ -59,6 +59,16 @@ const generateSlice = createSlice({
       state.currentJob = null;
       state.error = null;
       state.currentStep = 0;
+    },
+    clearHistory: (state) => {
+      state.jobs = [];
+      state.currentJob = null;
+      state.status = 'idle';
+      state.error = null;
+      state.currentStep = 0;
+      try {
+        localStorage.removeItem('uigen_jobs');
+      } catch (e) {}
     }
   },
   extraReducers: (builder) => {
@@ -88,5 +98,5 @@ const generateSlice = createSlice({
   },
 });
 
-export const { setStep, resetGenerate } = generateSlice.actions;
+export const { setStep, resetGenerate, clearHistory } = generateSlice.actions;
 export default generateSlice.reducer;

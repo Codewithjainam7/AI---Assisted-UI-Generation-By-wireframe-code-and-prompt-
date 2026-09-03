@@ -10,7 +10,7 @@ import GlassCard from '../components/ui/GlassCard';
 import StepProgress from '../components/ui/StepProgress';
 import JobHistoryCard from '../components/ui/JobHistoryCard';
 import HeroSection from '../sections/generated/HeroSection';
-import { submitGenerateJob } from '../features/generate/generateSlice';
+import { submitGenerateJob, clearHistory } from '../features/generate/generateSlice';
 
 const MODES = [
   { id: 'wireframe', label: 'Wireframe', icon: '🖼️' },
@@ -499,9 +499,21 @@ export default function GeneratePage() {
 
           {/* ── Job History Sidebar ──────────────────── */}
           <div className="lg:col-span-1">
-            <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-3 px-1">
-              Recent Generated Sections
-            </p>
+            <div className="flex items-center justify-between mb-3 px-1">
+              <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold">
+                Recent Generated Sections
+              </p>
+              {jobs.length > 0 && (
+                <button
+                  onClick={() => dispatch(clearHistory())}
+                  className="text-[11px] text-red-400 hover:text-red-300 flex items-center gap-1 transition-colors hover:underline"
+                  title="Clear generation history"
+                >
+                  <i className="pi pi-trash text-[10px]" />
+                  <span>Clear</span>
+                </button>
+              )}
+            </div>
             {jobs.length === 0 ? (
               <GlassCard className="text-center py-8">
                 <i className="pi pi-history text-2xl text-gray-600 mb-2 block" />
