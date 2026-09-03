@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export const fetchElementsByIds = createAsyncThunk(
   'cms/fetchElementsByIds',
   async ({ elementIds, pageName }) => {
     const response = await axios.get(`${API_URL}/elements`, { params: { pageName } });
-    return { elements: response.data, pageName };
+    const elements = response.data?.elements || response.data || [];
+    return { elements: Array.isArray(elements) ? elements : [], pageName };
   }
 );
 
@@ -18,7 +19,8 @@ export const patchElement = createAsyncThunk(
     if (content !== undefined) payload.content = content;
     if (css !== undefined) payload.css = css;
     const response = await axios.patch(`${API_URL}/elements/${fieldId}`, payload);
-    return { fieldId, pageName, element: response.data };
+    const element = response.data?.element || response.data;
+    return { fieldId, pageName, element };
   }
 );
 
@@ -62,12 +64,13 @@ const cmsSlice = createSlice({
       })
       .addCase(patchElement.fulfilled, (state, action) => {
         const { fieldId, pageName, element } = action.payload;
+        if (!element) return;
         if (!state.allSections[pageName]) state.allSections[pageName] = {};
         if (!state.allSectionsCss[pageName]) state.allSectionsCss[pageName] = {};
         
         state.allSections[pageName][fieldId] = element.contentType === 'Cards' ? element.loop : element.content;
         if (element.css) {
-            state.allSectionsCss[pageName][fieldId] = element.css;
+          state.allSectionsCss[pageName][fieldId] = element.css;
         }
       });
   },

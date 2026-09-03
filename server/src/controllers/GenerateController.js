@@ -18,7 +18,8 @@ export async function generate(req, res, next) {
     }
     
     const pageName = req.body.pageName || 'Home';
-    const sectionName = (req.body.sectionName || 'Hero').replace(/\s+/g, '');
+    const rawSectionName = req.body.sectionName || 'Custom';
+    const sectionName = rawSectionName.replace(/\s+/g, '') || 'Custom';
     
     const promises = [];
     let wireframeIR = null;
@@ -48,13 +49,13 @@ export async function generate(req, res, next) {
     if (!ctaEl) warnings.push('Missing ctaButton in IR');
     
     let synthResult = await ComponentSynthesiser.generate(ir);
-    let validation = JsxValidator.validate(synthResult.jsx);
+    let validation = JsxValidator.validate(synthResult.jsx || '');
     
-    if (!validation.valid) {
+    if (!synthResult.jsx || !validation.valid) {
       synthResult = await ComponentSynthesiser.generate(ir);
-      validation = JsxValidator.validate(synthResult.jsx);
+      validation = JsxValidator.validate(synthResult.jsx || '');
       
-      if (!validation.valid) {
+      if (!synthResult.jsx || !validation.valid) {
         warnings.push('Used fallback template due to generation failure');
         synthResult.jsx = generateFallback(ir);
       }
@@ -78,6 +79,10 @@ export async function generate(req, res, next) {
         for (let i = 0; i < count; i++) {
           const pair = IdAllocator.nextCardFieldIdPair();
           const def = defaults[i] || { field1: `Stat ${i + 1}`, field2: `Label ${i + 1}` };
+          
+          finalJsx = finalJsx.replace(new RegExp(`TBD-cardField${i * 2 + 1}`, 'g'), pair.fieldId1);
+          finalJsx = finalJsx.replace(new RegExp(`TBD-cardField${i * 2 + 2}`, 'g'), pair.fieldId2);
+          
           loop.push({
             field1:     def.field1,
             fieldType1: 'Text',
@@ -124,7 +129,7 @@ export async function generate(req, res, next) {
     fs.writeFileSync(namedOutPath, finalJsx, 'utf8');
 
     // Also update HeroSection.jsx if generating for Home
-    if (pageName === 'Home' || ir.sectionName.toLowerCase().includes('hero')) {
+    if (pageName === 'Home' || ir.sectionName.toLowerCase().includes('hero') || ir.sectionName.toLowerCase().includes('custom')) {
       const heroOutPath = path.join(generatedDir, 'HeroSection.jsx');
       fs.writeFileSync(heroOutPath, finalJsx, 'utf8');
     }

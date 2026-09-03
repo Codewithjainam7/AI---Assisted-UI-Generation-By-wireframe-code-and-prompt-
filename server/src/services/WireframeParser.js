@@ -12,7 +12,8 @@ export async function parse(file) {
     const imageData = fs.readFileSync(file.path);
     const base64 = imageData.toString('base64');
     
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.5-pro' });
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const model = genAI.getGenerativeModel({ model: modelName });
     
     const prompt = `Analyze this wireframe image for a website section. Identify and return a JSON object with the following structure:
 {
@@ -40,7 +41,7 @@ export async function parse(file) {
 Return ONLY the JSON object, no markdown, no explanation.`;
 
     const result = await model.generateContent([
-      { inlineData: { mimeType: file.mimetype, data: base64 } },
+      { inlineData: { mimeType: file.mimetype || 'image/png', data: base64 } },
       prompt
     ]);
     
@@ -48,6 +49,7 @@ Return ONLY the JSON object, no markdown, no explanation.`;
     const cleaned = text.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim();
     return JSON.parse(cleaned);
   } catch (e) {
+    console.warn('Gemini vision analysis warning (using default split-hero layout):', e.message);
     // Graceful degradation
     return {
       sectionType: 'split-hero',

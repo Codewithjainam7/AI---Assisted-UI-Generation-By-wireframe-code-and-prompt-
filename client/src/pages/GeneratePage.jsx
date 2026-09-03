@@ -80,7 +80,8 @@ export default function GeneratePage() {
 
   const downloadZip = () => {
     if (!currentJob?.sectionId) return;
-    window.open(`${import.meta.env.VITE_API_URL}/sections/${currentJob.sectionId}/export`, '_blank');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+    window.open(`${apiUrl}/sections/${currentJob.sectionId}/export`, '_blank');
   };
 
   const copyJsx = () => {

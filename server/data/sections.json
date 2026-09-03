@@ -1,5 +1,32 @@
 [
   {
+    "sectionId": "1000000003",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T10:47:12.153Z",
+    "updatedAt": "2026-09-03T10:47:12.154Z"
+  },
+  {
+    "sectionId": "1000000002",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T10:46:54.286Z",
+    "updatedAt": "2026-09-03T10:46:54.286Z"
+  },
+  {
+    "sectionId": "1000000001",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T10:45:38.119Z",
+    "updatedAt": "2026-09-03T10:45:38.119Z"
+  },
+  {
     "sectionName": "Custom",
     "sectionId": "1000000001",
     "variations": "2",

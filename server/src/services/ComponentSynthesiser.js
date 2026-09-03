@@ -19,14 +19,16 @@ export async function generate(ir) {
         { role: 'system', content: getJSXSystemPrompt() },
         { role: 'user', content: JSON.stringify(ir) }
       ],
-      temperature: 0.3
+      temperature: 0.3,
+      max_tokens: 2500
     });
     
-    let jsx = completion.choices[0].message.content;
+    let jsx = completion.choices?.[0]?.message?.content || '';
     jsx = jsx.replace(/^```[\w]*\n?/gm,'').replace(/\n?```$/gm,'').trim();
     
     return { jsx, warnings: [] };
   } catch (e) {
+    console.warn('Nemotron JSX synthesis warning:', e.message);
     return { jsx: '', warnings: [e.message] };
   }
 }

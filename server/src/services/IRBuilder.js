@@ -30,7 +30,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       { elementName: "brandBadge", contentType: "Text", defaultContent: "PULSE FIT", fieldId: "TBD-brandBadge" },
       { elementName: "headlineMain", contentType: "Text", defaultContent: "CHALLENGE YOUR LIMITS", fieldId: "TBD-headlineMain" },
       { elementName: "headlineSub", contentType: "Text", defaultContent: "Be a part of the tribe that's limitless.", fieldId: "TBD-headlineSub" },
-      { elementName: "description", contentType: "Textfield", defaultContent: "Join trainer-led workout sessions.", fieldId: "TBD-description" },
+      { elementName: "description", contentType: "Textfield", defaultContent: "Join trainer-led workout sessions designed to kickstart your fitness journey, at your convenience.", fieldId: "TBD-description" },
       { elementName: "statBadges", contentType: "Cards", defaultContent: "", fieldId: "TBD-statBadges", statCount: 3 },
       { elementName: "ctaButton", contentType: "Button", defaultContent: "FIND A WORKOUT", fieldId: "TBD-ctaButton" }
     ],
@@ -40,9 +40,10 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
 
   if (wireframeIR) {
     if (wireframeIR.layout) baseIR.layout = { ...baseIR.layout, ...wireframeIR.layout };
+    if (wireframeIR.theme) baseIR.theme = { ...baseIR.theme, ...wireframeIR.theme };
   }
 
-  if (promptText) {
+  if (promptText && promptText.trim()) {
     try {
       const completion = await client.chat.completions.create({
         model: process.env.LLM_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b',
@@ -50,11 +51,14 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
           { role: 'system', content: getIRSystemPrompt() },
           { role: 'user', content: promptText }
         ],
-        response_format: { type: 'json_object' }
+        response_format: { type: 'json_object' },
+        max_tokens: 1500,
+        temperature: 0.2
       });
-      const generated = JSON.parse(completion.choices[0].message.content);
-      if (generated.theme) baseIR.theme = generated.theme;
-      if (generated.elements) {
+      const generated = JSON.parse(completion.choices?.[0]?.message?.content || '{}');
+      if (generated.theme) baseIR.theme = { ...baseIR.theme, ...generated.theme };
+      if (generated.layout) baseIR.layout = { ...baseIR.layout, ...generated.layout };
+      if (Array.isArray(generated.elements)) {
         generated.elements.forEach(ge => {
           const match = baseIR.elements.find(e => e.elementName === ge.elementName);
           if (match) {
@@ -65,7 +69,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
         });
       }
     } catch (e) {
-      console.warn('IR generation failed, using defaults', e);
+      console.warn('Nemotron IR generation warning (using base layout):', e.message);
     }
   }
 
