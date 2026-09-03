@@ -1,5 +1,50 @@
 [
   {
+    "sectionId": "1000000017",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:03:00.955Z",
+    "updatedAt": "2026-09-03T11:03:00.955Z"
+  },
+  {
+    "sectionId": "1000000016",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:02:39.370Z",
+    "updatedAt": "2026-09-03T11:02:39.370Z"
+  },
+  {
+    "sectionId": "1000000015",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:02:37.645Z",
+    "updatedAt": "2026-09-03T11:02:37.645Z"
+  },
+  {
+    "sectionId": "1000000014",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:02:34.465Z",
+    "updatedAt": "2026-09-03T11:02:34.465Z"
+  },
+  {
+    "sectionId": "1000000013",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:00:17.974Z",
+    "updatedAt": "2026-09-03T11:00:17.974Z"
+  },
+  {
     "sectionName": "Custom",
     "sectionId": "1000000001",
     "variations": "2",

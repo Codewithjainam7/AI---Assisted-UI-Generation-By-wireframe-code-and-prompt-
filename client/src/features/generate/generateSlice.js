@@ -28,10 +28,21 @@ export const submitGenerateJob = createAsyncThunk(
   }
 );
 
+function getSavedJobs() {
+  try {
+    const raw = localStorage.getItem('uigen_jobs');
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+const savedJobs = getSavedJobs();
+
 const initialState = {
   status: 'idle',
-  jobs: [],
-  currentJob: null,
+  jobs: savedJobs,
+  currentJob: savedJobs[0] || null,
   error: null,
   currentStep: 0,
 };
@@ -62,9 +73,12 @@ const generateSlice = createSlice({
         state.currentJob = action.payload;
         state.currentStep = 4;
         state.jobs.unshift(action.payload);
-        if (state.jobs.length > 5) {
-          state.jobs = state.jobs.slice(0, 5);
+        if (state.jobs.length > 10) {
+          state.jobs = state.jobs.slice(0, 10);
         }
+        try {
+          localStorage.setItem('uigen_jobs', JSON.stringify(state.jobs));
+        } catch (e) {}
       })
       .addCase(submitGenerateJob.rejected, (state, action) => {
         state.status = 'error';
