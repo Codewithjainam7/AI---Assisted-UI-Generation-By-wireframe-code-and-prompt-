@@ -44,7 +44,7 @@ export default function GeneratePage() {
     formData.append('accentColor', accentColor);
 
     if (activeMode === 'wireframe' || activeMode === 'combined') {
-      if (wireframeFile) formData.append('image', wireframeFile);
+      if (wireframeFile) formData.append('wireframe', wireframeFile);
     }
     if (activeMode === 'code' || activeMode === 'combined') {
       formData.append('code', codeValue);
