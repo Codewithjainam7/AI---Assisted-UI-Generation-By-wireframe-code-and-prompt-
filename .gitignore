@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment — NEVER commit real keys
+.env
+**/.env
+
+# Generated runtime files
+uploads/
+**/uploads/
+id-counter.json
+
+# Build outputs
+dist/
+**/dist/
+build/
+
+# Editor / OS
+.DS_Store
+*.log
+.vscode/
+Thumbs.db

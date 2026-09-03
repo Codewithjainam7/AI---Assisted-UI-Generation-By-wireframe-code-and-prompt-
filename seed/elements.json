@@ -1,0 +1,34 @@
+[
+  {
+    "sectionId": "1000000001",
+    "elementName": "heroImage",
+    "fieldId": "2000000001",
+    "content": "default/images/hero-placeholder.jpg",
+    "contentType": "Image",
+    "pageName": "Home"
+  },
+  {
+    "sectionId": "1000000001",
+    "elementName": "brandBadge",
+    "fieldId": "2000000002",
+    "content": "PULSE FIT",
+    "contentType": "Text",
+    "pageName": "Home"
+  },
+  {
+    "sectionId": "1000000001",
+    "elementName": "statBadges",
+    "fieldId": "2000000003",
+    "content": "",
+    "contentType": "Cards",
+    "pageName": "Home",
+    "loop": [
+      {
+        "id": "3000000001",
+        "label": "Card 1 Title",
+        "descId": "3000000002",
+        "descLabel": "Card 1 Description"
+      }
+    ]
+  }
+]
