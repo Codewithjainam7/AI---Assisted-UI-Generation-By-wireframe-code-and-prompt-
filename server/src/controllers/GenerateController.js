@@ -4,8 +4,7 @@ import * as IRBuilder from '../services/IRBuilder.js';
 import * as ComponentSynthesiser from '../services/ComponentSynthesiser.js';
 import * as JsxValidator from '../services/JsxValidator.js';
 import IdAllocator from '../services/IdAllocator.js';
-import Section from '../models/Section.js';
-import Element from '../models/Element.js';
+import { SectionStore, ElementStore } from '../services/dbStore.js';
 import { generateFallback } from '../templates/heroFallback.js';
 import fs from 'fs';
 import path from 'path';
@@ -19,7 +18,7 @@ export async function generate(req, res, next) {
     }
     
     const pageName = req.body.pageName || 'Home';
-    const sectionName = req.body.sectionName || 'Custom';
+    const sectionName = (req.body.sectionName || 'Hero').replace(/\s+/g, '');
     
     const promises = [];
     let wireframeIR = null;
@@ -96,7 +95,10 @@ export async function generate(req, res, next) {
         fieldId,
         content: e.defaultContent || '',
         contentType: e.contentType,
+        projectName: 'sample-brand',
         pageName: ir.pageName,
+        isCustom: true,
+        css: null,
         loop
       };
     });
@@ -109,21 +111,30 @@ export async function generate(req, res, next) {
       cardGridColumns: ir.layout?.columns || 3
     };
     
-    await Section.create(sectionDoc);
-    await Element.insertMany(elementsToInsert);
+    await SectionStore.create(sectionDoc);
+    await ElementStore.insertMany(elementsToInsert);
     
-    const outPath = path.resolve(process.cwd(), `../client/src/sections/generated/${ir.sectionName}Section.jsx`);
-    const outDir = path.dirname(outPath);
-    if (!fs.existsSync(outDir)) {
-      fs.mkdirSync(outDir, { recursive: true });
+    // Write generated JSX file
+    const generatedDir = path.resolve(process.cwd(), '../client/src/sections/generated');
+    if (!fs.existsSync(generatedDir)) {
+      fs.mkdirSync(generatedDir, { recursive: true });
     }
-    fs.writeFileSync(outPath, finalJsx, 'utf8');
+    
+    const namedOutPath = path.join(generatedDir, `${ir.sectionName}Section.jsx`);
+    fs.writeFileSync(namedOutPath, finalJsx, 'utf8');
+
+    // Also update HeroSection.jsx if generating for Home
+    if (pageName === 'Home' || ir.sectionName.toLowerCase().includes('hero')) {
+      const heroOutPath = path.join(generatedDir, 'HeroSection.jsx');
+      fs.writeFileSync(heroOutPath, finalJsx, 'utf8');
+    }
     
     res.json({
       ok: true,
       sectionId,
       pageName,
       componentFile: `${ir.sectionName}Section.jsx`,
+      jsx: finalJsx,
       elementIds: elementsToInsert.map(e => e.fieldId),
       warnings,
       ir

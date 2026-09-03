@@ -20,12 +20,14 @@ dotenv.config({ path: path.join(__dirname, '../../../.env') });
 
 const app = express();
 
-app.use(helmet());
-app.use(cors({ origin: 'http://localhost:5173' }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({ origin: '*' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Serve static storage
 app.use('/storage', express.static(path.join(__dirname, '../../storage')));
+app.use('/storage', express.static(path.join(__dirname, '../storage')));
 
 app.use('/api/health', healthRoutes);
 app.use('/api/sections', sectionsRoutes);
@@ -36,12 +38,18 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/uigen')
+// Try to connect to MongoDB, but gracefully fall back to JSON file store if unavailable
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/hackathon_ui_gen';
+
+mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 2000 })
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`✦ UIGen Server running on http://localhost:${PORT}`);
-    });
+    console.log('✅ Connected to MongoDB at:', mongoUri);
   })
-  .catch(err => {
-    console.error('Failed to connect to MongoDB', err);
+  .catch((err) => {
+    console.log('⚠️ MongoDB not detected. Fallback to resilient JSON Document Store (data/sections.json, data/elements.json)');
+  })
+  .finally(() => {
+    app.listen(PORT, () => {
+      console.log(`✦ UIGen Studio API server listening on http://localhost:${PORT}`);
+    });
   });

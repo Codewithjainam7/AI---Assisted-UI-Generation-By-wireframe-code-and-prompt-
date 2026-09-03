@@ -1,4 +1,4 @@
-import Element from '../models/Element.js';
+import { ElementStore } from '../services/dbStore.js';
 import { sanitise } from '../services/HtmlSanitiser.js';
 
 export async function listElements(req, res, next) {
@@ -7,7 +7,7 @@ export async function listElements(req, res, next) {
     if (req.query.sectionId) query.sectionId = req.query.sectionId;
     if (req.query.pageName) query.pageName = req.query.pageName;
     
-    const elements = await Element.find(query).lean();
+    const elements = await ElementStore.find(query);
     res.json({ ok: true, elements });
   } catch (err) {
     next(err);
@@ -20,10 +20,10 @@ export async function updateElement(req, res, next) {
     const { content, css } = req.body;
     
     const updateData = {};
-    if (content !== undefined) updateData.content = sanitise(content);
+    if (content !== undefined) updateData.content = typeof content === 'string' ? sanitise(content) : content;
     if (css !== undefined) updateData.css = css;
     
-    const element = await Element.findOneAndUpdate(
+    const element = await ElementStore.findOneAndUpdate(
       { fieldId },
       { $set: updateData },
       { new: true }

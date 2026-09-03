@@ -25,12 +25,13 @@
     "sectionId": "1000000001",
     "elementName": "headlineMain",
     "fieldId": "2000000003",
-    "content": "CHALLENGE YOUR LIMITS",
+    "content": "TRAIN WITHOUT LIMITS",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
-    "css": "font-weight: bold; text-align: left;"
+    "css": "font-weight: bold; text-align: left;",
+    "updatedAt": "2026-09-03T10:41:54.164Z"
   },
   {
     "sectionId": "1000000001",
