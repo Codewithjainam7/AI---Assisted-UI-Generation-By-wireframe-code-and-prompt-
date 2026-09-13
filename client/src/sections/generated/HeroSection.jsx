@@ -7,13 +7,13 @@ import { getImage, errorImage } from "../../utils/getImage";
 
 // R1: Stable ids map
 const ids = {
-  heroImage:    "2000000232",
-  brandBadge:   "2000000233",
-  headlineMain: "2000000234",
-  headlineSub:  "2000000235",
-  description:  "2000000236",
-  statBadges:   "2000000237",
-  ctaButton:    "2000000238",
+  heroImage:    "2000000246",
+  brandBadge:   "2000000247",
+  headlineMain: "2000000248",
+  headlineSub:  "2000000249",
+  description:  "2000000250",
+  statBadges:   "2000000251",
+  ctaButton:    "2000000252",
 };
 
 // R9: Default stat cards extracted from wireframe
@@ -272,8 +272,10 @@ const CustomSection = ({ pageName = "Home" }) => {
                 id={ids.description}
                 className="dynamicStyle text-zinc-300 text-sm leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.
-Shown: Dark Grey Heather/Dark Grey Heather/White
-Style: 804346-063
+
+• Shown: Dark Grey Heather/Dark Grey Heather/White
+• Style: 804346-063
+
 Read More" }}
               />
               <a href="#" className="inline-block text-xs font-semibold text-zinc-400 hover:text-white underline transition">

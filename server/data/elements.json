@@ -98,23 +98,23 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "heroImage",
-    "fieldId": "2000000232",
-    "content": "https://images.unsplash.com/photo-1571448077557-0ceb685121c2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+    "fieldId": "2000000246",
+    "content": "https://images.unsplash.com/photo-1620799140408-edc6dcd7dcec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1700&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "brandBadge",
-    "fieldId": "2000000233",
+    "fieldId": "2000000247",
     "content": "AI STUDIO",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -122,13 +122,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "headlineMain",
-    "fieldId": "2000000234",
+    "fieldId": "2000000248",
     "content": "Cushy Fleece Hoodie",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -136,13 +136,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "headlineSub",
-    "fieldId": "2000000235",
+    "fieldId": "2000000249",
     "content": "Men's Pullover Hoodie $45",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -150,27 +150,27 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "description",
-    "fieldId": "2000000236",
-    "content": "The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.\nShown: Dark Grey Heather/Dark Grey Heather/White\nStyle: 804346-063\nRead More",
+    "fieldId": "2000000250",
+    "content": "The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.\n\n• Shown: Dark Grey Heather/Dark Grey Heather/White\n• Style: 804346-063\n\nRead More",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "statBadges",
-    "fieldId": "2000000237",
+    "fieldId": "2000000251",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -178,13 +178,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000036",
     "elementName": "ctaButton",
-    "fieldId": "2000000238",
+    "fieldId": "2000000252",
     "content": "Add To Cart",
     "contentType": "Button",
     "projectName": "sample-brand",
@@ -192,7 +192,7 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:12:05.832Z",
-    "updatedAt": "2026-09-13T19:12:05.832Z"
+    "createdAt": "2026-09-13T19:19:36.760Z",
+    "updatedAt": "2026-09-13T19:19:36.760Z"
   }
 ]

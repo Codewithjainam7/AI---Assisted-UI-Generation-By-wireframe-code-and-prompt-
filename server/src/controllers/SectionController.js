@@ -11,8 +11,30 @@ const __dirname  = path.dirname(__filename);
 
 export async function listSections(req, res, next) {
   try {
-    const sections = await SectionStore.find();
-    res.json({ ok: true, sections });
+    const query = {};
+    if (req.query.pageName) query.pageName = req.query.pageName;
+    const sections = await SectionStore.find(query);
+    
+    // Sort most recent first
+    sections.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    // Enrich with jsx code if missing
+    const enriched = sections.map(s => {
+      const obj = typeof s.toObject === 'function' ? s.toObject() : { ...s };
+      if (!obj.jsx) {
+        const generatedDir = path.resolve(__dirname, '../../../client/src/sections/generated');
+        const customPath = path.join(generatedDir, `${obj.sectionName}Section.jsx`);
+        const fallbackPath = path.join(generatedDir, 'CustomSection.jsx');
+        if (fs.existsSync(customPath)) {
+          obj.jsx = fs.readFileSync(customPath, 'utf8');
+        } else if (fs.existsSync(fallbackPath)) {
+          obj.jsx = fs.readFileSync(fallbackPath, 'utf8');
+        }
+      }
+      return obj;
+    });
+
+    res.json({ ok: true, sections: enriched });
   } catch (err) {
     next(err);
   }

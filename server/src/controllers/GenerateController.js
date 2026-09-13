@@ -145,7 +145,8 @@ export async function generate(req, res, next) {
       pageName: ir.pageName,
       isGenerated: true,
       wireframes: uploadedImageRelativePath || '',
-      cardGridColumns: ir.layout?.columns || 3
+      cardGridColumns: ir.layout?.columns || 3,
+      jsx: finalJsx
     };
     
     // Clear old elements for this page and save new ones
