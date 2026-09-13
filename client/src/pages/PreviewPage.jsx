@@ -168,17 +168,17 @@ export default function PreviewPage() {
       </div>
 
       {/* ── Main Area ─────────────────────────────────────── */}
-      <div className="pt-20 pb-6 px-4 md:px-6 flex gap-4 h-screen overflow-hidden">
+      <div className="pt-20 pb-4 px-4 md:px-6 flex gap-4 h-[calc(100vh)] min-h-0 overflow-hidden">
 
         {/* Canvas & Code Container */}
-        <div className="flex-1 flex gap-4 overflow-hidden">
+        <div className="flex-1 flex gap-4 overflow-hidden min-h-0 h-full">
 
           {/* Rendered Live Canvas */}
           {(viewMode === 'split' || viewMode === 'preview') && (
-            <div className={`flex-1 flex flex-col justify-start items-center overflow-y-auto ${viewMode === 'split' ? 'w-1/2' : 'w-full'}`}>
+            <div className={`flex-1 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden min-h-0 h-full w-full pr-1 scroll-smooth ${viewMode === 'split' ? 'w-1/2' : 'w-full'}`}>
               <div
-                className={`bg-zinc-950 min-h-[750px] rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 border border-white/10 w-full ${
-                  viewportSize === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
+                className={`bg-zinc-950 transition-all duration-300 w-full flex-shrink-0 mb-12 shadow-2xl border border-white/10 ${
+                  viewportSize === 'mobile' ? 'max-w-[375px] my-4 rounded-3xl overflow-hidden' : 'max-w-full rounded-2xl'
                 }`}
               >
                 <LiveComponentRenderer code={jsxCode || currentJob?.jsx} pageName={pageName} job={currentJob} />
@@ -188,7 +188,7 @@ export default function PreviewPage() {
 
           {/* Generated Code Panel */}
           {(viewMode === 'split' || viewMode === 'code') && (
-            <div className={`flex flex-col overflow-hidden ${viewMode === 'split' ? 'w-1/2' : 'w-full'}`}>
+            <div className={`flex flex-col min-h-0 h-full overflow-hidden ${viewMode === 'split' ? 'w-1/2' : 'w-full'}`}>
               <CodeEditor
                 value={jsxCode || currentJob?.jsx || '// Generated section code will appear here'}
                 readOnly={true}
@@ -203,7 +203,7 @@ export default function PreviewPage() {
 
         {/* CMS Editor Sidebar */}
         <div
-          className={`h-full flex-shrink-0 transition-all duration-300 ease-out overflow-hidden ${
+          className={`h-full flex-shrink-0 transition-all duration-300 ease-out overflow-hidden min-h-0 ${
             showEditor ? 'w-72 md:w-80 opacity-100' : 'w-0 opacity-0'
           }`}
         >

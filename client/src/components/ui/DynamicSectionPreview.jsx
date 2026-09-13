@@ -328,6 +328,22 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
             </div>
           </div>
         </main>
+        
+        {/* Full Website Footer */}
+        <footer className="w-full border-t border-white/10 bg-zinc-950/80 mt-16 py-10 px-6 lg:px-16 text-xs text-zinc-400">
+          <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+              <span className="font-bold text-sm tracking-wider uppercase text-white" dangerouslySetInnerHTML={{ __html: displayBrand }} />
+              <p className="text-zinc-500">© 2026 Acme Athletics, Inc. All rights reserved.</p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+              <a href="#" className="hover:text-white transition">Product Guides</a>
+              <a href="#" className="hover:text-white transition">Terms of Sale</a>
+              <a href="#" className="hover:text-white transition">Terms of Use</a>
+              <a href="#" className="hover:text-white transition">Privacy Policy</a>
+            </div>
+          </div>
+        </footer>
       </div>
     );
   }

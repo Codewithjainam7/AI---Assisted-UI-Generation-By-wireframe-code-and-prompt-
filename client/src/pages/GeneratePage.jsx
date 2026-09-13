@@ -448,11 +448,20 @@ export default function GeneratePage() {
                           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                           Live Interactive Rendered UI
                         </span>
-                        <span className="text-[11px] text-gray-500 font-mono">React 18 + Redux CMS</span>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
+                            className="text-[11px] text-red-400 hover:text-red-300 hover:underline flex items-center gap-1 font-medium transition"
+                          >
+                            <span>Open Studio Preview</span>
+                            <i className="pi pi-external-link text-[10px]" />
+                          </button>
+                          <span className="text-[11px] text-gray-500 font-mono hidden sm:inline">React 18 + Redux CMS</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-[#09090b] rounded-2xl border border-white/10 p-2 overflow-hidden shadow-2xl flex justify-center min-h-[550px] max-h-[700px] overflow-y-auto">
+                      <div className="w-full bg-[#09090b] rounded-2xl border border-white/10 p-3 shadow-2xl flex justify-center min-h-[550px] max-h-[850px] overflow-y-auto overflow-x-hidden scroll-smooth">
                         <div
-                          className={`bg-zinc-950 rounded-xl overflow-hidden transition-all duration-300 w-full ${
+                          className={`bg-zinc-950 rounded-xl transition-all duration-300 w-full pb-8 ${
                             previewViewport === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
                           }`}
                         >

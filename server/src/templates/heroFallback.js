@@ -30,11 +30,13 @@ export function generateFallback(ir) {
     return el?.defaultContent || fallbackText;
   };
 
-  const brandBadgeVal = getDefault('brandBadge', 'ACME ATHLETICS');
-  const headlineMainVal = getDefault('headlineMain', 'CUSHY FLEECE HOODIE');
-  const headlineSubVal = getDefault('headlineSub', "Men's Pullover Hoodie  $45");
-  const descriptionVal = getDefault('description', 'The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.<br /><br />• Shown: Dark Grey Heather/White<br />• Style: 804346-063');
-  const ctaButtonVal = getDefault('ctaButton', 'Add To Cart');
+  const cleanStr = (s) => (s || '').replace(/\r?\n/g, '<br />').replace(/"/g, '\\"');
+
+  const brandBadgeVal = cleanStr(getDefault('brandBadge', 'ACME ATHLETICS'));
+  const headlineMainVal = cleanStr(getDefault('headlineMain', 'CUSHY FLEECE HOODIE'));
+  const headlineSubVal = cleanStr(getDefault('headlineSub', "Men's Pullover Hoodie  $45"));
+  const descriptionVal = cleanStr(getDefault('description', 'The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.<br /><br />• Shown: Dark Grey Heather/White<br />• Style: 804346-063'));
+  const ctaButtonVal = cleanStr(getDefault('ctaButton', 'Add To Cart'));
 
   const isEcommerce = ir.domain === 'ecommerce' ||
     /hoodie|shoe|shirt|apparel|product|cart|fleece/i.test(headlineMainVal + ' ' + headlineSubVal + ' ' + descriptionVal) ||
@@ -369,6 +371,22 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
           </div>
         </div>
       </main>
+      
+      {/* Full Website Footer */}
+      <footer className="w-full border-t border-white/10 bg-zinc-950/80 mt-16 py-10 px-6 lg:px-16 text-xs text-zinc-400">
+        <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+            <span className="font-bold text-sm tracking-wider uppercase text-white">Acme Athletics</span>
+            <p className="text-zinc-500">© 2026 Acme Athletics, Inc. All rights reserved.</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+            <a href="#" className="hover:text-white transition">Product Guides</a>
+            <a href="#" className="hover:text-white transition">Terms of Sale</a>
+            <a href="#" className="hover:text-white transition">Terms of Use</a>
+            <a href="#" className="hover:text-white transition">Privacy Policy</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

@@ -12,10 +12,15 @@ body {
   min-height: 100vh;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(239,68,68,0.4); border-radius: 99px; }
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.25); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.45); border-radius: 99px; border: 1px solid rgba(255, 255, 255, 0.05); }
+::-webkit-scrollbar-thumb:hover { background: rgba(239, 68, 68, 0.8); }
 
 /* Glass utilities */
 .glass {
