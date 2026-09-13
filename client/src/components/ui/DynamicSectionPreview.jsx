@@ -118,10 +118,10 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
 
         {/* Top Header / Navigation from Wireframe */}
         <header className="w-full border-b border-white/10 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-30">
-          <div className="max-w-[1920px] mx-auto px-6 lg:px-16 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-8">
+          <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-16 h-14 sm:h-16 flex items-center justify-between">
+            <div className="flex items-center gap-4 sm:gap-8">
               <span
-                className="text-xl font-black tracking-wider uppercase text-white hover:text-red-400 transition cursor-pointer"
+                className="text-lg sm:text-xl font-black tracking-wider uppercase text-white hover:text-red-400 transition cursor-pointer"
                 dangerouslySetInnerHTML={{ __html: displayBrand }}
               />
               <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-300">
@@ -131,7 +131,7 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
               </nav>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <div className="relative hidden sm:block">
                 <input
                   type="search"
@@ -141,69 +141,76 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
                 <span className="absolute left-3 top-2 text-zinc-400 text-xs">🔍</span>
               </div>
 
-              <div className="flex items-center gap-3 text-xs text-zinc-400 font-medium">
+              <div className="flex items-center gap-2.5 sm:gap-3 text-xs text-zinc-400 font-medium">
                 <span className="hidden md:inline hover:text-white cursor-pointer transition">Join / Log In</span>
                 <span className="hidden md:inline text-zinc-600">|</span>
                 <span className="hover:text-white cursor-pointer transition">Help</span>
-                <button className="p-2 rounded-full hover:bg-white/10 text-white transition" title="Shopping Cart">
+                <button className="p-1.5 sm:p-2 rounded-full hover:bg-white/10 text-white transition" title="Shopping Cart">
                   🛒
                 </button>
               </div>
             </div>
           </div>
+
+          {/* Mobile Category Quick-bar */}
+          <div className="md:hidden flex items-center gap-4 px-4 py-2 overflow-x-auto border-t border-white/5 bg-zinc-950/90 text-xs font-semibold text-zinc-400 no-scrollbar">
+            {["All", "Men", "Women", "Boys", "Girls"].map((cat, idx) => (
+              <a key={cat} href="#" className={`flex-shrink-0 transition-colors ${idx === 0 ? "text-red-400 font-bold" : "hover:text-white"}`}>{cat}</a>
+            ))}
+          </div>
         </header>
 
         {/* Main Product Layout */}
-        <main className="max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-16 py-8 lg:py-12">
-          <div className="flex flex-col lg:flex-row items-start gap-10 xl:gap-16">
+        <main className="max-w-[1920px] mx-auto px-3 sm:px-8 lg:px-16 py-6 sm:py-8 lg:py-12">
+          <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-10 xl:gap-16">
             
             {/* Left: 2x2 Product Views Gallery */}
-            <div className="w-full lg:w-7/12 flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
+            <div className="w-full lg:w-7/12 flex flex-col gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                <div className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={getImage(displayImage)}
                     onError={errorImage}
                     alt="Product view front"
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
+                  <span className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
                     Front
                   </span>
                 </div>
 
-                <div className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
+                <div className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={getImage(PRODUCT_IMAGES[1])}
                     onError={errorImage}
                     alt="Product view back"
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
+                  <span className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
                     Back
                   </span>
                 </div>
 
-                <div className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
+                <div className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={getImage(PRODUCT_IMAGES[2])}
                     onError={errorImage}
                     alt="Product view detail"
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
+                  <span className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
                     Detail
                   </span>
                 </div>
 
-                <div className="group relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
+                <div className="group relative rounded-xl sm:rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 aspect-square shadow-lg">
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={getImage(PRODUCT_IMAGES[3])}
                     onError={errorImage}
                     alt="Product view lifestyle"
                   />
-                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
+                  <span className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-black/60 backdrop-blur-md text-white border border-white/15">
                     Fit
                   </span>
                 </div>
@@ -211,37 +218,37 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
             </div>
 
             {/* Right: Product Details & Purchase Form */}
-            <div className="w-full lg:w-5/12 flex flex-col space-y-6 lg:pl-2">
+            <div className="w-full lg:w-5/12 flex flex-col space-y-4 sm:space-y-6 lg:pl-2">
               <div>
                 <span
-                  className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-red-500/15 text-red-400 border border-red-500/20 mb-3"
+                  className="inline-block px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-red-500/15 text-red-400 border border-red-500/20 mb-2 sm:mb-3"
                   dangerouslySetInnerHTML={{ __html: displayBrand }}
                 />
 
                 <h1
-                  className="text-3xl sm:text-4xl xl:text-5xl font-black text-white tracking-tight uppercase leading-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black text-white tracking-tight uppercase leading-tight break-words"
                   dangerouslySetInnerHTML={{ __html: displayHeadline }}
                 />
 
                 <h2
-                  className="text-xl sm:text-2xl font-semibold text-zinc-300 mt-2"
+                  className="text-lg sm:text-xl md:text-2xl font-semibold text-zinc-300 mt-1 sm:mt-2"
                   dangerouslySetInnerHTML={{ __html: displaySub }}
                 />
               </div>
 
               {/* Color Swatches */}
               <div className="space-y-2">
-                <span className="text-xs font-bold uppercase text-zinc-400 tracking-wider">
+                <span className="text-[11px] sm:text-xs font-bold uppercase text-zinc-400 tracking-wider">
                   Select Color: <span className="text-white normal-case">{COLOR_SWATCHES[selectedColor].name}</span>
                 </span>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 no-scrollbar">
                   {COLOR_SWATCHES.map((swatch, idx) => (
                     <button
                       key={swatch.name}
                       onClick={() => setSelectedColor(idx)}
-                      className={`w-10 h-10 rounded-xl border-2 transition-all p-0.5 overflow-hidden ${
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 flex-shrink-0 transition-all p-0.5 overflow-hidden ${
                         selectedColor === idx
-                          ? 'border-red-500 scale-110 shadow-glow-red ring-2 ring-red-500/30'
+                          ? 'border-red-500 scale-105 sm:scale-110 shadow-glow-red ring-2 ring-red-500/30'
                           : 'border-white/20 hover:border-white/50 opacity-80'
                       }`}
                       title={swatch.name}
@@ -253,18 +260,18 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
               </div>
 
               {/* Size Selector */}
-              <div className="space-y-2.5 pt-2">
-                <div className="flex items-center justify-between text-xs font-bold tracking-wider">
+              <div className="space-y-2 pt-1 sm:pt-2">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs font-bold tracking-wider">
                   <span className="text-zinc-400 uppercase">Choose Size</span>
                   <button className="text-zinc-400 hover:text-white underline transition">Size Guide</button>
                 </div>
 
-                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-2">
                   {SIZES.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-2.5 rounded-xl font-bold text-sm transition-all border ${
+                      className={`py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all border ${
                         selectedSize === size
                           ? 'bg-white text-zinc-950 border-white shadow-md scale-105'
                           : 'bg-zinc-900/80 text-zinc-300 border-white/10 hover:border-white/30 hover:bg-zinc-800'
@@ -277,9 +284,9 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex items-center gap-3 pt-4">
+              <div className="flex items-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
                 <Button
-                  className="flex-1 py-4 rounded-full font-black text-base uppercase tracking-wider bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:shadow-glow-red hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
+                  className="flex-1 py-3.5 sm:py-4 rounded-full font-black text-sm sm:text-base uppercase tracking-wider bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:shadow-glow-red hover:scale-[1.02] active:scale-[0.98] transition-all border-none"
                   severity="danger"
                   label={displayCta}
                   aria-label="Add to cart"
@@ -287,7 +294,7 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
                 />
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
-                  className={`w-14 h-14 rounded-full flex items-center justify-center border transition-all ${
+                  className={`w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-full flex items-center justify-center border transition-all ${
                     isWishlisted
                       ? 'bg-red-500/20 border-red-500 text-red-500 shadow-glow-red'
                       : 'bg-zinc-900 border-white/20 text-zinc-300 hover:text-white hover:border-white/40'
@@ -299,26 +306,26 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
               </div>
 
               {/* Description & Specifications */}
-              <div className="border-t border-white/10 pt-5 space-y-3">
+              <div className="border-t border-white/10 pt-4 sm:pt-5 space-y-2.5 sm:space-y-3">
                 <p
-                  className="text-zinc-300 text-sm leading-relaxed"
+                  className="text-zinc-300 text-xs sm:text-sm leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: displayDesc }}
                 />
-                <a href="#" className="inline-block text-xs font-semibold text-zinc-400 hover:text-white underline transition">
+                <a href="#" className="inline-block text-[11px] sm:text-xs font-semibold text-zinc-400 hover:text-white underline transition">
                   Read More Details
                 </a>
               </div>
 
               {/* Stat / Feature Badges */}
-              <div className="grid grid-cols-3 gap-3 pt-2">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                 {statCards.map((item, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-zinc-900/60 border border-white/10 flex flex-col items-center text-center">
+                  <div key={idx} className="p-2 sm:p-3 rounded-xl bg-zinc-900/60 border border-white/10 flex flex-col items-center text-center">
                     <span
-                      className="text-sm font-extrabold text-white"
+                      className="text-xs sm:text-sm font-extrabold text-white"
                       dangerouslySetInnerHTML={{ __html: item.field1 || '100%' }}
                     />
                     <span
-                      className="text-[10px] text-zinc-400 mt-0.5 leading-tight"
+                      className="text-[9px] sm:text-[10px] text-zinc-400 mt-0.5 leading-tight"
                       dangerouslySetInnerHTML={{ __html: item.field2 || 'Quality' }}
                     />
                   </div>
@@ -330,13 +337,13 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
         </main>
         
         {/* Full Website Footer */}
-        <footer className="w-full border-t border-white/10 bg-zinc-950/80 mt-16 py-10 px-6 lg:px-16 text-xs text-zinc-400">
-          <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+        <footer className="w-full border-t border-white/10 bg-zinc-950/80 mt-12 sm:mt-16 py-8 sm:py-10 px-4 sm:px-6 lg:px-16 text-xs text-zinc-400">
+          <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
               <span className="font-bold text-sm tracking-wider uppercase text-white" dangerouslySetInnerHTML={{ __html: displayBrand }} />
-              <p className="text-zinc-500">© 2026 Acme Athletics, Inc. All rights reserved.</p>
+              <p className="text-zinc-500 text-[11px] sm:text-xs">© 2026 Acme Athletics, Inc. All rights reserved.</p>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[11px] sm:text-xs">
               <a href="#" className="hover:text-white transition">Product Guides</a>
               <a href="#" className="hover:text-white transition">Terms of Sale</a>
               <a href="#" className="hover:text-white transition">Terms of Use</a>
@@ -350,66 +357,66 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
 
   // Standard Split-Hero fallback
   return (
-    <div className="relative min-h-[600px] w-full flex items-center justify-center overflow-hidden bg-zinc-950 text-white rounded-2xl">
+    <div className="relative min-h-[600px] w-full flex items-center justify-center overflow-x-hidden bg-zinc-950 text-white rounded-2xl">
       <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-red-500 z-0" />
       <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-red-500 z-0" />
 
-      <main className="relative z-10 w-full max-w-[1920px] mx-auto px-4 md:px-12 flex items-center justify-center py-12 md:py-16">
-        <section className="w-full flex flex-col md:flex-row items-center gap-8 md:gap-12 overflow-hidden">
-          <div className="w-full md:w-1/2 flex items-center justify-center min-h-[300px] md:min-h-[500px] p-4">
-            <div className="relative w-full max-w-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900/60 p-2 group">
+      <main className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 flex items-center justify-center py-8 sm:py-12 md:py-16">
+        <section className="w-full flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 overflow-hidden py-4 sm:py-8 md:py-0">
+          <div className="w-full md:w-1/2 flex items-center justify-center min-h-[260px] sm:min-h-[300px] md:min-h-[500px] p-2 sm:p-4">
+            <div className="relative w-full max-w-[500px] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900/60 p-2 group">
               <img
                 src={getImage(displayImage)}
                 alt="Section visual"
                 onError={errorImage}
-                className="w-full h-auto max-h-[460px] object-contain mx-auto rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
+                className="w-full h-auto max-h-[320px] sm:max-h-[460px] object-contain mx-auto rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
               />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-8 space-y-6">
+          <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-8 space-y-4 sm:space-y-6 items-center md:items-start text-center md:text-left">
             {displayBrand && (
               <div>
                 <span
-                  className="inline-block px-4 py-1.5 rounded-full glass border border-red-500/40 uppercase text-red-400 font-bold text-xs tracking-[0.2em]"
+                  className="inline-block px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full glass border border-red-500/40 uppercase text-red-400 font-bold text-[10px] sm:text-xs tracking-[0.2em]"
                   dangerouslySetInnerHTML={{ __html: displayBrand }}
                 />
               </div>
             )}
 
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1] uppercase"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15] uppercase break-words"
               dangerouslySetInnerHTML={{ __html: displayHeadline }}
             />
 
             {displaySub && (
               <h2
-                className="text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400"
+                className="text-base sm:text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400"
                 dangerouslySetInnerHTML={{ __html: displaySub }}
               />
             )}
 
             {displayDesc && (
               <p
-                className="text-gray-400 text-sm md:text-base max-w-xl leading-relaxed font-normal"
+                className="text-gray-400 text-xs sm:text-sm md:text-base max-w-xl leading-relaxed font-normal"
                 dangerouslySetInnerHTML={{ __html: displayDesc }}
               />
             )}
 
             {Array.isArray(statCards) && statCards.length > 0 && (
-              <div className="flex flex-wrap md:flex-nowrap gap-3 pt-2">
+              <div className="w-full grid grid-cols-3 gap-2 sm:gap-4 pt-2">
                 {statCards.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex-1 min-w-[110px] glass p-3.5 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg"
+                    className="glass p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg"
                   >
                     <div
-                      className="text-2xl md:text-3xl font-extrabold text-white"
+                      className="text-base sm:text-2xl md:text-3xl font-extrabold text-white"
                       dangerouslySetInnerHTML={{ __html: item.field1 || '100+' }}
                     />
                     <div
-                      className="mt-1 text-gray-400 text-[11px] uppercase tracking-wider leading-snug"
+                      className="mt-0.5 sm:mt-1 text-gray-400 text-[9px] sm:text-[11px] uppercase tracking-wider leading-snug"
                       dangerouslySetInnerHTML={{ __html: item.field2 || 'Metric' }}
                     />
                   </div>
@@ -417,9 +424,9 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
               </div>
             )}
 
-            <div className="pt-2">
+            <div className="pt-2 w-full sm:w-auto">
               <Button
-                className="w-full md:w-auto px-8 py-3.5 rounded-full font-bold text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none text-white shadow-lg"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-bold text-sm sm:text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none text-white shadow-lg"
                 label={displayCta}
                 aria-label="Call to action"
                 onClick={() => alert(`CTA Clicked: ${displayCta}`)}

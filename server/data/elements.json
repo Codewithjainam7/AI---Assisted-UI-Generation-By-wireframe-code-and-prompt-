@@ -98,23 +98,23 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "heroImage",
-    "fieldId": "2000000246",
-    "content": "https://images.unsplash.com/photo-1620799140408-edc6dcd7dcec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1700&q=80",
+    "fieldId": "2000000260",
+    "content": "https://images.unsplash.com/photo-1616763355548-ee0325858674?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "brandBadge",
-    "fieldId": "2000000247",
+    "fieldId": "2000000261",
     "content": "AI STUDIO",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -122,77 +122,86 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "headlineMain",
-    "fieldId": "2000000248",
-    "content": "Cushy Fleece Hoodie",
+    "fieldId": "2000000262",
+    "content": "WELCOME",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "headlineSub",
-    "fieldId": "2000000249",
-    "content": "Men's Pullover Hoodie $45",
+    "fieldId": "2000000263",
+    "content": "REGISTRATION",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "description",
-    "fieldId": "2000000250",
-    "content": "The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.\n\n• Shown: Dark Grey Heather/Dark Grey Heather/White\n• Style: 804346-063\n\nRead More",
+    "fieldId": "2000000264",
+    "content": "This collection of mobile application wireframes illustrates a complete user journey including a welcome screen, user registration form, profile management, various content display formats (lists and grids), detailed content views, and a calendar component for scheduling or date selection. The app features consistent branding with a 'LOGO' and a standard bottom navigation bar across multiple screens.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "statBadges",
-    "fieldId": "2000000251",
+    "fieldId": "2000000265",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
-    "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "loop": [
+      {
+        "field1": "Content Item Title",
+        "fieldType1": "Text",
+        "fieldId1": "3000000181",
+        "field2": "Media Placeholder",
+        "fieldType2": "Text",
+        "fieldId2": "3000000182"
+      }
+    ],
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   },
   {
-    "sectionId": "1000000036",
+    "sectionId": "1000000038",
     "elementName": "ctaButton",
-    "fieldId": "2000000252",
-    "content": "Add To Cart",
+    "fieldId": "2000000266",
+    "content": "NEXT →",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T19:19:36.760Z",
-    "updatedAt": "2026-09-13T19:19:36.760Z"
+    "createdAt": "2026-09-13T20:04:31.510Z",
+    "updatedAt": "2026-09-13T20:04:31.510Z"
   }
 ]

@@ -77,7 +77,18 @@ R9. Repeating items (stats/cards) render from a loop array with DEFAULT_STAT_CAR
 R10. Apply allSectionsCss to DOM elements after cssData changes:
     useEffect(() => { Object.values(ids).forEach(id => { if (id && cssData?.[id]) { const el = document.getElementById(id); if (el) el.style.cssText = cssData[id]; } }); }, [cssData]);
 
-R11. Use Tailwind for responsive layout. Desktop: two columns (md:flex-row or lg:flex-row). Mobile: stacked (flex-col). Include max-w-[1920px] container.
+R11. MOBILE-FIRST RESPONSIVE ARCHITECTURE (CRITICAL):
+     The generated component MUST be 100% mobile responsive and look stunning on 375px screens as well as 1920px desktops:
+     a) Direction: Mobile layout MUST be strictly stacked (flex flex-col). Desktop transitions to two columns (lg:flex-row or md:flex-row).
+     b) Container & Padding: Root element MUST have 'w-full overflow-x-hidden'. Outer container has responsive padding 'px-3 sm:px-8 lg:px-16 py-6 sm:py-8 lg:py-12 max-w-[1920px] mx-auto'. Never use fixed pixel widths (like w-[600px]) without max-w-full.
+     c) Responsive Typography: Headlines MUST use responsive text sizes and word breaks: 'text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black break-words tracking-tight'. Subheads: 'text-lg sm:text-xl md:text-2xl'. Never use static text-5xl or text-6xl without sm: or md: prefixes.
+     d) 2x2 Product Galleries: On mobile, use 'grid grid-cols-2 gap-2 sm:gap-4'. Badges inside photos use 'text-[9px] sm:text-[10px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full'.
+     e) Swatches & Horizontal Lists: Wrap swatches in 'flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 no-scrollbar'. Swatch buttons must have 'flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10' so they never collapse or overflow on 375px screens.
+     f) Size Selectors: Use 'grid grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-2'. Buttons have 'py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm' to fit all 7 sizes cleanly across mobile without wrapping off-screen.
+     g) Touch Targets & Action Row: CTA button uses 'flex-1 py-3.5 sm:py-4 text-sm sm:text-base'. Secondary icon buttons (wishlist) MUST have 'flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14' so they are never crushed into non-circular shapes.
+     h) Navigation & Mobile Header: Header has 'px-4 sm:px-6 lg:px-16 h-14 sm:h-16'. Utility search input is 'hidden sm:block'. Provide mobile category navigation (e.g. horizontal scroll bar under header) for small screens.
+     i) Stat / Feature Badges: Use 'grid grid-cols-3 gap-2 sm:gap-3'. Each card has 'p-2 sm:p-3 rounded-xl' with responsive metric 'text-xs sm:text-sm font-extrabold' and description 'text-[9px] sm:text-[10px]'.
+     j) Footer: Responsive footer with 'flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left'.
 
 R12. Add className="dynamicStyle" on text/button nodes and className="dynamicStyle2" on image nodes.
 

@@ -69,3 +69,17 @@ The studio is designed for zero-config resilience:
 
 ### Q4: How does element deduplication work?
 - When querying `GET /api/elements?pageName=Home`, `ElementStore.find()` automatically scopes to the **latest active sectionId** for that page, preventing historical test runs from polluting the live CMS state.
+
+### Q5: Why must dynamic JSX template literals be escaped inside server-side generators?
+- **Root Cause**: When generating React JSX code containing dynamic class strings (e.g. `className={\`...\${condition ? '...' : '...'}\`}`), template strings inside Node.js template literals (`return \`...\``) will be evaluated immediately by the Node runtime instead of being emitted as raw JSX, causing runtime `ReferenceError` or `SyntaxError`.
+- **Resolution**: All dynamic JSX expressions inside generator templates are properly escaped as `\`\${...}\`` or authored with escaped backticks `\``.
+
+### Q6: How does the AI generator guarantee mobile responsiveness down to 375px?
+- **Root Cause**: Unconstrained hero headlines and static widths (such as fixed px widths or 5 unconstrained swatches) overflow 375px mobile viewports (e.g. iPhone SE).
+- **Resolution**: Rule R11 in `jsx-system-prompt.js` explicitly trains the synthesis model to apply mobile-first styling:
+  - Root `w-full overflow-x-hidden`.
+  - Responsive headline typography: `text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black break-words tracking-tight`.
+  - Swatch containers wrapped in `overflow-x-auto no-scrollbar` with `flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10`.
+  - 7-size selectors mapped to `grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-2`.
+  - CTA and secondary action buttons sized with 44px+ touch heights (`py-3.5 sm:py-4` and `flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14`).
+

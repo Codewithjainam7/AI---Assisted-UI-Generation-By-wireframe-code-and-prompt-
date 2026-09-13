@@ -32,12 +32,19 @@ This guide provides a structured walkthrough for demonstrations, along with a co
    - Card counts and metric values
 5. The preview immediately updates with the uploaded image and extracted typography.
 
-### Minute 3:45 – 5:00 · Live CMS Editing & Contract Verification
+### Minute 3:45 – 5:00 · Live CMS Editing, Mobile Responsiveness & Contract Verification
 1. Click **Open Fullscreen Preview** or navigate to **`/preview/Home`**.
-2. Toggle the viewport:
-   - Click **📱 375px** to demonstrate responsive mobile stacking.
-   - Click **💻 1280px** to demonstrate desktop 2-column split with red accent bars.
-3. Click **Edit Content** to open the slide-out CMS editor.
+2. Toggle the viewport to demonstrate **Mobile-First Responsive Architecture**:
+   - Click **📱 375px** (simulated iPhone SE / mobile screen):
+     - Show **zero horizontal overflow** (`overflow-x-hidden`).
+     - Point out the **2x2 product photo gallery** adapting cleanly to small screens.
+     - Demonstrate the swipeable **horizontal color swatches** (`overflow-x-auto no-scrollbar`) with circular touch targets.
+     - Click through the **7-size selector** (`XS` to `3XL`) fitting cleanly across mobile rows without wrapping errors.
+     - Observe the **48px touch targets** on CTA and Wishlist buttons.
+     - Show the **sticky mobile header** with category quick-bar.
+   - Click **💻 1280px** to demonstrate desktop 2-column split with red accent rails and expanded layout.
+3. Click **Edit Content** (or **CMS** on mobile) to open the slide-out editor:
+   - On mobile, note that it acts as a smooth glass overlay drawer without crushing the canvas.
 4. Modify the headline text in the input field:
    - Notice the green checkmark on blur.
    - Watch the preview canvas update in **real-time** without any code re-generation.
@@ -61,3 +68,4 @@ This guide provides a structured walkthrough for demonstrations, along with a co
 | **FR-G08** | CMS Live Element Editing | **PASS** | `ElementEditor.jsx` with instant Redux state patch |
 | **FR-G09** | Production ZIP Bundle Export | **PASS** | `ZipExporter.js` bundling `.jsx`, `section.json`, `elements.json` |
 | **FR-G10** | Deterministic ID Allocation | **PASS** | `IdAllocator.js` with persistent atomic counters |
+| **FR-G11** | Mobile-First Responsive Architecture | **PASS** | Strict Rule R11 mobile stacking, 375px touch ergonomics, 2x2 gallery, horizontal swatches |

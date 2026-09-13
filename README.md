@@ -26,13 +26,16 @@ Generate production-ready, CMS-bound React components from **wireframe sketches/
 ## ✨ Key Features
 
 - **Multimodal Generation Pipeline**:
-  - 🖼️ **Wireframe Mode**: Deep visual OCR and spatial layout extraction powered by **Gemini 2.5 Flash Vision**.
+  - 🖼️ **Wireframe Mode**: Deep visual OCR and spatial layout extraction powered by **Gemini 2.5 Flash Vision**. Reconstructs authentic product UIs (navigation, multi-angle galleries, swatches, size selectors) instead of pasting raw wireframe sketches.
   - ✍️ **Prompt Mode**: High-reasoning UI structure and theme synthesis via **Nemotron 3 Ultra 550B**.
   - 💻 **Code Mode**: JSX AST parsing with `acorn` + `acorn-jsx` to preserve and reuse existing CMS element bindings.
   - ⚡ **Combined Mode**: Resolves layout from wireframes and copy/accents from prompts.
-- **Side-by-Side Dual Studio**:
+- **📱 Mobile-First Responsive Architecture (Rule R11)**:
+  - Generates 100% mobile-first React layouts that scale fluidly from **375px mobile screens (iPhone SE)** to **1920px ultra-wide desktops**.
+  - Enforces zero horizontal overflow (`w-full overflow-x-hidden`), responsive typography scaling with `break-words`, mobile 2x2 photo galleries, swipeable horizontal swatches (`no-scrollbar`), 7-column size selectors, and ergonomic 48px touch targets.
+- **Side-by-Side Dual Studio & Responsive Viewport Switcher**:
   - Live interactive rendered canvas alongside syntax-highlighted JSX code with 1-click clipboard copy and ZIP bundle export.
-  - Viewport switcher (📱 375px Mobile / 💻 Desktop).
+  - Instant viewport switcher (📱 375px Mobile / 💻 1280px Desktop) and mobile slide-out CMS drawer.
 - **Live CMS Editing**:
   - Instant blur-based element patching (`PATCH /api/elements/:fieldId`) with real-time preview updates without code recompilation.
 - **Contract Compliance (R1–R14)**:
