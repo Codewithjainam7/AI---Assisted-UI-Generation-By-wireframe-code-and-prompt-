@@ -7,7 +7,7 @@ import GlassCard from '../components/ui/GlassCard';
 import ElementEditor from '../components/ui/ElementEditor';
 import CodeEditor from '../components/ui/CodeEditor';
 import { fetchElementsByIds } from '../features/cms/cmsSlice';
-import DynamicSectionPreview from '../components/ui/DynamicSectionPreview';
+import LiveComponentRenderer from '../components/ui/LiveComponentRenderer';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
@@ -181,7 +181,7 @@ export default function PreviewPage() {
                   viewportSize === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
                 }`}
               >
-                <DynamicSectionPreview pageName={pageName} job={currentJob} />
+                <LiveComponentRenderer code={jsxCode || currentJob?.jsx} pageName={pageName} job={currentJob} />
               </div>
             </div>
           )}

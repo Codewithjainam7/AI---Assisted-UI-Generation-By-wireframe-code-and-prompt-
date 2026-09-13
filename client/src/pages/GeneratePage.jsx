@@ -9,7 +9,7 @@ import GlassInput from '../components/ui/GlassInput';
 import GlassCard from '../components/ui/GlassCard';
 import StepProgress from '../components/ui/StepProgress';
 import JobHistoryCard from '../components/ui/JobHistoryCard';
-import DynamicSectionPreview from '../components/ui/DynamicSectionPreview';
+import LiveComponentRenderer from '../components/ui/LiveComponentRenderer';
 import { submitGenerateJob, clearHistory } from '../features/generate/generateSlice';
 
 const MODES = [
@@ -456,7 +456,7 @@ export default function GeneratePage() {
                             previewViewport === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
                           }`}
                         >
-                          <DynamicSectionPreview pageName={currentJob.pageName || pageName} job={currentJob} />
+                          <LiveComponentRenderer code={currentJob?.jsx} pageName={currentJob.pageName || pageName} job={currentJob} />
                         </div>
                       </div>
                     </div>

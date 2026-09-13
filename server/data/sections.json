@@ -1,5 +1,24 @@
 [
   {
+    "sectionId": "1000000030",
+    "sectionName": "TestWireframe",
+    "pageName": "TestPage",
+    "isGenerated": true,
+    "wireframes": "uploads/1789325670848-1789325670843-1789322832171-wireframe-example-plain.png",
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T18:55:11.616Z",
+    "updatedAt": "2026-09-13T18:55:11.616Z"
+  },
+  {
+    "sectionId": "1000000029",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T18:07:25.660Z",
+    "updatedAt": "2026-09-13T18:07:25.660Z"
+  },
+  {
     "sectionId": "1000000028",
     "sectionName": "CyberPulse Hero",
     "pageName": "Home",

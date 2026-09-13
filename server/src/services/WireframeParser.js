@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
-import path from 'path';
 
 let genAI;
 
@@ -16,40 +15,56 @@ export async function parse(file) {
     const modelName = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
     const model = genAI.getGenerativeModel({ model: modelName });
     
-    const prompt = `You are an expert UI/UX Vision Analyzer and OCR engine.
-Analyze this wireframe/mockup/sketch image in detail. Extract ALL text, layout geometry, branding, and interactive elements.
+    const prompt = `You are an elite Senior UI/UX Architect and Vision Engine.
+Carefully examine every detail of this uploaded wireframe, sketch, or mockup image.
+You must reconstruct the EXACT user interface depicted in the drawing.
 
-Return a strict JSON object with this exact structure (do NOT use placeholder/demo text, extract EXACT text or accurately deduce intent from the image):
+Analyze and extract a strict JSON object with this structure:
 {
-  "sectionType": "split-hero" | "full-hero" | "features-grid" | "stats-section",
-  "sectionName": "Short descriptive name deduced from the image (e.g. ModernHero, SaasFeature, FitnessLanding)",
+  "sectionType": "split-hero" | "full-hero" | "dashboard-hero" | "features-grid" | "app-landing",
+  "sectionName": "DescriptiveCamelCaseName (e.g. SmartLotHero, CryptoDashboard, EcoPortfolio)",
+  "domain": "The industry/theme (e.g. parking-iot, saas-ai, fitness, fintech, healthcare, ecommerce)",
   "layout": {
     "direction": "row" | "column",
     "mediaPosition": "left" | "right" | "top" | "center" | "none",
-    "columns": 1 | 2 | 3
+    "columns": 1 | 2 | 3 | 4,
+    "hasNavbar": true | false,
+    "hasSearchOrForm": true | false
   },
   "theme": {
-    "accent": "red-500" | "blue-500" | "indigo-500" | "purple-500" | "emerald-500" | "orange-500",
+    "accent": "red-500" | "blue-500" | "indigo-500" | "purple-500" | "emerald-500" | "orange-500" | "cyan-500",
     "surface": "dark" | "light",
     "text": "white" | "gray-900"
   },
+  "navbar": {
+    "logoText": "Brand or Logo text from top if drawn",
+    "links": ["Features", "Solutions", "Pricing", "Contact"]
+  },
   "content": {
-    "brandBadge": "Brand or category badge text seen in image (e.g. 'NEW RELEASE', 'AI STUDIO', 'PULSE FIT')",
-    "headlineMain": "Main bold heading / title text visible in the image",
-    "headlineSub": "Subtitle or secondary headline visible under the title",
-    "description": "Body paragraph / description copy visible in the image",
-    "ctaButton": "Primary CTA button text (e.g. 'Get Started', 'Sign Up Free', 'Explore Now')",
+    "brandBadge": "Brand or category badge text (e.g. 'SMARTLOT', 'AI PLATFORM')",
+    "headlineMain": "Main bold headline text visible in the drawing",
+    "headlineSub": "Subtitle or tagline text visible under the headline",
+    "description": "Full description paragraph or explanatory text visible in the wireframe",
+    "ctaButton": "Primary CTA button text (e.g. 'Get Started', 'Find Parking', 'Book Demo')",
+    "secondaryButton": "Secondary button text if drawn (e.g. 'Learn More', 'Watch Demo')",
+    "inputPlaceholder": "Placeholder text if an input/search box was drawn (e.g. 'Enter your location...')",
     "statCards": [
-      { "field1": "Top bold stat/metric or title", "field2": "Bottom label or description" }
-    ]
+      { "field1": "Big bold metric or title", "field2": "Descriptive subtitle or label" }
+    ],
+    "featureCards": [
+      { "title": "Card Title", "description": "Card description text", "icon": "car | bolt | shield | chart | mobile" }
+    ],
+    "imageConcept": "Detailed description of the visual/mockup drawn in the wireframe (e.g. 'Smart car connected to mobile parking app', 'Futuristic 3D dashboard', 'Athlete running')",
+    "suggestedImageUrl": "A relevant high-quality Unsplash image URL matching the domain (e.g. 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=1200&q=80' for parking/cars, or 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80' for analytics)"
   }
 }
 
 CRITICAL RULES:
-1. Perform accurate OCR on all text in the image.
-2. If text is handwritten or low-resolution, transcribe the most accurate wording.
-3. Note if the image/media is placed on the LEFT, RIGHT, or TOP, and set mediaPosition accordingly.
-4. Output ONLY the raw JSON object. No markdown code fences, no explanations.`;
+1. Extract ALL text accurately from the wireframe drawing via OCR.
+2. If text is handwritten or abbreviated, transcribe the intended wording intelligently.
+3. If the wireframe contains a grid of cards, extract all card titles and labels into statCards or featureCards.
+4. For suggestedImageUrl: Pick a realistic, modern, relevant Unsplash photo URL matching the domain topic. DO NOT suggest using the wireframe drawing itself.
+5. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
 
     const result = await model.generateContent([
       { inlineData: { mimeType: file.mimetype || 'image/png', data: base64 } },
@@ -60,27 +75,30 @@ CRITICAL RULES:
     const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const parsed = JSON.parse(cleaned);
 
-    console.log('✦ Gemini Vision OCR Success:', {
+    console.log('✦ Gemini Vision Full Wireframe Breakdown:', {
+      sectionName: parsed.sectionName,
+      domain: parsed.domain,
       headline: parsed.content?.headlineMain,
-      badge: parsed.content?.brandBadge,
-      cta: parsed.content?.ctaButton,
-      layout: parsed.layout
+      cardsCount: parsed.content?.statCards?.length,
+      imageConcept: parsed.content?.imageConcept
     });
 
     return parsed;
   } catch (e) {
-    console.warn('Gemini vision analysis warning (using fallback OCR parser):', e.message);
+    console.warn('Gemini vision analysis warning (using fallback wireframe parser):', e.message);
     return {
       sectionType: 'split-hero',
       sectionName: 'CustomHero',
-      layout: { direction: 'row', mediaPosition: 'left', columns: 2 },
+      domain: 'general-saas',
+      layout: { direction: 'row', mediaPosition: 'left', columns: 2, hasNavbar: false },
       theme: { accent: 'red-500', surface: 'dark', text: 'white' },
       content: {
-        brandBadge: 'AI ASSISTED UI',
+        brandBadge: 'AI STUDIO',
         headlineMain: 'GENERATED FROM WIREFRAME',
         headlineSub: 'Engineered with Precision & Live CMS Bindings',
         description: 'Your uploaded wireframe was successfully structured into an interactive React component.',
         ctaButton: 'GET STARTED',
+        suggestedImageUrl: 'default/images/hero-placeholder.jpg',
         statCards: [
           { field1: '100%', field2: 'Responsive' },
           { field1: '0ms', field2: 'Latency' },

@@ -57,14 +57,7 @@ export async function generate(req, res, next) {
       pageName
     });
 
-    // If a wireframe image was uploaded, point heroImage to it
-    if (uploadedImageRelativePath) {
-      const heroEl = ir.elements.find(e => e.elementName === 'heroImage');
-      if (heroEl) {
-        heroEl.defaultContent = uploadedImageRelativePath;
-      }
-    }
-    
+    // The uploaded wireframe image is the design blueprint, stored in sectionDoc.wireframes
     let warnings = [];
     const mainEl = ir.elements.find(e => e.elementName === 'headlineMain');
     const ctaEl = ir.elements.find(e => e.elementName === 'ctaButton');
@@ -144,6 +137,7 @@ export async function generate(req, res, next) {
       sectionName: ir.sectionName,
       pageName: ir.pageName,
       isGenerated: true,
+      wireframes: uploadedImageRelativePath || '',
       cardGridColumns: ir.layout?.columns || 3
     };
     

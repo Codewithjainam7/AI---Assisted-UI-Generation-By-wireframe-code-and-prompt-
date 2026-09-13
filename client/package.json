@@ -9,12 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@babel/standalone": "^8.0.5",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.3",
     "highlight.js": "^11.10.0",
     "jszip": "^3.10.1",
-    "primereact": "^10.8.3",
     "primeicons": "^7.0.0",
+    "primereact": "^10.8.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",

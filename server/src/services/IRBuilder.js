@@ -15,27 +15,35 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
     });
   }
 
+  const defaultHeroImage = wireframeIR?.content?.suggestedImageUrl || "default/images/hero-placeholder.jpg";
+
   let baseIR = {
     sectionType: wireframeIR?.sectionType || "split-hero",
+    sectionName: sectionName || wireframeIR?.sectionName || "Custom",
+    domain: wireframeIR?.domain || "general-saas",
     platform: "Website",
     layout: {
       direction: wireframeIR?.layout?.direction || "row",
       breakpoint: "md",
       columns: wireframeIR?.layout?.columns || 2,
-      mediaPosition: wireframeIR?.layout?.mediaPosition || "left"
+      mediaPosition: wireframeIR?.layout?.mediaPosition || "left",
+      hasNavbar: wireframeIR?.layout?.hasNavbar || false,
+      hasSearchOrForm: wireframeIR?.layout?.hasSearchOrForm || false
     },
     theme: {
       accent: wireframeIR?.theme?.accent || "red-500",
       surface: wireframeIR?.theme?.surface || "dark",
       text: wireframeIR?.theme?.text || "white"
     },
+    navbar: wireframeIR?.navbar || null,
     elements: [
       {
         elementName: "heroImage",
         contentType: "Image",
-        defaultContent: "default/images/hero-placeholder.jpg",
+        defaultContent: defaultHeroImage,
         fieldId: "TBD-heroImage",
-        position: wireframeIR?.layout?.mediaPosition || "left"
+        position: wireframeIR?.layout?.mediaPosition || "left",
+        concept: wireframeIR?.content?.imageConcept || ""
       },
       {
         elementName: "brandBadge",
@@ -58,7 +66,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       {
         elementName: "description",
         contentType: "Textfield",
-        defaultContent: wireframeIR?.content?.description || "Built with automated CMS bindings, responsive layout system, and modern iOS-inspired aesthetics.",
+        defaultContent: wireframeIR?.content?.description || "Built with automated CMS bindings, responsive layout system, and modern aesthetics.",
         fieldId: "TBD-description"
       },
       {
@@ -66,7 +74,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
         contentType: "Cards",
         defaultContent: "",
         fieldId: "TBD-statBadges",
-        statCount: Array.isArray(wireframeIR?.content?.statCards) ? wireframeIR.content.statCards.length : 3,
+        statCount: Array.isArray(wireframeIR?.content?.statCards) && wireframeIR.content.statCards.length > 0 ? wireframeIR.content.statCards.length : 3,
         statCards: wireframeIR?.content?.statCards || null
       },
       {
@@ -76,11 +84,13 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
         fieldId: "TBD-ctaButton"
       }
     ],
-    pageName: pageName || "Home",
-    sectionName: sectionName || wireframeIR?.sectionName || "Custom"
+    secondaryButton: wireframeIR?.content?.secondaryButton || null,
+    inputPlaceholder: wireframeIR?.content?.inputPlaceholder || null,
+    featureCards: wireframeIR?.content?.featureCards || null,
+    pageName: pageName || "Home"
   };
 
-  // If a natural language prompt was provided, run Nemotron to extract exact copy, theme, and layout
+  // If a natural language prompt was provided, run Nemotron to extract exact copy, theme, and layout overrides
   if (promptText && promptText.trim()) {
     try {
       const completion = await client.chat.completions.create({
@@ -110,10 +120,6 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
           }
         });
       }
-      console.log('✦ Nemotron Prompt IR Success:', {
-        headline: baseIR.elements.find(e => e.elementName === 'headlineMain')?.defaultContent,
-        badge: baseIR.elements.find(e => e.elementName === 'brandBadge')?.defaultContent
-      });
     } catch (e) {
       console.warn('Nemotron IR generation warning (using wireframe OCR/defaults):', e.message);
     }
