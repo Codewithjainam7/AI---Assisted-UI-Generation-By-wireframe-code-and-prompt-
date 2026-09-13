@@ -1,5 +1,32 @@
 [
   {
+    "sectionId": "1000000028",
+    "sectionName": "CyberPulse Hero",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T17:48:22.577Z",
+    "updatedAt": "2026-09-13T17:48:22.578Z"
+  },
+  {
+    "sectionId": "1000000027",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T17:39:11.770Z",
+    "updatedAt": "2026-09-13T17:39:11.770Z"
+  },
+  {
+    "sectionId": "1000000026",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T17:37:22.702Z",
+    "updatedAt": "2026-09-13T17:37:22.702Z"
+  },
+  {
     "sectionId": "1000000025",
     "sectionName": "Jainn AI Hero",
     "pageName": "Home",

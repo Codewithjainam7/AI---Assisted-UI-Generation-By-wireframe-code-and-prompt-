@@ -5,50 +5,54 @@ import { fetchElementsByIds } from "../../features/cms/cmsSlice";
 import { getSectionTextContrastClass } from "../../utils/sectionContrast";
 import { getImage, errorImage } from "../../utils/getImage";
 
-// R1: Stable ids map
 const ids = {
-  heroImage:    "2000000155",
-  brandBadge:   "2000000156",
-  headlineMain: "2000000157",
-  headlineSub:  "2000000158",
-  description:  "2000000159",
-  statBadges:   "2000000160",
-  ctaButton:    "2000000161",
+  heroImage: "2000000183",
+  brandBadge: "2000000184",
+  headlineMain: "2000000185",
+  headlineSub: "2000000186",
+  description: "2000000187",
+  statBadges: "2000000188",
+  ctaButton: "2000000189",
 };
 
-// R9: Default stat cards extracted from wireframe
 const DEFAULT_STAT_CARDS = [
-
+  { fieldId1: "TBD-cardField1", fieldId2: "TBD-cardField2", fieldId3: "TBD-cardField3" },
+  { fieldId1: "TBD-cardField4", fieldId2: "TBD-cardField5", fieldId3: "TBD-cardField6" },
 ];
 
-// R2: pageName prop
 const CustomSection = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
-
-  // R4: Read from Redux store
-  const data    = useSelector((state) => state.cms?.allSections?.[pageName]);
+  const data = useSelector((state) => state.cms?.allSections?.[pageName]);
   const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
-  const rootRef = useRef(null);
+  const contrastClass = getSectionTextContrastClass("dark");
+  const isMounted = useRef(false);
 
-  // R9: CMS loop or fallback
-  const statBadgesArr =
-    Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
-      ? data[ids.statBadges]
-      : DEFAULT_STAT_CARDS;
-
-  // R3: Dispatch all fieldIds on mount
   useEffect(() => {
-    dispatch(fetchElementsByIds({
-      elementIds: [
-        ids.heroImage, ids.brandBadge, ids.headlineMain, ids.headlineSub,
-        ids.description, ids.statBadges, ids.ctaButton,
-        
-      ],
-      pageName,
-    }));
+    if (!isMounted.current) {
+      isMounted.current = true;
+      dispatch(
+        fetchElementsByIds({
+          elementIds: [
+            ids.heroImage,
+            ids.brandBadge,
+            ids.headlineMain,
+            ids.headlineSub,
+            ids.description,
+            ids.statBadges,
+            ids.ctaButton,
+            "TBD-cardField1",
+            "TBD-cardField2",
+            "TBD-cardField3",
+            "TBD-cardField4",
+            "TBD-cardField5",
+            "TBD-cardField6",
+          ],
+          pageName,
+        })
+      );
+    }
   }, [dispatch, pageName]);
 
-  // R10: Apply per-element CSS overrides
   useEffect(() => {
     Object.values(ids).forEach((id) => {
       if (id && cssData?.[id]) {
@@ -56,97 +60,107 @@ const CustomSection = ({ pageName = "Home" }) => {
         if (el) el.style.cssText = cssData[id];
       }
     });
+    DEFAULT_STAT_CARDS.forEach((card) => {
+      Object.values(card).forEach((fieldId) => {
+        if (cssData?.[fieldId]) {
+          const el = document.getElementById(fieldId);
+          if (el) el.style.cssText = cssData[fieldId];
+        }
+      });
+    });
   }, [cssData]);
 
+  const statBadgesArr =
+    Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
+      ? data[ids.statBadges]
+      : DEFAULT_STAT_CARDS;
+
   return (
-    // R11: Responsive split layout with max-width
-    <div ref={rootRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
-      <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-blue-500 z-0" />
-      <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-blue-500 z-0" />
+    <section
+      id={ids.sectionWrapper}
+      className={`relative w-full max-w-[1920px] mx-auto px-4 md:px-12 py-16 md:py-24 bg-gray-950 ${contrastClass}`}
+      style={{ backgroundColor: "#030712" }}
+    >
+      <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+        <div
+          id={ids.heroImage}
+          className="dynamicStyle2 w-full md:w-1/2 flex justify-center order-1 md:order-1"
+        >
+          <img
+            id={ids.heroImage}
+            className="dynamicStyle2 max-w-full max-h-[600px] h-auto object-contain mx-auto rounded-3xl"
+            src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("default/images/hero-placeholder.jpg")}
+            onError={errorImage}
+            alt="Hero visual"
+          />
+        </div>
 
-      <main className="relative z-10 w-full max-w-[1920px] mx-auto px-4 md:px-12 flex items-center justify-center min-h-screen">
-        {/* R11: flex-col on mobile, flex-row on desktop */}
-        <section className="w-full flex flex-col md:flex-row bg-zinc-950 overflow-hidden py-12 md:py-0">
+        <div className="w-full md:w-1/2 flex flex-col items-start md:items-start text-left order-2 md:order-2">
+          <span
+            id={ids.brandBadge}
+            className="dynamicStyle inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-6 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+            dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "AI STUDIO" }}
+          />
 
-          {/* Hero Media / Image */}
-          <div className="md:w-1/2 w-full flex items-center justify-center min-h-[350px] md:min-h-[680px] py-8 px-4">
-            {/* R5: id, R7: getImage+errorImage, R12: dynamicStyle2 */}
-            <img
-              id={ids.heroImage}
-              className="dynamicStyle2 max-w-full max-h-[550px] h-auto object-contain mx-auto rounded-3xl shadow-2xl border border-white/10"
-              src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("uploads/1788433965382-1788433965375-01-youtube-wireframe-example.webp")}
-              alt="Section visual representation"
-              onError={errorImage}
-            />
-          </div>
+          <h1
+            id={ids.headlineMain}
+            className="dynamicStyle text-5xl md:text-7xl font-extrabold leading-tight mb-4 tracking-tight text-white"
+            dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "SmartLot" }}
+          />
 
-          {/* Content Column */}
-          <div className="md:w-1/2 w-full flex flex-col justify-center px-6 md:px-16 py-12 space-y-6">
+          <h2
+            id={ids.headlineSub}
+            className="dynamicStyle text-xl md:text-2xl font-medium mb-8 text-emerald-300 tracking-wider"
+            dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "MANAGE BETTER • BUILD STRONGER • LIVE CONNECTED" }}
+          />
 
-            {/* Brand Badge */}
-            <div>
-              <span
-                id={ids.brandBadge}
-                className="dynamicStyle inline-block px-4 py-1.5 rounded-full glass border border-blue-500/30 uppercase text-blue-500 font-bold text-xs tracking-[0.2em]"
-                dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "AI STUDIO" }}
-              />
-            </div>
+          <p
+            id={ids.description}
+            className="dynamicStyle text-lg md:text-xl text-gray-300 mb-10 max-w-xl leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Built with automated CMS bindings, responsive layout system, and modern iOS-inspired aesthetics." }}
+          />
 
-            {/* Headline Main */}
-            <h1
-              id={ids.headlineMain}
-              className="dynamicStyle text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1] uppercase"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "Recommended" }}
-            />
-
-            {/* Headline Sub */}
-            <h2
-              id={ids.headlineSub}
-              className="dynamicStyle text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-orange-400"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Transform ideas and wireframes into production React components." }}
-            />
-
-            {/* Description */}
-            <p
-              id={ids.description}
-              className="dynamicStyle text-gray-400 text-sm md:text-base max-w-xl leading-relaxed font-normal"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Built with automated CMS bindings, responsive layout system, and modern iOS-inspired aesthetics." }}
-            />
-
-            {/* Stat Cards */}
-            <div id={ids.statBadges} className="dynamicStyle flex flex-wrap md:flex-nowrap gap-4 pt-2">
-              {statBadgesArr.map((item, idx) => (
-                <div key={item.fieldId1 || idx} className="flex-1 min-w-[120px] glass p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center">
-                  <div
-                    id={item.fieldId1}
-                    className="dynamicStyle text-2xl md:text-3xl font-extrabold text-white"
-                    dangerouslySetInnerHTML={{ __html: data?.[item.fieldId1] || item.field1 }}
+          {statBadgesArr.length > 0 && (
+            <div className="flex flex-wrap gap-4 mb-10 w-full">
+              {statBadgesArr.map((badge, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 px-5 py-3 bg-gray-900/80 border border-gray-700 rounded-xl backdrop-blur-sm"
+                >
+                  <span
+                    id={badge.fieldId1}
+                    className="dynamicStyle text-2xl font-bold text-emerald-400"
+                    dangerouslySetInnerHTML={{ __html: data?.[badge.fieldId1] || "99%" }}
                   />
-                  <div
-                    id={item.fieldId2}
-                    className="dynamicStyle mt-1 text-gray-400 text-xs uppercase tracking-wider leading-snug"
-                    dangerouslySetInnerHTML={{ __html: data?.[item.fieldId2] || item.field2 }}
-                  />
+                  <div className="flex flex-col">
+                    <span
+                      id={badge.fieldId2}
+                      className="dynamicStyle text-sm font-semibold text-white"
+                      dangerouslySetInnerHTML={{ __html: data?.[badge.fieldId2] || "Uptime" }}
+                    />
+                    <span
+                      id={badge.fieldId3}
+                      className="dynamicStyle text-xs text-gray-400"
+                      dangerouslySetInnerHTML={{ __html: data?.[badge.fieldId3] || "Guaranteed SLA" }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
+          )}
 
-            {/* CTA Button */}
-            <div className="pt-2">
-              <Button
-                id={ids.ctaButton}
-                className="dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none"
-                aria-label="Primary call to action"
-                label={data?.[ids.ctaButton] || "GET STARTED"}
-                onClick={() => {}}
-              />
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
+          <Button
+            id={ids.ctaButton}
+            className="dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold text-lg"
+            severity="danger"
+            label={data?.[ids.ctaButton] || "GET STARTED"}
+            aria-label="Action button"
+            onClick={() => {}}
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 
-// R14: Default export
 export default CustomSection;

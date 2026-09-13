@@ -134,6 +134,10 @@ export async function generate(req, res, next) {
         loop
       };
     });
+
+    // Clean up any remaining TBD placeholders with valid allocated IDs
+    finalJsx = finalJsx.replace(/TBD-cardField\d+/g, () => IdAllocator.nextCardFieldId());
+    finalJsx = finalJsx.replace(/TBD-[\w]+/g, () => IdAllocator.nextFieldId());
     
     const sectionDoc = {
       sectionId,

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { fetchElementsByIds } from '../cms/cmsSlice';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
@@ -19,6 +20,13 @@ export const submitGenerateJob = createAsyncThunk(
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
+
+      if (response.data?.ok && response.data?.elementIds) {
+        dispatch(fetchElementsByIds({
+          elementIds: response.data.elementIds,
+          pageName: response.data.pageName || 'Home'
+        }));
+      }
 
       return response.data;
     } catch (err) {
