@@ -1,5 +1,14 @@
 [
   {
+    "sectionId": "1000000025",
+    "sectionName": "Jainn AI Hero",
+    "pageName": "Home",
+    "isGenerated": true,
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-03T11:26:23.469Z",
+    "updatedAt": "2026-09-03T11:26:23.469Z"
+  },
+  {
     "sectionName": "Custom",
     "sectionId": "1000000001",
     "variations": "2",

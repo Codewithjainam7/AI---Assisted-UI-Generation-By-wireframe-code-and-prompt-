@@ -101,5 +101,128 @@
     "pageName": "Home",
     "isCustom": true,
     "css": null
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "heroImage",
+    "fieldId": "2000000169",
+    "content": "default/images/hero-placeholder.jpg",
+    "contentType": "Image",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.472Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "brandBadge",
+    "fieldId": "2000000170",
+    "content": "JAINN AI",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "headlineMain",
+    "fieldId": "2000000171",
+    "content": "JAINN AI",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "headlineSub",
+    "fieldId": "2000000172",
+    "content": "Your intelligent chatbot companion",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "description",
+    "fieldId": "2000000173",
+    "content": "Experience seamless conversations with dark and light mode toggle.",
+    "contentType": "Textfield",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "statBadges",
+    "fieldId": "2000000174",
+    "content": "",
+    "contentType": "Cards",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [
+      {
+        "field1": "100+",
+        "fieldType1": "Text",
+        "fieldId1": "3000000139",
+        "field2": "Active Users",
+        "fieldType2": "Text",
+        "fieldId2": "3000000140"
+      },
+      {
+        "field1": "4.9★",
+        "fieldType1": "Text",
+        "fieldId1": "3000000141",
+        "field2": "Top Rated",
+        "fieldType2": "Text",
+        "fieldId2": "3000000142"
+      },
+      {
+        "field1": "24/7",
+        "fieldType1": "Text",
+        "fieldId1": "3000000143",
+        "field2": "Live Support",
+        "fieldType2": "Text",
+        "fieldId2": "3000000144"
+      }
+    ],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
+  },
+  {
+    "sectionId": "1000000025",
+    "elementName": "ctaButton",
+    "fieldId": "2000000175",
+    "content": "START CHATTING",
+    "contentType": "Button",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-09-03T11:26:23.473Z",
+    "updatedAt": "2026-09-03T11:26:23.473Z"
   }
 ]
