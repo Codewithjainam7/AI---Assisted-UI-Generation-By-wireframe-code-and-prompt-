@@ -1,5 +1,45 @@
 [
   {
+    "sectionId": "1000000034",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "wireframes": "uploads/1789326703474-1789326703467-1789322832171-wireframe-example-plain.png",
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T19:12:05.828Z",
+    "updatedAt": "2026-09-13T19:12:05.829Z"
+  },
+  {
+    "sectionId": "1000000033",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "wireframes": "uploads/1789326617447-1789326617438-1789322832171-wireframe-example-plain.png",
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T19:10:42.188Z",
+    "updatedAt": "2026-09-13T19:10:42.189Z"
+  },
+  {
+    "sectionId": "1000000032",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "wireframes": "uploads/1789326569665-1789326569658-1789322832171-wireframe-example-plain.png",
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T19:09:45.464Z",
+    "updatedAt": "2026-09-13T19:09:45.465Z"
+  },
+  {
+    "sectionId": "1000000031",
+    "sectionName": "Custom",
+    "pageName": "Home",
+    "isGenerated": true,
+    "wireframes": "uploads/1789326128149-1789326128145-wireframe-example-plain.png",
+    "cardGridColumns": 2,
+    "createdAt": "2026-09-13T19:02:46.352Z",
+    "updatedAt": "2026-09-13T19:02:46.352Z"
+  },
+  {
     "sectionId": "1000000030",
     "sectionName": "TestWireframe",
     "pageName": "TestPage",

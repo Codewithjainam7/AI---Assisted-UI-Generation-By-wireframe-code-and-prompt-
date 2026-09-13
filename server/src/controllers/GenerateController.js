@@ -114,11 +114,18 @@ export async function generate(req, res, next) {
         }
       }
       
+      let content = e.defaultContent || '';
+      if (e.contentType === 'Image') {
+        if (!content || content.includes('uploads/') || content.includes('wireframe') || content.includes('1571434190823')) {
+          content = 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80';
+        }
+      }
+      
       return {
         sectionId,
         elementName: e.elementName,
         fieldId,
-        content: e.defaultContent || '',
+        content,
         contentType: e.contentType,
         projectName: 'sample-brand',
         pageName: ir.pageName,
@@ -142,6 +149,7 @@ export async function generate(req, res, next) {
     };
     
     // Clear old elements for this page and save new ones
+    await ElementStore.deleteMany({ pageName: ir.pageName });
     await SectionStore.create(sectionDoc);
     await ElementStore.insertMany(elementsToInsert);
     
