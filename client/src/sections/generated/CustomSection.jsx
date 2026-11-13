@@ -1,241 +1,125 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { fetchElementsByIds } from "../../features/cms/cmsSlice";
 import { getSectionTextContrastClass } from "../../utils/sectionContrast";
 import { getImage, errorImage } from "../../utils/getImage";
+
+const ids = {
+  // Hero section
+  heroImage: "2000000420",
+  brandBadge: "2000000421",
+  headlineMain: "2000000422",
+  headlineSub: "2000000423",
+  description: "2000000424",
+  ctaButton: "2000000426",
+  // Navbar
+  navbarLogo: "2000000427",
+  navLink1: "2000000428", // Features
+  navLink2: "2000000429", // Solutions
+  navLink3: "2000000430", // Pricing
+  navLink4: "2000000431", // About Us
+  navbarSearchInput: "2000000432",
+  // Content Blocks (Value Propositions)
+  contentBlock1Title: "2000000433",
+  contentBlock1Desc: "2000000434",
+  contentBlock2Title: "2000000435",
+  contentBlock2Desc: "2000000436",
+  contentBlock3Title: "2000000437",
+  contentBlock3Desc: "2000000438",
+  // Below the Fold CTA
+  belowFoldCtaHeadline: "2000000439",
+  belowFoldCtaButton: "2000000440",
+  belowFoldCtaSubtext: "2000000441",
+  // Feature Cards (Stat Badges)
+  statBadges: "2000000425", // Container ID for stat cards
+  cardField1: "3000000259",
+  cardField2: "3000000260",
+  cardField3: "3000000261",
+  cardField4: "3000000262",
+  cardField5: "3000000263",
+  cardField6: "3000000264",
+  cardField7: "3000000265",
+  cardField8: "3000000266",
+  // Footer
+  footerEmailInput: "2000000442",
+  footerSignupButton: "2000000443",
+  footerLink1: "2000000444", // About Us
+  footerLink2: "2000000445", // Support
+  footerLink3: "2000000446", // Legal
+  socialLink1: "2000000447", // Email
+  socialLink2: "2000000448", // LinkedIn
+  socialLink3: "2000000449", // Instagram
+  socialLink4: "2000000450", // Twitter
+  socialLink5: "2000000451", // Facebook
+};
 
 const CustomSection = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.cms?.allSections?.[pageName]);
   const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
 
-  const ir = {
-    "sectionType": "app-landing",
-    "sectionName": "Custom",
-    "domain": "saas-ai",
-    "platform": "Website",
-    "layout": {
-      "direction": "column",
-      "breakpoint": "md",
-      "columns": 4,
-      "mediaPosition": "none",
-      "hasNavbar": true,
-      "hasSearchOrForm": true
+  const themeAccent = "indigo-500"; // From ir.theme.accent
+
+  const navbarLinks = [
+    { text: "Features", id: ids.navLink1 },
+    { text: "Solutions", id: ids.navLink2 },
+    { text: "Pricing", id: ids.navLink3 },
+    { text: "About Us", id: ids.navLink4 },
+  ];
+
+  const contentBlocks = [
+    {
+      titleId: ids.contentBlock1Title,
+      titleDefault: "Scalable Architecture",
+      descriptionId: ids.contentBlock1Desc,
+      descriptionDefault: "Built on a robust, cloud-native infrastructure, our platform scales effortlessly with your business needs."
     },
-    "theme": {
-      "accent": "blue-500",
-      "surface": "light",
-      "text": "gray-900"
+    {
+      titleId: ids.contentBlock2Title,
+      titleDefault: "Intuitive Interface",
+      descriptionId: ids.contentBlock2Desc,
+      descriptionDefault: "Designed for clarity and ease of use, empowering your team to harness AI without complexity."
     },
-    "navbar": {
-      "logoText": "InnovateAI",
-      "links": [
-        "Solutions",
-        "Features",
-        "Pricing",
-        "About Us"
-      ]
-    },
-    "imageConcept": "A large, abstract representation of interconnected data networks or a futuristic AI interface for the hero section. Four smaller, distinct icons or simple illustrations representing each feature card's concept, such as a brain icon for AI, a gear for automation, a chart for analytics, and people for collaboration.",
-    "contentBlocks": [
-      {
-        "title": "Intuitive Development",
-        "description": "Streamline your workflow with an easy-to-use interface and powerful IDE integrations."
-      },
-      {
-        "title": "Robust API Access",
-        "description": "Integrate seamlessly with your existing systems using our well-documented and flexible APIs."
-      },
-      {
-        "title": "Comprehensive Support",
-        "description": "Access 24/7 expert support and a thriving community for all your development needs."
-      }
-    ],
-    "featureCards": [
-      {
-        "title": "AI Model Training",
-        "description": "Train custom machine learning models with various algorithms and datasets in a scalable environment."
-      },
-      {
-        "title": "Automated Deployment",
-        "description": "Effortlessly deploy your AI applications to production with integrated CI/CD pipelines."
-      },
-      {
-        "title": "Real-time Analytics",
-        "description": "Monitor performance and gain insights into your AI models with real-time data and dashboards."
-      },
-      {
-        "title": "Collaborative Workspace",
-        "description": "Foster team productivity with shared projects, version control, and access management."
-      }
-    ],
-    "ctaBlocks": [
-      {
-        "headline": "Ready to transform your AI projects?",
-        "buttonText": "Sign Up Now",
-        "subtext": "No credit card required. Start building today!"
-      }
-    ],
-    "footer": {
-      "hasEmailSignup": true,
-      "emailPlaceholder": "Enter your email address",
-      "signupButtonText": "Subscribe",
-      "links": [
-        "About Us",
-        "Careers",
-        "Privacy Policy"
-      ],
-      "socials": [
-        "Email",
-        "LinkedIn",
-        "Instagram",
-        "Twitter",
-        "Facebook"
-      ]
-    },
-    "elements": [
-      {
-        "elementName": "heroImage",
-        "contentType": "Image",
-        "defaultContent": "https://images.unsplash.com/photo-1579782522030-ff6778648873?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzODd8MHwxfHNlYXJjaHw1fHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDB8fHx8MTcwMTI3NjE5Mnww&ixlib=rb-4.0.3&q=80&w=1080",
-        "fieldId": "2000000354",
-        "position": "none",
-        "concept": "A large, abstract representation of interconnected data networks or a futuristic AI interface for the hero section. Four smaller, distinct icons or simple illustrations representing each feature card's concept, such as a brain icon for AI, a gear for automation, a chart for analytics, and people for collaboration."
-      },
-      {
-        "elementName": "brandBadge",
-        "contentType": "Text",
-        "defaultContent": "AI STUDIO",
-        "fieldId": "2000000355"
-      },
-      {
-        "elementName": "headlineMain",
-        "contentType": "Text",
-        "defaultContent": "Unlock the Future of AI Development",
-        "fieldId": "2000000356"
-      },
-      {
-        "elementName": "headlineSub",
-        "contentType": "Text",
-        "defaultContent": "Build, deploy, and scale intelligent applications with unprecedented speed and precision.",
-        "fieldId": "2000000357"
-      },
-      {
-        "elementName": "description",
-        "contentType": "Textfield",
-        "defaultContent": "Our cutting-edge platform provides a comprehensive suite of tools for data scientists, developers, and enterprises to innovate faster and bring their AI visions to life.",
-        "fieldId": "2000000358"
-      },
-      {
-        "elementName": "statBadges",
-        "contentType": "Cards",
-        "defaultContent": "",
-        "fieldId": "2000000359",
-        "statCount": 4,
-        "statCards": [
-          {
-            "field1": "AI Model Training",
-            "field2": "AI Model Training"
-          },
-          {
-            "field1": "Automated Deployment",
-            "field2": "Automated Deployment"
-          },
-          {
-            "field1": "Real-time Analytics",
-            "field2": "Real-time Analytics"
-          },
-          {
-            "field1": "Collaborative Workspace",
-            "field2": "Collaborative Workspace"
-          }
-        ]
-      },
-      {
-        "elementName": "ctaButton",
-        "contentType": "Button",
-        "defaultContent": "Get Started Free",
-        "fieldId": "2000000360"
-      }
-    ],
-    "secondaryButton": "Explore Features",
-    "inputPlaceholder": "Search products...",
-    "pageName": "Home"
-  };
+    {
+      titleId: ids.contentBlock3Title,
+      titleDefault: "Secure & Compliant",
+      descriptionId: ids.contentBlock3Desc,
+      descriptionDefault: "Enterprise-grade security and strict compliance ensure your data is always protected."
+    }
+  ];
 
-  const ids = {
-    heroImage: "2000000354",
-    brandBadge: "2000000355",
-    headlineMain: "2000000356",
-    headlineSub: "2000000357",
-    description: "2000000358",
-    statBadges: "2000000359",
-    ctaButton: "2000000360",
-    // Navbar
-    navbarLogo: "2000000361",
-    navbarLink1: "2000000362-solutions",
-    navbarLink2: "2000000363-features",
-    navbarLink3: "2000000364-pricing",
-    navbarLink4: "2000000365-aboutUs",
-    // Secondary CTA
-    secondaryCtaButton: "2000000366",
-    // Content Blocks
-    contentBlock1Title: "2000000367-1-title",
-    contentBlock1Description: "2000000368-1-description",
-    contentBlock2Title: "2000000369-2-title",
-    contentBlock2Description: "2000000370-2-description",
-    contentBlock3Title: "2000000371-3-title",
-    contentBlock3Description: "2000000372-3-description",
-    // Below-the-fold CTA
-    ctaBlockHeadline: "2000000373-headline",
-    ctaBlockButtonText: "2000000374-buttonText",
-    ctaBlockSubtext: "2000000375-subtext",
-    // Footer
-    footerEmailInput: "2000000376",
-    footerSubscribeButton: "2000000377",
-    footerLink1: "2000000378-aboutUs",
-    footerLink2: "2000000379-careers",
-    footerLink3: "2000000380-privacyPolicy",
-    footerSocial1: "2000000381-email",
-    footerSocial2: "2000000382-linkedin",
-    footerSocial3: "2000000383-instagram",
-    footerSocial4: "2000000384-twitter",
-    footerSocial5: "2000000385-facebook",
-  };
+  const DEFAULT_STAT_CARDS = [
+    { field1: "AI-Driven Insights", fieldType1: "Text", fieldId1: ids.cardField1, field2: "Gain deep, actionable insights from your data with advanced analytics and predictive modeling.", fieldType2: "Text", fieldId2: ids.cardField2 },
+    { field1: "Automated Workflows", fieldType1: "Text", fieldId1: ids.cardField3, field2: "Streamline repetitive tasks and complex processes with intelligent automation tools.", fieldType2: "Text", fieldId2: ids.cardField4 },
+    { field1: "Personalized Experiences", fieldType1: "Text", fieldId1: ids.cardField5, field2: "Deliver tailored content and services to your users with adaptive AI algorithms.", fieldType2: "Text", fieldId2: ids.cardField6 },
+    { field1: "Real-time Collaboration", fieldType1: "Text", fieldId1: ids.cardField7, field2: "Enhance team productivity with shared workspaces and instant communication features.", fieldType2: "Text", fieldId2: ids.cardField8 }
+  ];
 
-  const accentColor = ir.theme.accent;
-  const surfaceColor = ir.theme.surface === 'dark' ? 'zinc-900' : 'white';
-  const contrastClass = getSectionTextContrastClass(surfaceColor);
+  const footerLinks = [
+    { text: "About Us", id: ids.footerLink1 },
+    { text: "Support", id: ids.footerLink2 },
+    { text: "Legal", id: ids.footerLink3 },
+  ];
 
-  const DEFAULT_STAT_CARDS = ir.featureCards.map((card, index) => ({
-    field1: card.title,
-    fieldType1: "Text",
-    fieldId1: `2000000386-${index + 1}-title`,
-    field2: card.description,
-    fieldType2: "Text",
-    fieldId2: `2000000387-${index + 1}-description`,
-  }));
-
-  const statBadgesArr = Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
-    ? data[ids.statBadges]
-    : DEFAULT_STAT_CARDS;
-
-  // Combine all fieldIds for dispatch
-  const allElementIds = [
-    ...Object.values(ids),
-    // Dynamically add fieldIds for stat cards
-    ...DEFAULT_STAT_CARDS.flatMap(card => [card.fieldId1, card.fieldId2]),
-    // Additional IDs for dynamic content
-    ...ir.navbar.links.map((_, i) => ids[`navbarLink${i + 1}`]),
-    ...ir.contentBlocks.flatMap((_, i) => [ids[`contentBlock${i + 1}Title`], ids[`contentBlock${i + 1}Description`]]),
-    ...ir.footer.links.map((_, i) => ids[`footerLink${i + 1}`]),
-    ...ir.footer.socials.map((_, i) => ids[`footerSocial${i + 1}`]),
+  const socialLinks = [
+    { icon: "pi pi-envelope", id: ids.socialLink1 },
+    { icon: "pi pi-linkedin", id: ids.socialLink2 },
+    { icon: "pi pi-instagram", id: ids.socialLink3 },
+    { icon: "pi pi-twitter", id: ids.socialLink4 },
+    { icon: "pi pi-facebook", id: ids.socialLink5 },
   ];
 
   useEffect(() => {
+    const allElementIds = [
+      ...Object.values(ids),
+      // Individual card fields for statBadges (already included via DEFAULT_STAT_CARDS and explicit ids)
+      // Individual content block fields (already included via contentBlocks and explicit ids)
+      // Navbar links, footer links, social links (already included via their arrays and explicit ids)
+    ];
     dispatch(fetchElementsByIds({
-      elementIds: allElementIds,
+      elementIds: allElementIds.filter(id => id && id !== ids.statBadges), // Filter out container ID for direct fetch
       pageName,
     }));
   }, [dispatch, pageName]);
@@ -247,175 +131,153 @@ const CustomSection = ({ pageName = "Home" }) => {
         if (el) el.style.cssText = cssData[id];
       }
     });
-    // Apply for stat card fields too
-    DEFAULT_STAT_CARDS.forEach(card => {
-      if (cssData?.[card.fieldId1]) {
-        const el = document.getElementById(card.fieldId1);
-        if (el) el.style.cssText = cssData[card.fieldId1];
-      }
-      if (cssData?.[card.fieldId2]) {
-        const el = document.getElementById(card.fieldId2);
-        if (el) el.style.cssText = cssData[card.fieldId2];
-      }
-    });
   }, [cssData]);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const statBadgesArr = Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
+    ? data[ids.statBadges]
+    : DEFAULT_STAT_CARDS;
 
   return (
-    <div className={`w-full overflow-x-hidden min-h-screen bg-zinc-950 ${contrastClass}`}>
-      {/* Sticky Navbar (R11h) */}
-      <nav className={`sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md h-14 sm:h-16 shadow-lg border-b border-zinc-800 px-4 sm:px-6 lg:px-16 flex items-center justify-between`}>
+    <div className="w-full overflow-x-hidden min-h-screen bg-zinc-950 text-gray-100 font-sans">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 w-full bg-zinc-950/90 backdrop-blur-md shadow-lg h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6 lg:px-16 border-b border-zinc-800">
         <div className="flex items-center gap-6">
-          <a href="#" className={`text-xl sm:text-2xl font-bold text-${accentColor}`} id={ids.navbarLogo} dangerouslySetInnerHTML={{ __html: data?.[ids.navbarLogo] || ir.navbar.logoText }}></a>
-          <ul className="hidden lg:flex items-center gap-6">
-            {ir.navbar.links.map((link, index) => (
-              <li key={index}>
-                <a href="#" id={ids[`navbarLink${index + 1}`]} className={`text-zinc-300 hover:text-${accentColor} transition-colors dynamicStyle`} dangerouslySetInnerHTML={{ __html: data?.[ids[`navbarLink${index + 1}`]] || link }}></a>
-              </li>
+          <a href="#" className="flex-shrink-0 text-xl sm:text-2xl font-black text-gray-100" id={ids.navbarLogo}>
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.navbarLogo] || "InnovateAI" }} className="dynamicStyle"></span>
+          </a>
+          <div className="hidden sm:flex items-center gap-6 lg:gap-8">
+            {navbarLinks.map((link) => (
+              <a key={link.id} href="#" className="text-sm font-medium text-gray-300 hover:text-white transition-colors" id={link.id}>
+                <span dangerouslySetInnerHTML={{ __html: data?.[link.id] || link.text }} className="dynamicStyle"></span>
+              </a>
             ))}
-          </ul>
+          </div>
         </div>
-        <div className="hidden sm:flex items-center gap-4">
-          <input
-            type="text"
-            placeholder={ir.inputPlaceholder || "Search..."}
-            className="hidden sm:block px-4 py-2 bg-zinc-800 text-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 w-48"
-          />
-          <Button label="Login" className="p-button-text text-zinc-200 hover:text-white" />
-          <Button id={ids.ctaButton} className={`dynamicStyle px-5 py-2 rounded-full font-semibold text-white bg-${accentColor} hover:bg-${accentColor.replace('-500', '-600')} transition-colors`} label={data?.[ids.ctaButton] || ir.elements.find(el => el.fieldId === ids.ctaButton)?.defaultContent} aria-label="Get Started Free" onClick={() => {}} />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <span className="p-input-icon-left hidden sm:block">
+            <i className="pi pi-search text-gray-400" />
+            <InputText id={ids.navbarSearchInput} className="dynamicStyle w-32 sm:w-48 bg-zinc-800 text-gray-100 border border-zinc-700 rounded-lg px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={data?.[ids.navbarSearchInput] || "Search..."} />
+          </span>
+          <Button icon="pi pi-bars" className="p-button-rounded p-button-text p-button-sm text-gray-100 sm:hidden" aria-label="Menu" />
         </div>
-        <button className="lg:hidden p-2 text-zinc-300" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          <i className="pi pi-bars text-xl"></i>
-        </button>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-zinc-950/95 flex flex-col items-center justify-center lg:hidden">
-          <button className="absolute top-4 right-4 p-2 text-zinc-300" onClick={() => setIsMobileMenuOpen(false)}>
-            <i className="pi pi-times text-2xl"></i>
-          </button>
-          <ul className="flex flex-col gap-6 text-2xl font-bold">
-            {ir.navbar.links.map((link, index) => (
-              <li key={index}>
-                <a href="#" className={`text-zinc-300 hover:text-${accentColor} transition-colors dynamicStyle`} dangerouslySetInnerHTML={{ __html: data?.[ids[`navbarLink${index + 1}`]] || link }}></a>
-              </li>
-            ))}
-            <li><Button label="Login" className="p-button-text text-zinc-300 text-2xl" onClick={() => setIsMobileMenuOpen(false)} /></li>
-            <li><Button id={ids.ctaButton + "-mobile"} className={`dynamicStyle px-8 py-3 rounded-full font-semibold text-lg text-white bg-${accentColor} hover:bg-${accentColor.replace('-500', '-600')} transition-colors`} label={data?.[ids.ctaButton] || ir.elements.find(el => el.fieldId === ids.ctaButton)?.defaultContent} aria-label="Get Started Free" onClick={() => setIsMobileMenuOpen(false)} /></li>
-          </ul>
-        </div>
-      )}
-
-
-      <div className="px-3 sm:px-8 lg:px-16 py-6 sm:py-8 lg:py-12 max-w-[1920px] mx-auto text-center lg:text-left">
-        {/* Hero Section */}
-        <section className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-16 py-12 md:py-20 lg:py-24">
-          <div className="flex-1 max-w-xl lg:max-w-2xl">
-            <p id={ids.brandBadge} className={`dynamicStyle text-sm sm:text-base font-semibold text-${accentColor} mb-2`} dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || ir.elements.find(el => el.fieldId === ids.brandBadge)?.defaultContent }}></p>
-            <h1 id={ids.headlineMain} className="dynamicStyle text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white leading-tight break-words tracking-tight mb-4 md:mb-6" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || ir.elements.find(el => el.fieldId === ids.headlineMain)?.defaultContent }}></h1>
-            <h2 id={ids.headlineSub} className="dynamicStyle text-lg sm:text-xl md:text-2xl text-zinc-300 mb-6 md:mb-8" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || ir.elements.find(el => el.fieldId === ids.headlineSub)?.defaultContent }}></h2>
-            <p id={ids.description} className="dynamicStyle text-base sm:text-lg text-zinc-400 mb-8 md:mb-10 max-w-prose" dangerouslySetInnerHTML={{ __html: data?.[ids.description] || ir.elements.find(el => el.fieldId === ids.description)?.defaultContent }}></p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button id={ids.ctaButton} className={`dynamicStyle flex-1 sm:flex-none w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-lg text-white bg-${accentColor} hover:bg-${accentColor.replace('-500', '-600')} transition-colors`} label={data?.[ids.ctaButton] || ir.elements.find(el => el.fieldId === ids.ctaButton)?.defaultContent} aria-label="Get Started Free" onClick={() => {}} />
-              <Button id={ids.secondaryCtaButton} className={`dynamicStyle flex-1 sm:flex-none w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-lg text-${accentColor} border-2 border-${accentColor} hover:bg-${accentColor} hover:text-white transition-colors`} label={data?.[ids.secondaryCtaButton] || ir.secondaryButton} aria-label="Explore Features" outlined onClick={() => {}} />
-            </div>
-          </div>
-          <div className="flex-1 w-full lg:w-auto max-w-xl lg:max-w-none">
-            <img
-              id={ids.heroImage}
-              className="dynamicStyle2 w-full h-auto object-cover rounded-3xl shadow-2xl transition-transform duration-500 hover:scale-105"
-              src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage(ir.elements.find(el => el.fieldId === ids.heroImage)?.defaultContent || "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80")}
-              onError={errorImage}
-              alt="Futuristic AI interface"
-            />
-          </div>
-        </section>
-
-        {/* Feature Cards / Stat Badges (R9, R11i) */}
-        <section className="py-12 md:py-20 lg:py-24">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white text-center mb-12">Powerful Features for Your AI Journey</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {statBadgesArr.map((item, index) => (
-              <div key={index} className="p-4 sm:p-6 rounded-2xl bg-zinc-800 border border-zinc-700 shadow-xl flex flex-col items-start text-left hover:scale-[1.02] transition-transform duration-300">
-                {/* Placeholder for icon/illustration based on imageConcept */}
-                <div className={`text-${accentColor} mb-3 text-3xl sm:text-4xl`}>
-                  {index === 0 && <i className="pi pi-chart-line"></i> /* AI Model Training */}
-                  {index === 1 && <i className="pi pi-cloud-upload"></i> /* Automated Deployment */}
-                  {index === 2 && <i className="pi pi-globe"></i> /* Real-time Analytics */}
-                  {index === 3 && <i className="pi pi-users"></i> /* Collaborative Workspace */}
-                </div>
-                <h3 id={item.fieldId1} className="dynamicStyle text-lg sm:text-xl font-bold text-white mb-2" dangerouslySetInnerHTML={{ __html: data?.[item.fieldId1] || item.field1 }}></h3>
-                <p id={item.fieldId2} className="dynamicStyle text-sm sm:text-base text-zinc-400" dangerouslySetInnerHTML={{ __html: data?.[item.fieldId2] || item.field2 }}></p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Content Blocks / Value Propositions */}
-        <section className="py-12 md:py-20 lg:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-            {ir.contentBlocks.map((block, index) => (
-              <div key={index} className="text-center p-6 bg-zinc-800/50 rounded-2xl border border-zinc-700 backdrop-blur-sm hover:scale-[1.02] transition-transform duration-300">
-                <h3 id={ids[`contentBlock${index + 1}Title`]} className="dynamicStyle text-xl sm:text-2xl font-bold text-white mb-3" dangerouslySetInnerHTML={{ __html: data?.[ids[`contentBlock${index + 1}Title`]] || block.title }}></h3>
-                <p id={ids[`contentBlock${index + 1}Description`]} className="dynamicStyle text-base sm:text-lg text-zinc-400" dangerouslySetInnerHTML={{ __html: data?.[ids[`contentBlock${index + 1}Description`]] || block.description }}></p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Below-the-fold CTA */}
-        <section className={`bg-${accentColor}/10 border border-${accentColor} rounded-3xl p-8 sm:p-12 lg:p-16 my-12 md:my-20 lg:my-24 text-center shadow-xl`}>
-          <h2 id={ids.ctaBlockHeadline} className="dynamicStyle text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight break-words" dangerouslySetInnerHTML={{ __html: data?.[ids.ctaBlockHeadline] || ir.ctaBlocks[0].headline }}></h2>
-          <p id={ids.ctaBlockSubtext} className="dynamicStyle text-base sm:text-lg text-zinc-300 mb-8 max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: data?.[ids.ctaBlockSubtext] || ir.ctaBlocks[0].subtext }}></p>
-          <Button id={ids.ctaBlockButtonText} className={`dynamicStyle px-10 py-4 rounded-full font-bold text-xl text-white bg-${accentColor} hover:bg-${accentColor.replace('-500', '-600')} transition-colors`} label={data?.[ids.ctaBlockButtonText] || ir.ctaBlocks[0].buttonText} aria-label="Sign Up Now" onClick={() => {}} />
-        </section>
-      </div>
-
-      {/* Footer (R11j) */}
-      <footer className="bg-zinc-900 border-t border-zinc-800 py-8 sm:py-10 lg:py-12 px-3 sm:px-8 lg:px-16">
-        <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 text-center md:text-left">
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <h3 className={`text-2xl font-bold text-${accentColor}`} dangerouslySetInnerHTML={{ __html: data?.[ids.navbarLogo] || ir.navbar.logoText }}></h3>
-            {ir.footer.hasEmailSignup && (
-              <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full justify-center md:justify-start">
-                <input
-                  type="email"
-                  id={ids.footerEmailInput}
-                  placeholder={data?.[ids.footerEmailInput] || ir.footer.emailPlaceholder}
-                  className="dynamicStyle flex-grow px-5 py-3 bg-zinc-800 text-zinc-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 w-full sm:w-auto min-w-[200px]"
-                />
-                <Button id={ids.footerSubscribeButton} className={`dynamicStyle px-6 py-3 rounded-full font-bold text-white bg-${accentColor} hover:bg-${accentColor.replace('-500', '-600')} transition-colors w-full sm:w-auto`} label={data?.[ids.footerSubscribeButton] || ir.footer.signupButtonText} aria-label="Subscribe to newsletter" onClick={() => {}} />
-              </div>
-            )}
-            <p className="text-zinc-500 text-sm mt-4">&copy; {new Date().getFullYear()} {ir.navbar.logoText}. All rights reserved.</p>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-6 sm:gap-10 lg:gap-16 text-zinc-300">
-            <div className="flex flex-col gap-2">
-              <h4 className="font-semibold text-white mb-2">Company</h4>
-              {ir.footer.links.map((link, index) => (
-                <a key={index} href="#" id={ids[`footerLink${index + 1}`]} className={`dynamicStyle text-zinc-400 hover:text-${accentColor} transition-colors`} dangerouslySetInnerHTML={{ __html: data?.[ids[`footerLink${index + 1}`]] || link }}></a>
-              ))}
-            </div>
-            <div className="flex flex-col gap-2">
-              <h4 className="font-semibold text-white mb-2">Connect</h4>
-              <div className="flex gap-4 justify-center md:justify-start">
-                {ir.footer.socials.map((social, index) => (
-                  <a key={index} href="#" id={ids[`footerSocial${index + 1}`]} aria-label={social} className={`text-zinc-400 hover:text-${accentColor} transition-colors text-xl`}>
-                    {social === "Email" && <i className="pi pi-envelope"></i>}
-                    {social === "LinkedIn" && <i className="pi pi-linkedin"></i>}
-                    {social === "Instagram" && <i className="pi pi-instagram"></i>}
-                    {social === "Twitter" && <i className="pi pi-twitter"></i>}
-                    {social === "Facebook" && <i className="pi pi-facebook"></i>}
-                    {/* Add more social icons as needed */}
-                  </a>
-                ))}
-              </div>
-            </div>
+      {/* Hero Section */}
+      <section className="px-3 sm:px-8 lg:px-16 py-12 sm:py-16 lg:py-24 max-w-[1920px] mx-auto text-center flex flex-col items-center justify-center gap-8 lg:gap-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 opacity-60"></div>
+        <div className="relative z-10 flex flex-col items-center gap-6 lg:gap-8 max-w-4xl">
+          <span id={ids.brandBadge} className={`dynamicStyle inline-flex items-center rounded-full bg-${themeAccent}/20 px-4 py-1.5 text-xs sm:text-sm font-semibold text-${themeAccent} shadow-inner`}>
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "AI STUDIO" }}></span>
+          </span>
+          <h1 id={ids.headlineMain} className="dynamicStyle text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black break-words tracking-tight text-white leading-tight">
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "Unlock the Power of Intelligent Automation" }}></span>
+          </h1>
+          <h2 id={ids.headlineSub} className="dynamicStyle text-lg sm:text-xl md:text-2xl text-gray-300 max-w-2xl leading-relaxed">
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Revolutionize your workflows with cutting-edge AI-powered solutions designed for efficiency and growth." }}></span>
+          </h2>
+          <p id={ids.description} className="dynamicStyle text-sm sm:text-base text-gray-400 max-w-xl">
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Our platform seamlessly integrates advanced machine learning and intuitive design, enabling businesses to achieve unprecedented levels of productivity and innovation. Experience the future of work today." }}></span>
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <Button id={ids.ctaButton} className={`dynamicStyle w-full sm:w-auto px-8 py-3.5 rounded-full font-bold bg-${themeAccent} hover:bg-${themeAccent}/80 text-white shadow-lg transition-all duration-300 ease-in-out`} severity="danger" label={data?.[ids.ctaButton] || "Get Started Free"} aria-label="Get Started Free" onClick={() => {}} />
+            <Button className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-gray-200 border border-zinc-600 hover:border-zinc-500 hover:bg-zinc-800 transition-all duration-300 ease-in-out" label="Learn More" outlined aria-label="Learn More" onClick={() => {}} />
           </div>
         </div>
+        <div className="relative w-full max-w-5xl mt-10 md:mt-16 z-10">
+          <img id={ids.heroImage} className="dynamicStyle2 w-full h-auto object-cover rounded-3xl shadow-2xl border border-zinc-700"
+            src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80")}
+            onError={errorImage}
+            alt="AI-powered solutions dashboard"
+          />
+        </div>
+      </section>
+
+      {/* Content Blocks (Value Propositions) */}
+      <section className="px-3 sm:px-8 lg:px-16 py-12 sm:py-16 lg:py-24 max-w-[1920px] mx-auto bg-zinc-900 border-t border-b border-zinc-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {contentBlocks.map((block, index) => (
+            <div key={index} className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-800/60 border border-zinc-700 backdrop-blur-sm shadow-xl">
+              <i className={`pi pi-${index === 0 ? "cloud" : index === 1 ? "compass" : "lock"} text-4xl text-${themeAccent} mb-4`}></i>
+              <h3 id={block.titleId} className="dynamicStyle text-xl sm:text-2xl font-bold text-white mb-3">
+                <span dangerouslySetInnerHTML={{ __html: data?.[block.titleId] || block.titleDefault }}></span>
+              </h3>
+              <p id={block.descriptionId} className="dynamicStyle text-gray-300 text-sm sm:text-base">
+                <span dangerouslySetInnerHTML={{ __html: data?.[block.descriptionId] || block.descriptionDefault }}></span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Below the Fold CTA */}
+      <section className="px-3 sm:px-8 lg:px-16 py-10 sm:py-12 max-w-[1920px] mx-auto bg-gradient-to-br from-zinc-800 to-zinc-900 flex flex-col md:flex-row items-center justify-between gap-6 rounded-b-3xl">
+        <div className="flex flex-col text-center md:text-left">
+          <h2 id={ids.belowFoldCtaHeadline} className="dynamicStyle text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight mb-2">
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.belowFoldCtaHeadline] || "Ready to elevate your business with AI?" }}></span>
+          </h2>
+          <p id={ids.belowFoldCtaSubtext} className="dynamicStyle text-sm text-gray-300">
+            <span dangerouslySetInnerHTML={{ __html: data?.[ids.belowFoldCtaSubtext] || "No credit card required • Instant access" }}></span>
+          </p>
+        </div>
+        <Button id={ids.belowFoldCtaButton} className={`dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold bg-${themeAccent} hover:bg-${themeAccent}/80 text-white shadow-lg transition-all duration-300 ease-in-out`} label={data?.[ids.belowFoldCtaButton] || "Start Free Trial"} aria-label="Start Free Trial" onClick={() => {}} />
+      </section>
+
+      {/* Feature Cards / Stat Badges */}
+      <section className="px-3 sm:px-8 lg:px-16 py-12 sm:py-16 lg:py-24 max-w-[1920px] mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-12">Key Features</h2>
+        <div id={ids.statBadges} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statBadgesArr.map((item, index) => (
+            <div key={index} className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-800/60 border border-zinc-700 backdrop-blur-sm shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center rounded-full mb-6 bg-zinc-700/50 border border-zinc-600 overflow-hidden">
+                <img className="dynamicStyle2 absolute inset-0 w-full h-full object-cover opacity-20" src={getImage("https://via.placeholder.com/150/0f172a/60a5fa?text=%2B")} onError={errorImage} alt="Feature visual" />
+                <i className={`pi pi-${index === 0 ? "chart-line" : index === 1 ? "sync" : index === 2 ? "user-plus" : "comments"} text-4xl text-${themeAccent} relative z-10`}></i>
+              </div>
+              <h3 id={item.fieldId1} className="dynamicStyle text-xl sm:text-2xl font-extrabold text-white mb-2 leading-tight">
+                <span dangerouslySetInnerHTML={{ __html: data?.[item.fieldId1] || item.field1 }}></span>
+              </h3>
+              <p id={item.fieldId2} className="dynamicStyle text-sm sm:text-base text-gray-300">
+                <span dangerouslySetInnerHTML={{ __html: data?.[item.fieldId2] || item.field2 }}></span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full bg-zinc-900 border-t border-zinc-800 px-3 sm:px-8 lg:px-16 py-8 sm:py-10 max-w-[1920px] mx-auto text-gray-400">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 mb-8 pb-8 border-b border-zinc-800">
+          <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
+            <span id={ids.navbarLogo} className="dynamicStyle text-xl sm:text-2xl font-black text-gray-100 mb-2">
+              <span dangerouslySetInnerHTML={{ __html: data?.[ids.navbarLogo] || "InnovateAI" }}></span>
+            </span>
+            <p className="text-sm">Revolutionizing workflows with AI.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <span className="p-input-icon-left w-full sm:w-auto">
+              <i className="pi pi-envelope text-gray-400" />
+              <InputText id={ids.footerEmailInput} className="dynamicStyle w-full bg-zinc-800 text-gray-100 border border-zinc-700 rounded-lg px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder={data?.[ids.footerEmailInput] || "Email address field"} />
+            </span>
+            <Button id={ids.footerSignupButton} className={`dynamicStyle w-full sm:w-auto px-6 py-2 rounded-lg font-semibold bg-${themeAccent} hover:bg-${themeAccent}/80 text-white transition-colors`} label={data?.[ids.footerSignupButton] || "Sign up CTA button"} aria-label="Sign up for updates" onClick={() => {}} />
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+            {footerLinks.map((link) => (
+              <a key={link.id} href="#" className="hover:text-white transition-colors" id={link.id}>
+                <span dangerouslySetInnerHTML={{ __html: data?.[link.id] || link.text }} className="dynamicStyle"></span>
+              </a>
+            ))}
+          </div>
+          <div className="flex gap-4">
+            {socialLinks.map((social) => (
+              <a key={social.id} href="#" className="text-xl hover:text-white transition-colors" aria-label={social.icon.split('-')[1]} id={social.id}>
+                <i className={`${social.icon} dynamicStyle`}></i>
+              </a>
+            ))}
+          </div>
+        </div>
+        <p className="text-center text-xs mt-8">&copy; 2023 InnovateAI. All rights reserved.</p>
       </footer>
     </div>
   );

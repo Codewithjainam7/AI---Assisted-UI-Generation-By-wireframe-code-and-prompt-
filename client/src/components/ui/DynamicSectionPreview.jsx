@@ -355,86 +355,268 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
     );
   }
 
-  // Standard Split-Hero fallback
+  // Default Content Blocks matching the 3 boxes in the wireframe
+  const contentBlocks = [
+    {
+      title: liveValues.contentBlock1Title || 'Modular Architecture',
+      desc: liveValues.contentBlock1Desc || 'Construct high-performance interfaces with reusable, production-ready modules.'
+    },
+    {
+      title: liveValues.contentBlock2Title || 'Zero-Latency State',
+      desc: liveValues.contentBlock2Desc || 'Instantaneous client-side state synchronization with unified Redux stores.'
+    },
+    {
+      title: liveValues.contentBlock3Title || 'Autonomous Pipelines',
+      desc: liveValues.contentBlock3Desc || 'Streamline design handoffs into validated, accessible codebases.'
+    }
+  ];
+
+  const featureCardImages = [
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80'
+  ];
+
+  // Full Landing Page faithful to the wireframe sketch
   return (
-    <div className="relative min-h-[600px] w-full flex items-center justify-center overflow-x-hidden bg-zinc-950 text-white rounded-2xl">
-      <div className="hidden md:block absolute left-0 top-0 h-full w-2 bg-red-500 z-0" />
-      <div className="hidden md:block absolute right-0 top-0 h-full w-2 bg-red-500 z-0" />
-
-      <main className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-8 md:px-12 flex items-center justify-center py-8 sm:py-12 md:py-16">
-        <section className="w-full flex flex-col md:flex-row items-center gap-6 sm:gap-8 md:gap-12 overflow-hidden py-4 sm:py-8 md:py-0">
-          <div className="w-full md:w-1/2 flex items-center justify-center min-h-[260px] sm:min-h-[300px] md:min-h-[500px] p-2 sm:p-4">
-            <div className="relative w-full max-w-[500px] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-zinc-900/60 p-2 group">
-              <img
-                src={getImage(displayImage)}
-                alt="Section visual"
-                onError={errorImage}
-                className="w-full h-auto max-h-[320px] sm:max-h-[460px] object-contain mx-auto rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
+    <div className="relative min-h-screen w-full bg-[#09090b] text-white font-sans antialiased overflow-x-hidden rounded-2xl">
+      {/* ── 1. Top Sticky Navbar with Search ────────────────────────────── */}
+      <header className="w-full border-b border-white/10 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-40">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-16 h-14 sm:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6 sm:gap-10">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-glow-sm" />
+              <span
+                className="text-lg sm:text-xl font-black tracking-wider uppercase text-white hover:text-red-400 transition cursor-pointer"
+                dangerouslySetInnerHTML={{ __html: displayBrand }}
               />
-              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
             </div>
+            <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-300">
+              {['Features', 'Solutions', 'Pricing'].map((link) => (
+                <a key={link} href="#" className="hover:text-white hover:underline transition-colors py-1">{link}</a>
+              ))}
+            </nav>
           </div>
 
-          <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-8 space-y-4 sm:space-y-6 items-center md:items-start text-center md:text-left">
-            {displayBrand && (
-              <div>
-                <span
-                  className="inline-block px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full glass border border-red-500/40 uppercase text-red-400 font-bold text-[10px] sm:text-xs tracking-[0.2em]"
-                  dangerouslySetInnerHTML={{ __html: displayBrand }}
-                />
-              </div>
-            )}
-
-            <h1
-              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15] uppercase break-words"
-              dangerouslySetInnerHTML={{ __html: displayHeadline }}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="relative hidden sm:block">
+              <input
+                type="search"
+                placeholder="search platform..."
+                className="w-48 md:w-64 px-4 py-1.5 pl-9 rounded-full bg-zinc-900/90 border border-white/15 text-sm text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition"
+              />
+              <span className="absolute left-3 top-2 text-zinc-400 text-xs">🔍</span>
+            </div>
+            <Button
+              className="px-4 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 border-none text-white transition"
+              label="Sign In"
+              aria-label="Sign in"
             />
+          </div>
+        </div>
+      </header>
 
-            {displaySub && (
-              <h2
-                className="text-base sm:text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400"
-                dangerouslySetInnerHTML={{ __html: displaySub }}
-              />
-            )}
+      {/* ── 2. Full-Width Hero Section with Visual Media ────────────────── */}
+      <main className="max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-16 pt-8 sm:pt-12 pb-12 sm:pb-16 flex flex-col items-center text-center">
+        {displayBrand && (
+          <div className="mb-4">
+            <span
+              className="inline-block px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full glass border border-red-500/40 uppercase text-red-400 font-bold text-[10px] sm:text-xs tracking-[0.2em]"
+              dangerouslySetInnerHTML={{ __html: displayBrand }}
+            />
+          </div>
+        )}
 
-            {displayDesc && (
-              <p
-                className="text-gray-400 text-xs sm:text-sm md:text-base max-w-xl leading-relaxed font-normal"
-                dangerouslySetInnerHTML={{ __html: displayDesc }}
-              />
-            )}
+        <h1
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15] uppercase max-w-4xl break-words"
+          dangerouslySetInnerHTML={{ __html: displayHeadline }}
+        />
 
-            {Array.isArray(statCards) && statCards.length > 0 && (
-              <div className="w-full grid grid-cols-3 gap-2 sm:gap-4 pt-2">
-                {statCards.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="glass p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center shadow-lg"
-                  >
-                    <div
-                      className="text-base sm:text-2xl md:text-3xl font-extrabold text-white"
-                      dangerouslySetInnerHTML={{ __html: item.field1 || '100+' }}
-                    />
-                    <div
-                      className="mt-0.5 sm:mt-1 text-gray-400 text-[9px] sm:text-[11px] uppercase tracking-wider leading-snug"
-                      dangerouslySetInnerHTML={{ __html: item.field2 || 'Metric' }}
-                    />
-                  </div>
-                ))}
+        {displaySub && (
+          <h2
+            className="text-base sm:text-lg md:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400 mt-3 max-w-2xl"
+            dangerouslySetInnerHTML={{ __html: displaySub }}
+          />
+        )}
+
+        {displayDesc && (
+          <p
+            className="text-gray-400 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed mt-4"
+            dangerouslySetInnerHTML={{ __html: displayDesc }}
+          />
+        )}
+
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mt-6">
+          <Button
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-sm sm:text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none text-white shadow-lg"
+            label={displayCta}
+            aria-label="Primary CTA button"
+            onClick={() => alert(`Clicked: ${displayCta}`)}
+          />
+          <button
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-sm sm:text-base glass border border-white/15 hover:bg-white/10 text-white transition-all"
+            onClick={() => alert('Explore platform clicked')}
+          >
+            Explore Platform
+          </button>
+        </div>
+
+        {/* Hero Visual Media Banner (Full-Width Wireframe Box) */}
+        <div className="w-full max-w-5xl mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-zinc-900/60 p-2 sm:p-3 relative group">
+          <img
+            src={getImage(displayImage)}
+            alt="Hero Visual Blueprint"
+            onError={errorImage}
+            className="w-full h-auto max-h-[360px] sm:max-h-[500px] object-cover rounded-xl sm:rounded-2xl transition-transform duration-500 group-hover:scale-[1.01]"
+          />
+          <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        </div>
+      </main>
+
+      {/* ── 3. Three Content Blocks in 3-Column Grid ────────────────────── */}
+      <section className="max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-16 py-8 sm:py-12 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          {contentBlocks.map((block, idx) => (
+            <div
+              key={idx}
+              className="glass p-5 sm:p-6 rounded-2xl border border-white/10 hover:border-red-500/40 transition-all flex flex-col justify-center text-center group"
+            >
+              <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center font-bold text-sm mx-auto mb-3">
+                0{idx + 1}
               </div>
-            )}
+              <h3
+                className="text-base sm:text-lg font-bold text-white mb-2 group-hover:text-red-400 transition"
+                dangerouslySetInnerHTML={{ __html: block.title }}
+              />
+              <p
+                className="text-xs sm:text-sm text-gray-400 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: block.desc }}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
 
-            <div className="pt-2 w-full sm:w-auto">
+      {/* ── 4. Prominent Horizontal "Below The Fold CTA" Banner ─────────── */}
+      <section className="max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-16 py-6 sm:py-8">
+        <div className="w-full rounded-2xl sm:rounded-3xl bg-gradient-to-r from-red-950/60 via-zinc-900 to-zinc-950 border border-red-500/30 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 shadow-xl">
+          <div className="text-center md:text-left">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-400">Limited Alpha Access</span>
+            <h2 className="text-lg sm:text-2xl font-black text-white mt-1">Ready to transform your UI workflows?</h2>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">Join leading developers synthesizing production React components.</p>
+          </div>
+          <Button
+            className="px-8 py-3 rounded-full font-black text-xs sm:text-sm uppercase tracking-wider bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none text-white flex-shrink-0"
+            label="Join Alpha Now"
+            aria-label="Join alpha"
+            onClick={() => alert('Below the fold CTA activated')}
+          />
+        </div>
+      </section>
+
+      {/* ── 5. Four Feature Cards in 4-Column Grid with Image Headers ──── */}
+      <section className="max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-16 py-8 sm:py-12 border-t border-white/10">
+        <div className="text-center mb-8">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-400">Core Capabilities</span>
+          <h2 className="text-xl sm:text-3xl font-black text-white mt-1">Engineered for Production Excellence</h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {statCards.slice(0, 4).map((item, idx) => (
+            <div
+              key={idx}
+              className="glass rounded-2xl border border-white/10 overflow-hidden flex flex-col hover:border-red-500/50 hover:scale-[1.02] transition-all group shadow-xl"
+            >
+              {/* Card Media Header (matching the wireframe square with X) */}
+              <div className="w-full h-36 sm:h-40 overflow-hidden relative bg-zinc-900">
+                <img
+                  src={featureCardImages[idx % featureCardImages.length]}
+                  alt={item.field1 || 'Feature'}
+                  onError={errorImage}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
+                <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-black/60 text-red-400 border border-white/10 backdrop-blur-md">
+                  0{idx + 1}
+                </span>
+              </div>
+
+              {/* Card Text Content */}
+              <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
+                <div>
+                  <h4
+                    className="text-sm sm:text-base font-extrabold text-white group-hover:text-red-400 transition mb-1.5"
+                    dangerouslySetInnerHTML={{ __html: item.field1 || 'Feature Metric' }}
+                  />
+                  <p
+                    className="text-xs text-gray-400 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: item.field2 || 'Feature Description' }}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 6. Full Website Footer ──────────────────────────────────────── */}
+      <footer className="w-full border-t border-white/10 bg-zinc-950 mt-12 py-10 px-4 sm:px-6 lg:px-16 text-xs text-zinc-400">
+        <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b border-white/5">
+          {/* Left: Sign up CTA */}
+          <div className="flex flex-col gap-3 max-w-md w-full">
+            <span className="text-sm font-bold text-white uppercase tracking-wider">Stay Connected</span>
+            <p className="text-xs text-gray-400">Receive architectural updates and newly generated design components.</p>
+            <div className="flex items-center gap-2 w-full">
+              <input
+                type="email"
+                placeholder="Enter your work email"
+                className="flex-1 px-4 py-2 rounded-full bg-zinc-900 border border-white/15 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/50"
+              />
               <Button
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-bold text-sm sm:text-base bg-gradient-to-r from-red-600 to-orange-500 hover:shadow-glow-red hover:scale-105 transition-all border-none text-white shadow-lg"
-                label={displayCta}
-                aria-label="Call to action"
-                onClick={() => alert(`CTA Clicked: ${displayCta}`)}
+                className="px-5 py-2 rounded-full text-xs font-bold bg-red-600 hover:bg-red-500 border-none text-white transition flex-shrink-0"
+                label="Subscribe"
+                aria-label="Subscribe"
+                onClick={() => alert('Subscribed!')}
               />
             </div>
           </div>
-        </section>
-      </main>
+
+          {/* Right: Three Navigation Columns */}
+          <div className="flex flex-wrap gap-8 sm:gap-12 text-xs">
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-white uppercase text-[11px] tracking-wider">Product</span>
+              <a href="#" className="hover:text-white transition">Architecture</a>
+              <a href="#" className="hover:text-white transition">Live CMS</a>
+              <a href="#" className="hover:text-white transition">Components</a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-white uppercase text-[11px] tracking-wider">Resources</span>
+              <a href="#" className="hover:text-white transition">Documentation</a>
+              <a href="#" className="hover:text-white transition">API Reference</a>
+              <a href="#" className="hover:text-white transition">Guides</a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-white uppercase text-[11px] tracking-wider">Legal</span>
+              <a href="#" className="hover:text-white transition">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition">Terms of Service</a>
+              <a href="#" className="hover:text-white transition">Security</a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Social Media Icons & Copyright */}
+        <div className="max-w-[1920px] mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
+          <p>© {new Date().getFullYear()} {displayBrand || 'AI Studio'}. All rights reserved.</p>
+          <div className="flex items-center gap-4 text-base text-zinc-400">
+            <a href="#" className="hover:text-white transition" title="Email"><i className="pi pi-envelope" /></a>
+            <a href="#" className="hover:text-white transition" title="LinkedIn"><i className="pi pi-linkedin" /></a>
+            <a href="#" className="hover:text-white transition" title="Instagram"><i className="pi pi-instagram" /></a>
+            <a href="#" className="hover:text-white transition" title="Twitter"><i className="pi pi-twitter" /></a>
+            <a href="#" className="hover:text-white transition" title="Facebook"><i className="pi pi-facebook" /></a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

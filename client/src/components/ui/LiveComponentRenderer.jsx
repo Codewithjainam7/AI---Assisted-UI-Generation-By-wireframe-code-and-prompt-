@@ -68,7 +68,12 @@ export default function LiveComponentRenderer({ code = '', pageName = 'Home', jo
 
       // Transform with Babel standalone using classic runtime (React.createElement)
       // to avoid modern automatic JSX runtime generating import statements
-      const transformed = Babel.transform(cleaned, {
+      const transformFn = Babel?.transform || Babel?.default?.transform || (typeof window !== 'undefined' && window.Babel?.transform);
+      if (!transformFn) {
+        throw new Error('Babel standalone transform function not available');
+      }
+
+      const transformed = transformFn(cleaned, {
         presets: [
           ['react', { runtime: 'classic' }]
         ],

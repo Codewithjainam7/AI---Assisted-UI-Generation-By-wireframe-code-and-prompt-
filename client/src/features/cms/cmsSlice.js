@@ -35,7 +35,13 @@ const initialState = {
 const cmsSlice = createSlice({
   name: 'cms',
   initialState,
-  reducers: {},
+  reducers: {
+    updateLiveCmsValue: (state, action) => {
+      const { fieldId, pageName, value } = action.payload;
+      if (!state.allSections[pageName]) state.allSections[pageName] = {};
+      state.allSections[pageName][fieldId] = value;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchElementsByIds.pending, (state) => {
@@ -50,6 +56,12 @@ const cmsSlice = createSlice({
         
         elements.forEach(el => {
           state.allSections[pageName][el.fieldId] = el.contentType === 'Cards' ? el.loop : el.content;
+          if (el.contentType === 'Cards' && Array.isArray(el.loop)) {
+            el.loop.forEach(item => {
+              if (item.fieldId1) state.allSections[pageName][item.fieldId1] = item.field1;
+              if (item.fieldId2) state.allSections[pageName][item.fieldId2] = item.field2;
+            });
+          }
           if (el.css) {
             state.allSectionsCss[pageName][el.fieldId] = el.css;
           }
@@ -68,7 +80,16 @@ const cmsSlice = createSlice({
         if (!state.allSections[pageName]) state.allSections[pageName] = {};
         if (!state.allSectionsCss[pageName]) state.allSectionsCss[pageName] = {};
         
-        state.allSections[pageName][fieldId] = element.contentType === 'Cards' ? element.loop : element.content;
+        state.allSections[pageName][fieldId] = (element.contentType === 'Cards' && Array.isArray(element.loop) && element.loop.length > 0)
+          ? element.loop
+          : (element.content || element.loop);
+
+        if (element.contentType === 'Cards' && Array.isArray(element.loop)) {
+          element.loop.forEach(item => {
+            if (item.fieldId1) state.allSections[pageName][item.fieldId1] = item.field1;
+            if (item.fieldId2) state.allSections[pageName][item.fieldId2] = item.field2;
+          });
+        }
         if (element.css) {
           state.allSectionsCss[pageName][fieldId] = element.css;
         }
@@ -76,4 +97,5 @@ const cmsSlice = createSlice({
   },
 });
 
+export const { updateLiveCmsValue } = cmsSlice.actions;
 export default cmsSlice.reducer;

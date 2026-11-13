@@ -3,7 +3,7 @@
     "sectionId": "1000000030",
     "elementName": "heroImage",
     "fieldId": "2000000204",
-    "content": "https://images.unsplash.com/photo-1620799140188-3b2a0c64ab3d?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "TestPage",
@@ -98,23 +98,23 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "heroImage",
-    "fieldId": "2000000354",
-    "content": "https://images.unsplash.com/photo-1579782522030-ff6778648873?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTQzODd8MHwxfHNlYXJjaHw1fHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDB8fHx8MTcwMTI3NjE5Mnww&ixlib=rb-4.0.3&q=80&w=1080",
+    "fieldId": "2000000420",
+    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.385Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "brandBadge",
-    "fieldId": "2000000355",
+    "fieldId": "2000000421",
     "content": "AI STUDIO",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -122,56 +122,63 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "headlineMain",
-    "fieldId": "2000000356",
-    "content": "Unlock the Future of AI Development",
+    "fieldId": "2000000422",
+    "content": "LIVE EDITING VERIFIED TEST",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:07:24.441Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "headlineSub",
-    "fieldId": "2000000357",
-    "content": "Build, deploy, and scale intelligent applications with unprecedented speed and precision.",
+    "fieldId": "2000000423",
+    "content": "Revolutionize your workflows with cutting-edge AI-powered solutions designed for efficiency and growth.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "description",
-    "fieldId": "2000000358",
-    "content": "Our cutting-edge platform provides a comprehensive suite of tools for data scientists, developers, and enterprises to innovate faster and bring their AI visions to life.",
+    "fieldId": "2000000424",
+    "content": "Our platform seamlessly integrates advanced machine learning and intuitive design, enabling businesses to achieve unprecedented levels of productivity and innovation. Experience the future of work today.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "statBadges",
-    "fieldId": "2000000359",
-    "content": "",
+    "fieldId": "2000000425",
+    "content": [
+      {
+        "field1": "99.99% Uptime",
+        "field2": "Enterprise SLA",
+        "fieldId1": "3000000001",
+        "fieldId2": "3000000002"
+      }
+    ],
     "contentType": "Cards",
     "projectName": "sample-brand",
     "pageName": "Home",
@@ -179,45 +186,19 @@
     "css": null,
     "loop": [
       {
-        "field1": "AI Model Training",
-        "fieldType1": "Text",
-        "fieldId1": "3000000243",
-        "field2": "AI Model Training",
-        "fieldType2": "Text",
-        "fieldId2": "3000000244"
-      },
-      {
-        "field1": "Automated Deployment",
-        "fieldType1": "Text",
-        "fieldId1": "3000000245",
-        "field2": "Automated Deployment",
-        "fieldType2": "Text",
-        "fieldId2": "3000000246"
-      },
-      {
-        "field1": "Real-time Analytics",
-        "fieldType1": "Text",
-        "fieldId1": "3000000247",
-        "field2": "Real-time Analytics",
-        "fieldType2": "Text",
-        "fieldId2": "3000000248"
-      },
-      {
-        "field1": "Collaborative Workspace",
-        "fieldType1": "Text",
-        "fieldId1": "3000000249",
-        "field2": "Collaborative Workspace",
-        "fieldType2": "Text",
-        "fieldId2": "3000000250"
+        "field1": "99.99% Uptime",
+        "field2": "Enterprise SLA",
+        "fieldId1": "3000000001",
+        "fieldId2": "3000000002"
       }
     ],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:07:24.460Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "ctaButton",
-    "fieldId": "2000000360",
+    "fieldId": "2000000426",
     "content": "Get Started Free",
     "contentType": "Button",
     "projectName": "sample-brand",
@@ -225,13 +206,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "navbarLogo",
-    "fieldId": "2000000361",
+    "fieldId": "2000000427",
     "content": "InnovateAI",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -239,13 +220,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "navbarLink1",
-    "fieldId": "2000000362-solutions",
+    "sectionId": "1000000052",
+    "elementName": "navLink1",
+    "fieldId": "2000000428",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -253,13 +234,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "navbarLink2",
-    "fieldId": "2000000363-features",
+    "sectionId": "1000000052",
+    "elementName": "navLink2",
+    "fieldId": "2000000429",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -267,13 +248,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "navbarLink3",
-    "fieldId": "2000000364-pricing",
+    "sectionId": "1000000052",
+    "elementName": "navLink3",
+    "fieldId": "2000000430",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -281,13 +262,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "navbarLink4",
-    "fieldId": "2000000365-aboutUs",
+    "sectionId": "1000000052",
+    "elementName": "navLink4",
+    "fieldId": "2000000431",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -295,13 +276,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "secondaryCtaButton",
-    "fieldId": "2000000366",
+    "sectionId": "1000000052",
+    "elementName": "navbarSearchInput",
+    "fieldId": "2000000432",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -309,13 +290,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "contentBlock1Title",
-    "fieldId": "2000000367-1-title",
+    "fieldId": "2000000433",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -323,13 +304,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "contentBlock1Description",
-    "fieldId": "2000000368-1-description",
+    "sectionId": "1000000052",
+    "elementName": "contentBlock1Desc",
+    "fieldId": "2000000434",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -337,13 +318,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "contentBlock2Title",
-    "fieldId": "2000000369-2-title",
+    "fieldId": "2000000435",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -351,13 +332,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "contentBlock2Description",
-    "fieldId": "2000000370-2-description",
+    "sectionId": "1000000052",
+    "elementName": "contentBlock2Desc",
+    "fieldId": "2000000436",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -365,13 +346,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "contentBlock3Title",
-    "fieldId": "2000000371-3-title",
+    "fieldId": "2000000437",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -379,13 +360,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "contentBlock3Description",
-    "fieldId": "2000000372-3-description",
+    "sectionId": "1000000052",
+    "elementName": "contentBlock3Desc",
+    "fieldId": "2000000438",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -393,13 +374,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "ctaBlockHeadline",
-    "fieldId": "2000000373-headline",
+    "sectionId": "1000000052",
+    "elementName": "belowFoldCtaHeadline",
+    "fieldId": "2000000439",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -407,13 +388,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "ctaBlockButtonText",
-    "fieldId": "2000000374-buttonText",
+    "sectionId": "1000000052",
+    "elementName": "belowFoldCtaButton",
+    "fieldId": "2000000440",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -421,13 +402,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "ctaBlockSubtext",
-    "fieldId": "2000000375-subtext",
+    "sectionId": "1000000052",
+    "elementName": "belowFoldCtaSubtext",
+    "fieldId": "2000000441",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -435,13 +416,125 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
+    "elementName": "cardField1",
+    "fieldId": "3000000259",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField2",
+    "fieldId": "3000000260",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField3",
+    "fieldId": "3000000261",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField4",
+    "fieldId": "3000000262",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField5",
+    "fieldId": "3000000263",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField6",
+    "fieldId": "3000000264",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField7",
+    "fieldId": "3000000265",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
+    "elementName": "cardField8",
+    "fieldId": "3000000266",
+    "content": "Content",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
+  },
+  {
+    "sectionId": "1000000052",
     "elementName": "footerEmailInput",
-    "fieldId": "2000000376",
+    "fieldId": "2000000442",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -449,13 +542,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSubscribeButton",
-    "fieldId": "2000000377",
+    "sectionId": "1000000052",
+    "elementName": "footerSignupButton",
+    "fieldId": "2000000443",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -463,13 +556,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "footerLink1",
-    "fieldId": "2000000378-aboutUs",
+    "fieldId": "2000000444",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -477,13 +570,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "footerLink2",
-    "fieldId": "2000000379-careers",
+    "fieldId": "2000000445",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -491,13 +584,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
+    "sectionId": "1000000052",
     "elementName": "footerLink3",
-    "fieldId": "2000000380-privacyPolicy",
+    "fieldId": "2000000446",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -505,13 +598,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSocial1",
-    "fieldId": "2000000381-email",
+    "sectionId": "1000000052",
+    "elementName": "socialLink1",
+    "fieldId": "2000000447",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -519,13 +612,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSocial2",
-    "fieldId": "2000000382-linkedin",
+    "sectionId": "1000000052",
+    "elementName": "socialLink2",
+    "fieldId": "2000000448",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -533,13 +626,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSocial3",
-    "fieldId": "2000000383-instagram",
+    "sectionId": "1000000052",
+    "elementName": "socialLink3",
+    "fieldId": "2000000449",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -547,13 +640,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSocial4",
-    "fieldId": "2000000384-twitter",
+    "sectionId": "1000000052",
+    "elementName": "socialLink4",
+    "fieldId": "2000000450",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -561,13 +654,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   },
   {
-    "sectionId": "1000000050",
-    "elementName": "footerSocial5",
-    "fieldId": "2000000385-facebook",
+    "sectionId": "1000000052",
+    "elementName": "socialLink5",
+    "fieldId": "2000000451",
     "content": "Content",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -575,7 +668,7 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-13T22:44:15.386Z",
-    "updatedAt": "2026-11-13T22:44:15.386Z"
+    "createdAt": "2026-11-13T23:06:52.373Z",
+    "updatedAt": "2026-11-13T23:06:52.373Z"
   }
 ]

@@ -116,11 +116,13 @@ export async function generate(req, res, next) {
       
       let content = e.defaultContent || '';
       if (e.contentType === 'Image') {
-        if (!content || content.includes('uploads/') || content.includes('wireframe') || content.includes('1571434190823')) {
-          const isApparel = ir.domain === 'ecommerce' || /hoodie|clothing|apparel|fleece/i.test(ir.sectionName || '');
+        const isApparel = ir.domain === 'ecommerce' || /hoodie|clothing|apparel|fleece/i.test(ir.sectionName || '');
+        if (!content || content.includes('uploads/') || content.includes('wireframe') || content.includes('placeholder') || content.includes('1571434190823')) {
           content = isApparel
             ? 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80'
-            : (ir.elements.find(el => el.elementName === 'heroImage')?.suggestedImageUrl || 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80');
+            : 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80';
+        } else if (!isApparel && !content.startsWith('http')) {
+          content = 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80';
         }
       }
       

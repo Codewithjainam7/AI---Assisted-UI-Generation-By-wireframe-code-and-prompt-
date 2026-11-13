@@ -55,7 +55,7 @@ R6. Text nodes use dangerouslySetInnerHTML with default fallback from the input 
     dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "EXTRACTED_HEADLINE" }}
 
 R7. Images use getImage helper and errorImage:
-    <img id={ids.heroImage} className="dynamicStyle2 max-w-full max-h-[600px] h-auto object-cover rounded-2xl" src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80")} onError={errorImage} alt="Visual representation" />
+    <img id={ids.heroImage} className="dynamicStyle2 max-w-full max-h-[600px] h-auto object-cover rounded-2xl" src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : getImage("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80")} onError={errorImage} alt="Visual representation" />
 
 R8. Buttons use PrimeReact Button with label from CMS and aria-label:
     <Button id={ids.ctaButton} className="dynamicStyle w-full md:w-auto px-8 py-3.5 rounded-full font-bold" severity="danger" label={data?.[ids.ctaButton] || "CTA_LABEL"} aria-label="Action button" onClick={() => {}} />

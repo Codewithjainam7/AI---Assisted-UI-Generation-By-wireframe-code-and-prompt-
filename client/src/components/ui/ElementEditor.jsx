@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { patchElement } from '../../features/cms/cmsSlice';
+import { patchElement, updateLiveCmsValue } from '../../features/cms/cmsSlice';
 
 export default function ElementEditor({ elements = [], pageName }) {
   const dispatch = useDispatch();
@@ -17,6 +17,21 @@ export default function ElementEditor({ elements = [], pageName }) {
 
   const handleChange = (fieldId, value) => {
     setLocalValues(prev => ({ ...prev, [fieldId]: value }));
+    dispatch(updateLiveCmsValue({ fieldId, pageName, value }));
+  };
+
+  const handleCardFieldChange = (parentFieldId, cIdx, key, val) => {
+    const parentCards = Array.isArray(localValues[parentFieldId]) ? [...localValues[parentFieldId]] : [];
+    const updatedCards = parentCards.map((c, i) => i === cIdx ? { ...c, [key]: val } : c);
+    setLocalValues(prev => ({ ...prev, [parentFieldId]: updatedCards }));
+    
+    dispatch(updateLiveCmsValue({ fieldId: parentFieldId, pageName, value: updatedCards }));
+    
+    const targetCard = updatedCards[cIdx];
+    const specificId = key === 'field1' ? targetCard?.fieldId1 : targetCard?.fieldId2;
+    if (specificId) {
+      dispatch(updateLiveCmsValue({ fieldId: specificId, pageName, value: val }));
+    }
   };
 
   const handleBlur = (fieldId) => {
@@ -25,7 +40,11 @@ export default function ElementEditor({ elements = [], pageName }) {
     const originalValue = originalEl?.contentType === 'Cards' ? originalEl.loop : originalEl?.content;
     
     if (JSON.stringify(currentValue) !== JSON.stringify(originalValue)) {
-      dispatch(patchElement({ fieldId, pageName, content: currentValue }))
+      const payload = { fieldId, pageName, content: currentValue };
+      if (Array.isArray(currentValue)) {
+        payload.loop = currentValue;
+      }
+      dispatch(patchElement(payload))
         .unwrap()
         .then(() => {
           setSaveStatus(prev => ({ ...prev, [fieldId]: 'saved' }));
@@ -94,11 +113,7 @@ export default function ElementEditor({ elements = [], pageName }) {
                     type="text"
                     value={item.field1 || ''}
                     placeholder="Stat Value (e.g. 1000+)"
-                    onChange={(e) => {
-                      const newArray = [...localValues[el.fieldId]];
-                      newArray[cIdx] = { ...newArray[cIdx], field1: e.target.value };
-                      handleChange(el.fieldId, newArray);
-                    }}
+                    onChange={(e) => handleCardFieldChange(el.fieldId, cIdx, 'field1', e.target.value)}
                     onBlur={() => handleBlur(el.fieldId)}
                     className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-white font-bold focus:border-red-500/60 focus:outline-none"
                   />
@@ -106,11 +121,7 @@ export default function ElementEditor({ elements = [], pageName }) {
                     type="text"
                     value={item.field2 || ''}
                     placeholder="Stat Label"
-                    onChange={(e) => {
-                      const newArray = [...localValues[el.fieldId]];
-                      newArray[cIdx] = { ...newArray[cIdx], field2: e.target.value };
-                      handleChange(el.fieldId, newArray);
-                    }}
+                    onChange={(e) => handleCardFieldChange(el.fieldId, cIdx, 'field2', e.target.value)}
                     onBlur={() => handleBlur(el.fieldId)}
                     className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-gray-300 focus:border-red-500/60 focus:outline-none"
                   />

@@ -25,6 +25,13 @@ export default function PreviewPage() {
   const [loadingElems, setLoadingElems] = useState(true);
   const [jsxCode,      setJsxCode]      = useState(currentJob?.jsx || '');
 
+  // Keep jsxCode synchronized with currentJob
+  useEffect(() => {
+    if (currentJob?.jsx) {
+      setJsxCode(currentJob.jsx);
+    }
+  }, [currentJob?.jsx]);
+
   // Fetch elements and latest section metadata
   useEffect(() => {
     if (!pageName) return;

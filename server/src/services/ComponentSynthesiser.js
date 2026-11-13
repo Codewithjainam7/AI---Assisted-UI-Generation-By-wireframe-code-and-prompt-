@@ -33,7 +33,7 @@ CRITICAL RECONSTRUCTION DIRECTIVES:
     if (!genAIClient) {
       genAIClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     }
-    const geminiModels = [process.env.GEMINI_MODEL || 'gemini-2.5-flash'];
+    const geminiModels = [process.env.GEMINI_MODEL || 'gemini-2.5-flash', 'gemini-2.0-flash'];
     for (const gModelName of geminiModels) {
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
