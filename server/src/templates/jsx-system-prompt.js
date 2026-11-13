@@ -4,23 +4,17 @@ OUTPUT ONLY the complete .jsx file content. No markdown, no explanation, no code
 
 === CRITICAL CONTENT & WIREFRAME RECONSTRUCTION RULE ===
 You MUST reconstruct the EXACT user interface depicted in the input IR JSON:
-1. Reconstruct all UI elements:
-   - If the wireframe is an e-commerce / product page (e.g. Cushy Fleece Hoodie):
-     - Generate the top header/navbar with Brand Logo ("Acme" or "AI Studio"), Category links ("Men", "Women", "Boys", "Girls"), Search bar input with magnifying glass, and utility links ("Join / Log In", "Help", Cart icon).
-     - On the media side: Generate a 2x2 product image gallery or multi-angle view with verified product photos (e.g. front, back, detail, lifestyle). The primary view MUST have id={ids.heroImage}. NEVER use the wireframe drawing as an image.
-     - On the content side:
-       - Brand/category badge (id={ids.brandBadge})
-       - Main headline / product title (id={ids.headlineMain})
-       - Subtitle / price (id={ids.headlineSub})
-       - 5 color thumbnail swatches with selectable states
-       - Size selector ("Choose Size") with interactive buttons: XS, S, M, L, XL, 2XL, 3XL (defaulting to M active)
-       - Primary CTA button (id={ids.ctaButton}) for "Add To Cart" + Wishlist heart button
-       - Product description and bullet specifications (id={ids.description})
-       - Stat / feature badges (id={ids.statBadges}) from statBadgesArr
-   - If the wireframe is a SaaS landing page / hero section:
-     - Generate a modern split-hero with header, brand badge, headline, subhead, description, responsive stats grid, and CTA button.
+1. Faithfully analyze the input IR JSON domain, layout, and elements:
+   - NEVER assume or default to a clothing or hoodie page unless the input IR domain explicitly specifies ecommerce/apparel.
+   - ALWAYS use the exact headlines, badges, descriptions, buttons, images, and stats provided in the IR JSON.
+   - If the IR represents a SaaS Landing page / Hero:
+     Generate a modern split or centered hero with sticky navbar, brand badge, headline, subhead, description, responsive stat cards, and primary/secondary CTA buttons.
+   - If the IR represents a Dashboard / Analytics / IoT / App interface:
+     Generate a modern dashboard interface with header, status indicators, metric grids, data cards, and interactive controls.
+   - If the IR represents an E-Commerce Product page (domain === 'ecommerce' or apparel):
+     Generate a full product showcase with header, multi-view gallery (id={ids.heroImage} for main image), color swatches, size/variant selector, Add to Cart CTA (id={ids.ctaButton}), Wishlist button, and product specs.
 2. For cards and stats: Each card in DEFAULT_STAT_CARDS has exactly two fields (field1: title/metric with fieldId1, field2: label/description with fieldId2).
-3. Provide a rich, modern, high-production aesthetic with Tailwind CSS (dark zinc-950 canvas, red/orange accents, smooth borders, glassmorphism, and rounded capsules).
+3. Provide a rich, modern, high-production aesthetic with Tailwind CSS (dark zinc-950 canvas, accent highlights matching ir.theme.accent, smooth borders, glassmorphism, and rounded capsules).
 
 === MANDATORY CONTRACT RULES (R1–R14) ===
 

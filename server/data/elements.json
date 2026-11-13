@@ -98,79 +98,79 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "heroImage",
-    "fieldId": "2000000309",
-    "content": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000323",
+    "content": "default/images/hero-placeholder.jpg",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "brandBadge",
-    "fieldId": "2000000310",
-    "content": "AI STUDIO",
+    "fieldId": "2000000324",
+    "content": "CYBERPULSE",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "headlineMain",
-    "fieldId": "2000000311",
-    "content": "NEXT-GEN UI GENERATION",
+    "fieldId": "2000000325",
+    "content": "ZERO TRUST CLOUD SECURITY",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "headlineSub",
-    "fieldId": "2000000312",
-    "content": "Transform ideas and wireframes into production React components.",
+    "fieldId": "2000000326",
+    "content": "Protect your multi-cloud infrastructure with autonomous AI agents.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "description",
-    "fieldId": "2000000313",
-    "content": "Built with automated CMS bindings, responsive layout system, and modern aesthetics.",
+    "fieldId": "2000000327",
+    "content": "Join trainer-led workout sessions.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "statBadges",
-    "fieldId": "2000000314",
+    "fieldId": "2000000328",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,45 +179,45 @@
     "css": null,
     "loop": [
       {
-        "field1": "Text",
+        "field1": "100+",
         "fieldType1": "Text",
-        "fieldId1": "3000000213",
-        "field2": "Metric",
+        "fieldId1": "3000000225",
+        "field2": "Active Users",
         "fieldType2": "Text",
-        "fieldId2": "3000000214"
+        "fieldId2": "3000000226"
       },
       {
-        "field1": "Text",
+        "field1": "4.9★",
         "fieldType1": "Text",
-        "fieldId1": "3000000215",
-        "field2": "Metric",
+        "fieldId1": "3000000227",
+        "field2": "Top Rated",
         "fieldType2": "Text",
-        "fieldId2": "3000000216"
+        "fieldId2": "3000000228"
       },
       {
-        "field1": "Text",
+        "field1": "24/7",
         "fieldType1": "Text",
-        "fieldId1": "3000000217",
-        "field2": "Metric",
+        "fieldId1": "3000000229",
+        "field2": "Live Support",
         "fieldType2": "Text",
-        "fieldId2": "3000000218"
+        "fieldId2": "3000000230"
       }
     ],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   },
   {
-    "sectionId": "1000000045",
+    "sectionId": "1000000047",
     "elementName": "ctaButton",
-    "fieldId": "2000000315",
-    "content": "Sign up CTA",
+    "fieldId": "2000000329",
+    "content": "START FREE TRIAL",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-12T20:06:31.064Z",
-    "updatedAt": "2026-11-12T20:06:31.064Z"
+    "createdAt": "2026-11-13T22:19:46.732Z",
+    "updatedAt": "2026-11-13T22:19:46.732Z"
   }
 ]

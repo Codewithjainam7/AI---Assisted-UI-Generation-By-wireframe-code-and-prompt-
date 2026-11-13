@@ -32,21 +32,22 @@ export function generateFallback(ir) {
 
   const cleanStr = (s) => (s || '').replace(/\r?\n/g, '<br />').replace(/"/g, '\\"');
 
-  const brandBadgeVal = cleanStr(getDefault('brandBadge', 'ACME ATHLETICS'));
-  const headlineMainVal = cleanStr(getDefault('headlineMain', 'CUSHY FLEECE HOODIE'));
-  const headlineSubVal = cleanStr(getDefault('headlineSub', "Men's Pullover Hoodie  $45"));
-  const descriptionVal = cleanStr(getDefault('description', 'The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.<br /><br />• Shown: Dark Grey Heather/White<br />• Style: 804346-063'));
-  const ctaButtonVal = cleanStr(getDefault('ctaButton', 'Add To Cart'));
+  const brandBadgeVal = cleanStr(getDefault('brandBadge', (ir.sectionName || 'AI STUDIO').toUpperCase()));
+  const headlineMainVal = cleanStr(getDefault('headlineMain', 'NEXT-GEN UI EXPERIENCE'));
+  const headlineSubVal = cleanStr(getDefault('headlineSub', 'Built with automated CMS bindings and responsive layouts.'));
+  const descriptionVal = cleanStr(getDefault('description', 'Transforming your ideas and wireframes into production-ready React components.'));
+  const ctaButtonVal = cleanStr(getDefault('ctaButton', 'GET STARTED'));
 
+  // Detect genuine e-commerce apparel wireframes only (strict check, never default)
   const isEcommerce = ir.domain === 'ecommerce' ||
-    /hoodie|shoe|shirt|apparel|product|cart|fleece/i.test(headlineMainVal + ' ' + headlineSubVal + ' ' + descriptionVal) ||
-    /hoodie|shop|store|product|overview/i.test(ir.sectionName || '');
+    /hoodie|fleece|clothing|apparel|sweatshirt/i.test((ir.elements || []).map(e => e.defaultContent || '').join(' ')) ||
+    /hoodie|apparel/i.test(ir.sectionName || '');
 
   const statBadgesEl = (ir.elements || []).find(e => e.elementName === 'statBadges');
   const rawCards = statBadgesEl?.statCards || (isEcommerce ? [
-    { field1: "100%", field2: "Organic Cotton Fleece" },
-    { field1: "4.9★", field2: "Customer Rating (2.4k)" },
-    { field1: "Free", field2: "Express Shipping & Returns" }
+    { field1: "100%", field2: "Premium Quality" },
+    { field1: "4.9★", field2: "Customer Rating" },
+    { field1: "Free", field2: "Fast Shipping" }
   ] : [
     { field1: "100+", field2: "Active Users" },
     { field1: "4.9★", field2: "Top Rated" },

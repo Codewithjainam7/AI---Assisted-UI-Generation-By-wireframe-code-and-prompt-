@@ -41,12 +41,12 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
   };
 
   // Resolve values
-  const brandBadge = getElementDefault('brandBadge', 'ACME ATHLETICS');
-  const headlineMain = getElementDefault('headlineMain', 'CUSHY FLEECE HOODIE');
-  const headlineSub = getElementDefault('headlineSub', "Men's Pullover Hoodie  $45");
-  const description = getElementDefault('description', 'The Acme Cushy Hoodie is made with an ultra-soft interior for everyday comfort.<br /><br />• Shown: Dark Grey Heather/White<br />• Style: 804346-063');
-  const ctaButton = getElementDefault('ctaButton', 'Add To Cart');
-  const heroImage = getElementDefault('heroImage', PRODUCT_IMAGES[0]);
+  const brandBadge = getElementDefault('brandBadge', (job?.sectionName || 'AI STUDIO').toUpperCase());
+  const headlineMain = getElementDefault('headlineMain', 'NEXT-GEN UI GENERATION');
+  const headlineSub = getElementDefault('headlineSub', 'Production-ready component synthesized from your design.');
+  const description = getElementDefault('description', 'Fully responsive React component with dynamic Redux CMS integration and clean Tailwind styling.');
+  const ctaButton = getElementDefault('ctaButton', 'GET STARTED');
+  const heroImage = getElementDefault('heroImage', 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80');
 
   // Look for CMS live value overrides
   const liveValues = {};
@@ -79,14 +79,14 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
   const displayCta = liveValues.ctaButton || ctaButton;
   let displayImage = liveValues.heroImage || heroImage;
 
-  if (displayImage.includes('uploads/') || displayImage.includes('wireframe') || displayImage.includes('1571434190823')) {
-    displayImage = PRODUCT_IMAGES[0];
-  }
-
   // Detect whether this is an e-commerce product wireframe
   const isEcommerce = ir?.domain === 'ecommerce' ||
-    /hoodie|shoe|shirt|apparel|product|cart|fleece|acme/i.test(displayHeadline + ' ' + displaySub + ' ' + displayDesc) ||
-    /hoodie|shop|store|product|overview/i.test(job?.sectionName || '');
+    /hoodie|clothing|apparel|fleece|sweatshirt/i.test(displayHeadline + ' ' + displaySub + ' ' + displayDesc) ||
+    /hoodie|apparel/i.test(job?.sectionName || '');
+
+  if (displayImage.includes('uploads/') || displayImage.includes('wireframe') || displayImage.includes('1571434190823')) {
+    displayImage = isEcommerce ? PRODUCT_IMAGES[0] : 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80';
+  }
 
   // Stat badges loop
   const statEl = elements.find((e) => e.elementName === 'statBadges');
