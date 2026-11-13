@@ -98,23 +98,23 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "heroImage",
-    "fieldId": "2000000260",
-    "content": "https://images.unsplash.com/photo-1616763355548-ee0325858674?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80",
+    "fieldId": "2000000309",
+    "content": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "brandBadge",
-    "fieldId": "2000000261",
+    "fieldId": "2000000310",
     "content": "AI STUDIO",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -122,55 +122,55 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "headlineMain",
-    "fieldId": "2000000262",
-    "content": "WELCOME",
+    "fieldId": "2000000311",
+    "content": "NEXT-GEN UI GENERATION",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "headlineSub",
-    "fieldId": "2000000263",
-    "content": "REGISTRATION",
+    "fieldId": "2000000312",
+    "content": "Transform ideas and wireframes into production React components.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "description",
-    "fieldId": "2000000264",
-    "content": "This collection of mobile application wireframes illustrates a complete user journey including a welcome screen, user registration form, profile management, various content display formats (lists and grids), detailed content views, and a calendar component for scheduling or date selection. The app features consistent branding with a 'LOGO' and a standard bottom navigation bar across multiple screens.",
+    "fieldId": "2000000313",
+    "content": "Built with automated CMS bindings, responsive layout system, and modern aesthetics.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "statBadges",
-    "fieldId": "2000000265",
+    "fieldId": "2000000314",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,29 +179,45 @@
     "css": null,
     "loop": [
       {
-        "field1": "Content Item Title",
+        "field1": "Text",
         "fieldType1": "Text",
-        "fieldId1": "3000000181",
-        "field2": "Media Placeholder",
+        "fieldId1": "3000000213",
+        "field2": "Metric",
         "fieldType2": "Text",
-        "fieldId2": "3000000182"
+        "fieldId2": "3000000214"
+      },
+      {
+        "field1": "Text",
+        "fieldType1": "Text",
+        "fieldId1": "3000000215",
+        "field2": "Metric",
+        "fieldType2": "Text",
+        "fieldId2": "3000000216"
+      },
+      {
+        "field1": "Text",
+        "fieldType1": "Text",
+        "fieldId1": "3000000217",
+        "field2": "Metric",
+        "fieldType2": "Text",
+        "fieldId2": "3000000218"
       }
     ],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   },
   {
-    "sectionId": "1000000038",
+    "sectionId": "1000000045",
     "elementName": "ctaButton",
-    "fieldId": "2000000266",
-    "content": "NEXT →",
+    "fieldId": "2000000315",
+    "content": "Sign up CTA",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-09-13T20:04:31.510Z",
-    "updatedAt": "2026-09-13T20:04:31.510Z"
+    "createdAt": "2026-11-12T20:06:31.064Z",
+    "updatedAt": "2026-11-12T20:06:31.064Z"
   }
 ]
