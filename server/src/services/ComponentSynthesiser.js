@@ -7,7 +7,26 @@ let genAIClient;
 
 export async function generate(ir) {
   const prompt = getJSXSystemPrompt();
-  const userContent = `Generate the React section component for this IR JSON:\n${JSON.stringify(ir, null, 2)}`;
+  let userContent = `Generate the React section component for this IR JSON:\n${JSON.stringify(ir, null, 2)}`;
+
+  if (ir.imageConcept || ir.featureCards || ir.contentBlocks || ir.ctaBlocks) {
+    userContent += `\n\n=== WIREFRAME VISUAL BLUEPRINT & PAGE SECTIONS ===
+Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-block UI layout'}
+CRITICAL RECONSTRUCTION DIRECTIVES:
+1. Reconstruct EVERY section and element depicted in the wireframe blueprint:
+   - Sticky top Navigation bar with logo/brand and navigation links.
+   - Main Hero section with headline, subhead, body description, primary/secondary CTA, and hero visual media.
+   ${ir.contentBlocks ? `- Content blocks / value propositions described in the blueprint.` : ''}
+   ${ir.ctaBlocks ? `- Prominent horizontal 'Below the fold CTA' banner.` : ''}
+   - Feature / Stat cards grid (e.g. 4 feature cards with metrics/labels) faithful to the wireframe layout.
+   - Comprehensive footer with email signup input, subscribe CTA button, nav links, and social links.
+2. Ensure strict adherence to R1–R14 contract rules:
+   - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
+   - Dispatch fetchElementsByIds on mount with all IDs including card field IDs.
+   - Text nodes use dangerouslySetInnerHTML with default fallback copy.
+   - PrimeReact Button with label from CMS.
+   - Mobile-first responsive Tailwind layout (strictly stacked on 375px mobile, flex-row or responsive grids on desktop).`;
+  }
 
   // 1. Primary Engine: Gemini 2.5 Flash (Fast, reliable, large context, zero credit limit)
   if (process.env.GEMINI_API_KEY) {

@@ -141,6 +141,31 @@ export async function generate(req, res, next) {
     // Clean up any remaining TBD placeholders with valid allocated IDs
     finalJsx = finalJsx.replace(/TBD-cardField\d+/g, () => IdAllocator.nextCardFieldId());
     finalJsx = finalJsx.replace(/TBD-[\w]+/g, () => IdAllocator.nextFieldId());
+
+    // Register any extra IDs generated in `const ids = { ... }` (e.g. navbar, footer, extra CTAs)
+    const idsMatch = finalJsx.match(/const\s+ids\s*=\s*\{([^}]+)\}/);
+    if (idsMatch && idsMatch[1]) {
+      const pairRegex = /(\w+)\s*:\s*["']([^"']+)["']/g;
+      let m;
+      while ((m = pairRegex.exec(idsMatch[1])) !== null) {
+        const key = m[1];
+        const valId = m[2];
+        if (!elementsToInsert.some(e => e.fieldId === valId || e.elementName === key)) {
+          elementsToInsert.push({
+            sectionId,
+            elementName: key,
+            fieldId: valId,
+            content: key.toLowerCase().includes('logo') ? (ir.navbar?.logoText || 'Brand') : 'Content',
+            contentType: 'Text',
+            projectName: 'sample-brand',
+            pageName: ir.pageName,
+            isCustom: true,
+            css: null,
+            loop: []
+          });
+        }
+      }
+    }
     
     const sectionDoc = {
       sectionId,
@@ -166,11 +191,12 @@ export async function generate(req, res, next) {
     const namedOutPath = path.join(generatedDir, `${ir.sectionName}Section.jsx`);
     fs.writeFileSync(namedOutPath, finalJsx, 'utf8');
 
-    // Also update HeroSection.jsx if generating for Home
-    if (pageName === 'Home' || ir.sectionName.toLowerCase().includes('hero') || ir.sectionName.toLowerCase().includes('custom')) {
-      const heroOutPath = path.join(generatedDir, 'HeroSection.jsx');
-      fs.writeFileSync(heroOutPath, finalJsx, 'utf8');
-    }
+    // Always update HeroSection.jsx and CustomSection.jsx so preview is immediately synchronized
+    const heroOutPath = path.join(generatedDir, 'HeroSection.jsx');
+    fs.writeFileSync(heroOutPath, finalJsx, 'utf8');
+
+    const customOutPath = path.join(generatedDir, 'CustomSection.jsx');
+    fs.writeFileSync(customOutPath, finalJsx, 'utf8');
     
     res.json({
       ok: true,

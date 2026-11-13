@@ -341,7 +341,7 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
           <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
               <span className="font-bold text-sm tracking-wider uppercase text-white" dangerouslySetInnerHTML={{ __html: displayBrand }} />
-              <p className="text-zinc-500 text-[11px] sm:text-xs">© 2026 Acme Athletics, Inc. All rights reserved.</p>
+              <p className="text-zinc-500 text-[11px] sm:text-xs">© {new Date().getFullYear()} {displayBrand || 'Studio'}. All rights reserved.</p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[11px] sm:text-xs">
               <a href="#" className="hover:text-white transition">Product Guides</a>

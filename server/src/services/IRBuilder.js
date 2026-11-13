@@ -38,6 +38,11 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       text: wireframeIR?.theme?.text || "white"
     },
     navbar: wireframeIR?.navbar || null,
+    imageConcept: wireframeIR?.content?.imageConcept || "",
+    contentBlocks: wireframeIR?.content?.contentBlocks || null,
+    featureCards: wireframeIR?.content?.featureCards || null,
+    ctaBlocks: wireframeIR?.content?.ctaBlocks || null,
+    footer: wireframeIR?.content?.footer || wireframeIR?.footer || null,
     elements: [
       {
         elementName: "heroImage",

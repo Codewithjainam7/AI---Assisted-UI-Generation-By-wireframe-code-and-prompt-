@@ -23,7 +23,7 @@ You must reconstruct the EXACT user interface depicted in the drawing.
 Analyze and extract a strict JSON object with this structure:
 {
   "sectionType": "split-hero" | "full-hero" | "dashboard-hero" | "features-grid" | "app-landing",
-  "sectionName": "DescriptiveCamelCaseName (e.g. CryptoExchange, SmartParking, TaskDashboard, EcommerceProduct)",
+  "sectionName": "DescriptiveCamelCaseName (e.g. CryptoExchange, SmartParking, TaskDashboard, GenericLandingPage)",
   "domain": "The industry/theme (e.g. ecommerce, fintech, saas-ai, fitness, healthcare, dashboard, iot)",
   "layout": {
     "direction": "row" | "column",
@@ -39,31 +39,55 @@ Analyze and extract a strict JSON object with this structure:
   },
   "navbar": {
     "logoText": "Brand or Logo text from top if drawn",
-    "links": ["Link 1", "Link 2"]
+    "links": ["Features", "Solutions", "Pricing", "About"]
   },
   "content": {
-    "brandBadge": "Brand or category badge text drawn in wireframe",
-    "headlineMain": "Main bold headline text visible in the drawing",
-    "headlineSub": "Subtitle, price, or tagline text visible under the headline",
-    "description": "Full description paragraph or specifications visible in the wireframe",
-    "ctaButton": "Primary CTA button text",
-    "secondaryButton": "Secondary button text if drawn",
+    "brandBadge": "Brand or category badge text drawn in wireframe (e.g. 'NEXT-GEN AI', 'PLATFORM')",
+    "headlineMain": "Main bold headline. If the wireframe contains placeholder text like 'Text' or 'Heading' or has no text, INFER an engaging, domain-specific headline (e.g. 'Build Intelligent Apps Faster')",
+    "headlineSub": "Subtitle or tagline text. If placeholder, INFER a compelling domain-specific subtitle",
+    "description": "Full description paragraph. If placeholder, INFER a modern, realistic explanation",
+    "ctaButton": "Primary CTA button text (e.g. 'Get Started', 'Start Free Trial', 'Explore Platform')",
+    "secondaryButton": "Secondary button text if drawn (e.g. 'Learn More', 'View Demo')",
     "inputPlaceholder": "Placeholder text if an input/search box was drawn",
-    "statCards": [
-      { "field1": "Value 1", "field2": "Label 1" },
-      { "field1": "Value 2", "field2": "Label 2" }
+    "contentBlocks": [
+      { "title": "Modular Architecture", "description": "Construct high-performance interfaces with reusable, production-ready modules." },
+      { "title": "Zero-Latency State", "description": "Instantaneous client-side state synchronization with unified Redux stores." },
+      { "title": "Autonomous Pipelines", "description": "Streamline design handoffs into validated, accessible codebases." }
     ],
+    "featureCards": [
+      { "title": "Neural Synthesis", "description": "Automated React component rendering directly from raw blueprints.", "metric": "99.9%" },
+      { "title": "Ultra-Low Latency", "description": "Optimized execution pipelines deliver sub-millisecond reactions.", "metric": "10x" },
+      { "title": "Continuous Sync", "description": "Live CMS field synchronization with zero hydration mismatch.", "metric": "24/7" },
+      { "title": "Responsive Matrix", "description": "Fluid adaptability spanning 375px mobile to 4K displays.", "metric": "100%" }
+    ],
+    "statCards": [
+      { "field1": "99.9%", "field2": "Uptime SLA" },
+      { "field1": "10x", "field2": "Faster Deployment" },
+      { "field1": "24/7", "field2": "Intelligent Monitoring" }
+    ],
+    "ctaBlocks": [
+      { "headline": "Ready to transform your UI workflows?", "buttonText": "Start Free Trial", "subtext": "No credit card required • Instant access" }
+    ],
+    "footer": {
+      "hasEmailSignup": true,
+      "emailPlaceholder": "Enter your work email",
+      "signupButtonText": "Subscribe",
+      "links": ["Documentation", "API", "Privacy", "Terms"],
+      "socials": ["Twitter", "GitHub", "Discord", "LinkedIn"]
+    },
     "imageConcept": "Detailed description of the visual drawn in the wireframe",
-    "suggestedImageUrl": "https://images.unsplash.com/photo-..."
+    "suggestedImageUrl": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80"
   }
 }
 
 CRITICAL RULES:
 1. Extract ALL text accurately from the wireframe drawing via OCR.
 2. If text is handwritten or abbreviated, transcribe the intended wording intelligently.
-3. If the wireframe contains a grid of cards or product views, extract them accurately into statCards or imageConcept.
-4. For suggestedImageUrl: Provide a realistic, verified, working photo URL matching the domain. DO NOT suggest using the wireframe drawing itself.
-5. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
+3. If the wireframe contains placeholder text (such as 'Text', 'Heading', 'Title', 'Lorem Ipsum', or empty boxes), NEVER return null or literal 'Text'. Always infer realistic, production-quality copy tailored to the detected domain and visual concept.
+4. If the wireframe contains a grid of cards, product views, or feature blocks, extract ALL of them into featureCards or statCards.
+5. If the wireframe has below-the-fold CTA blocks, content blocks, or a footer, extract them into contentBlocks, ctaBlocks, and footer.
+6. For suggestedImageUrl: Provide a realistic, verified, working photo URL matching the domain. DO NOT suggest using the wireframe drawing itself.
+7. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
 
     let result = null;
     let lastError = null;
@@ -90,6 +114,30 @@ CRITICAL RULES:
     const text = result.response.text().trim();
     const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const parsed = JSON.parse(cleaned);
+
+    // Smart post-processing for placeholder text in wireframe drawings
+    if (parsed.content) {
+      if (!parsed.content.headlineMain || /^(text|heading|title|lorem|null|undefined)$/i.test(parsed.content.headlineMain.trim())) {
+        parsed.content.headlineMain = parsed.domain === 'ecommerce'
+          ? 'NEXT-GEN APPAREL & STREETWEAR'
+          : (parsed.sectionName ? `${parsed.sectionName.replace(/([A-Z])/g, ' $1').trim().toUpperCase()}` : 'INTELLIGENT UI PLATFORM');
+      }
+      if (!parsed.content.headlineSub || /^(text|heading|title|lorem|null|undefined)$/i.test(parsed.content.headlineSub.trim())) {
+        parsed.content.headlineSub = 'Production-grade components engineered for high-velocity teams.';
+      }
+      if (!parsed.content.description || /^(text|paragraph|lorem ipsum)$/i.test(parsed.content.description.trim())) {
+        parsed.content.description = 'Construct high-performance, responsive interfaces with automated Redux CMS state synchronization and precision layouts.';
+      }
+      if (!parsed.content.ctaButton) {
+        parsed.content.ctaButton = 'GET STARTED';
+      }
+      if ((!parsed.content.statCards || parsed.content.statCards.length === 0) && Array.isArray(parsed.content.featureCards) && parsed.content.featureCards.length > 0) {
+        parsed.content.statCards = parsed.content.featureCards.slice(0, 4).map((f, i) => ({
+          field1: f.metric || f.title || `0${i + 1}`,
+          field2: f.title || f.description || `Feature ${i + 1}`
+        }));
+      }
+    }
 
     console.log('✦ Gemini Vision Full Wireframe Breakdown:', {
       sectionName: parsed.sectionName,
