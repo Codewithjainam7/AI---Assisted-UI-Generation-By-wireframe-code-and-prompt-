@@ -9,17 +9,59 @@ export async function generate(ir) {
   const prompt = getJSXSystemPrompt();
   let userContent = `Generate the React section component for this IR JSON:\n${JSON.stringify(ir, null, 2)}`;
 
-  if (ir.imageConcept || ir.featureCards || ir.contentBlocks || ir.ctaBlocks) {
+  const isDashboard = ir.domain === 'dashboard' || ir.layout?.hasSidebar || ir.sectionType === 'dashboard-hero';
+
+  if (isDashboard) {
+    userContent += `\n\n=== WIREFRAME VISUAL BLUEPRINT & DASHBOARD ARCHITECTURE ===
+Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-panel workspace dashboard'}
+CRITICAL RECONSTRUCTION DIRECTIVES:
+The wireframe is an interactive Dashboard / Application Workspace. Reconstruct the EXACT layout shown in the wireframe:
+1. Outer Container: Light neutral canvas (e.g. bg-[#e8eaed] or bg-gray-100 min-h-screen p-4 sm:p-8 flex items-center justify-center font-sans).
+2. Main Application Window: A large rounded white container (bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl w-full max-w-7xl flex flex-col md:flex-row gap-6 relative border border-gray-200/60).
+3. Floating Left Vertical Sidebar Capsule:
+   - A rounded vertical pill rail on the left (w-16 ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-3 flex flex-col items-center justify-between shadow-lg shadow-amber-500/20 min-h-[560px] flex-shrink-0 z-20):
+     * Top hamburger menu icon (= / ☰),
+     * Triangle up (▲),
+     * Bar chart (📊 / ☲),
+     * Star with active indicator dot (★ •),
+     * Active highlighted grid app square (⊞) with rounded white/dark pill backdrop,
+     * Circle outline (○),
+     * Bottom hexagon nut / gear settings icon (⬡).
+4. Top Bar:
+   - Category tab pills or breadcrumbs on left (e.g. Overview, Assets, Library).
+   - Rounded search bar input on right with search icon and placeholder '${ir.inputPlaceholder || ir.content?.inputPlaceholder || 'Search...'}'.
+5. Central Content Area:
+   - Main card container holding a 3x2 grid of 6 rounded thumbnail cards (grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6).
+   - Each card has a gray rounded thumbnail rectangle (h-28 bg-gray-200/90 rounded-2xl mb-3) and two lines of text (title and subtitle).
+6. Right Detail Inspector Panel:
+   - A dedicated rounded panel (w-full md:w-80 bg-gray-50/90 rounded-2xl p-5 border border-gray-100 flex flex-col justify-between flex-shrink-0) containing:
+     * Top large preview image card (<img id={ids.heroImage} className="dynamicStyle2 w-full h-44 object-cover rounded-xl mb-3" ... />),
+     * Main headline (<h3 id={ids.headlineMain} className="dynamicStyle text-base font-bold text-gray-900" ... />),
+     * Subtitle (<p id={ids.headlineSub} className="dynamicStyle text-xs text-gray-500" ... />),
+     * Star rating row (5 golden stars: ★★★★★) and score text,
+     * Body description (<p id={ids.description} className="dynamicStyle text-xs text-gray-600 my-2" ... />),
+     * Bottom action row with Primary CTA (<Button id={ids.ctaButton} className="dynamicStyle flex-1 py-2.5 rounded-xl font-bold" ... />) and Secondary action button.
+7. Bottom Activity Row:
+   - A horizontal row of 4 rounded collaborator / avatar cards (rounded avatar circle + 2 lines of text).
+8. STRICT REQUIREMENT:
+   - Do NOT generate an unrelated marketing landing page hero headline banner or footer email signup. Reconstruct the EXACT dashboard layout depicted in the wireframe!
+9. Ensure strict adherence to R1–R14 contract rules:
+   - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
+   - Dispatch fetchElementsByIds on mount with all IDs including card field IDs (TBD-cardField1 through TBD-cardField6).
+   - Text nodes use dangerouslySetInnerHTML with default fallback copy.
+   - PrimeReact Button with label from CMS.
+   - Mobile-first responsive Tailwind layout.`;
+  } else if (ir.imageConcept || ir.featureCards || ir.contentBlocks || ir.ctaBlocks) {
     userContent += `\n\n=== WIREFRAME VISUAL BLUEPRINT & PAGE SECTIONS ===
 Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-block UI layout'}
 CRITICAL RECONSTRUCTION DIRECTIVES:
 1. Reconstruct EVERY section and element depicted in the wireframe blueprint:
-   - Sticky top Navigation bar with logo/brand and navigation links.
-   - Main Hero section with headline, subhead, body description, primary/secondary CTA, and hero visual media.
+   ${ir.layout?.hasNavbar ? '- Sticky top Navigation bar with logo/brand and navigation links.' : ''}
+   - Main section with headline, subhead, body description, primary/secondary CTA, and visual media faithful to the wireframe blueprint.
    ${ir.contentBlocks ? `- Content blocks / value propositions described in the blueprint.` : ''}
    ${ir.ctaBlocks ? `- Prominent horizontal 'Below the fold CTA' banner.` : ''}
-   - Feature / Stat cards grid (e.g. 4 feature cards with metrics/labels) faithful to the wireframe layout.
-   - Comprehensive footer with email signup input, subscribe CTA button, nav links, and social links.
+   ${ir.featureCards ? `- Feature / Stat cards grid faithful to the wireframe layout.` : ''}
+   ${ir.footer ? `- Comprehensive footer with email signup input, subscribe CTA button, nav links, and social links.` : ''}
 2. Ensure strict adherence to R1–R14 contract rules:
    - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
    - Dispatch fetchElementsByIds on mount with all IDs including card field IDs.

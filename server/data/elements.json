@@ -98,9 +98,9 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "heroImage",
-    "fieldId": "2000000015",
+    "fieldId": "2000000031",
     "content": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
@@ -108,69 +108,69 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.632Z",
+    "updatedAt": "2026-11-14T21:01:47.632Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "brandBadge",
-    "fieldId": "2000000016",
-    "content": "ENTERPRISE DASHBOARD",
+    "fieldId": "2000000032",
+    "content": "WORKSPACE",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "headlineMain",
-    "fieldId": "2000000017",
-    "content": "Centralized Asset & Workflow Management",
+    "fieldId": "2000000033",
+    "content": "Digital Asset Workspace",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "headlineSub",
-    "fieldId": "2000000018",
-    "content": "Monitor real-time metrics, organize asset collections, and streamline team collaboration.",
+    "fieldId": "2000000034",
+    "content": "Manage, inspect, and organize your team's creative assets seamlessly.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "description",
-    "fieldId": "2000000019",
-    "content": "Empower your operational workflows with high-visibility grid views, modular controls, and intelligent asset distribution tools built for modern teams.",
+    "fieldId": "2000000035",
+    "content": "Centralized asset repository with real-time detail previewing, granular metadata tracking, and integrated review workflows.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "statBadges",
-    "fieldId": "2000000020",
+    "fieldId": "2000000036",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,45 +179,45 @@
     "css": null,
     "loop": [
       {
-        "field1": "99.9%",
+        "field1": "1,248",
         "fieldType1": "Text",
-        "fieldId1": "3000000013",
-        "field2": "Uptime SLA",
+        "fieldId1": "3000000025",
+        "field2": "Total Assets",
         "fieldType2": "Text",
-        "fieldId2": "3000000014"
+        "fieldId2": "3000000026"
       },
       {
-        "field1": "2.4M",
+        "field1": "84.2 GB",
         "fieldType1": "Text",
-        "fieldId1": "3000000015",
-        "field2": "Requests/Day",
+        "fieldId1": "3000000027",
+        "field2": "Storage Used",
         "fieldType2": "Text",
-        "fieldId2": "3000000016"
+        "fieldId2": "3000000028"
       },
       {
-        "field1": "12ms",
+        "field1": "14",
         "fieldType1": "Text",
-        "fieldId1": "3000000017",
-        "field2": "Avg Latency",
+        "fieldId1": "3000000029",
+        "field2": "Active Collaborators",
         "fieldType2": "Text",
-        "fieldId2": "3000000018"
+        "fieldId2": "3000000030"
       }
     ],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   },
   {
-    "sectionId": "1000000003",
+    "sectionId": "1000000005",
     "elementName": "ctaButton",
-    "fieldId": "2000000021",
-    "content": "Create Asset",
+    "fieldId": "2000000037",
+    "content": "Upload Asset",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-14T20:32:25.255Z",
-    "updatedAt": "2026-11-14T20:32:25.255Z"
+    "createdAt": "2026-11-14T21:01:47.633Z",
+    "updatedAt": "2026-11-14T21:01:47.633Z"
   }
 ]

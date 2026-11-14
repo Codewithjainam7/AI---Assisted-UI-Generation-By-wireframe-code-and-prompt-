@@ -30,7 +30,8 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       columns: wireframeIR?.layout?.columns || 2,
       mediaPosition: wireframeIR?.layout?.mediaPosition || "left",
       hasNavbar: wireframeIR?.layout?.hasNavbar || false,
-      hasSearchOrForm: wireframeIR?.layout?.hasSearchOrForm || false
+      hasSearchOrForm: wireframeIR?.layout?.hasSearchOrForm || false,
+      ...(wireframeIR?.layout || {})
     },
     theme: {
       accent: wireframeIR?.theme?.accent || "red-500",
@@ -107,7 +108,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       if (!genAI) genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-          const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.5-flash' });
+          const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.5-flash' });
           const res = await model.generateContent([
             { text: irSystemPrompt },
             { text: `Extract the UI structure for this user prompt:\n${promptText}` }

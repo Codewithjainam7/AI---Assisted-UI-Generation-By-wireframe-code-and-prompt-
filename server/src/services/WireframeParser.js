@@ -1,5 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 let genAI;
 
@@ -13,10 +21,11 @@ export async function parse(file) {
     const base64 = imageData.toString('base64');
     
     const candidateModels = [
-      process.env.GEMINI_MODEL || 'gemini-3.5-flash',
+      process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
+      'gemini-3.1-flash-lite',
+      'gemini-3.5-flash-lite',
       'gemini-3.5-flash',
-      'gemini-3.8-flash',
-      'gemini-flash-latest'
+      'gemini-flash-lite-latest'
     ];
 
     const prompt = `You are an elite Senior UI/UX Architect and Vision Engine.
