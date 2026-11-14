@@ -9,8 +9,13 @@ You MUST reconstruct the EXACT user interface depicted in the input IR JSON:
    - ALWAYS use the exact headlines, badges, descriptions, buttons, images, and stats provided in the IR JSON.
    - If the IR represents a SaaS Landing page / Hero:
      Generate a modern split or centered hero with sticky navbar, brand badge, headline, subhead, description, responsive stat cards, and primary/secondary CTA buttons.
-   - If the IR represents a Dashboard / Analytics / IoT / App interface:
-     Generate a modern dashboard interface with header, status indicators, metric grids, data cards, and interactive controls.
+   - If the IR represents a Dashboard / Analytics / IoT / App interface (or layout.hasSidebar is true or domain === 'dashboard' or sectionType === 'dashboard-hero'):
+     Reconstruct the EXACT multi-panel app interface faithfully matching the drawing:
+     a) Left Vertical Sidebar: Render a dedicated vertical icon sidebar rail or rounded floating strip styled with the exact color from IR (e.g. bg-yellow-400 / amber-400 or dark zinc-900), containing vertical icon glyphs for Hamburger Menu, Dashboard, Analytics/Chart, Star/Favorites, Apps Grid, and Settings/Gear.
+     b) Top Header Bar: Clean search bar input with search icon, category/tab filter pills, and brand/action buttons.
+     c) Central Card Grid: A 3x2 (or 3-column) grid of content cards representing modules/assets, each with a rounded container, thumbnail area, title, description, and status tag.
+     d) Right-hand Inspector / Detail Panel: A dedicated detail panel with hero preview card (id={ids.heroImage}), headline (id={ids.headlineMain}), subtitle (id={ids.headlineSub}), rating stars or specifications, description (id={ids.description}), and primary CTA button (id={ids.ctaButton}).
+     e) Bottom Row: User avatar chips or horizontal metric cards.
    - If the IR represents an E-Commerce Product page (domain === 'ecommerce' or apparel):
      Generate a full product showcase with header, multi-view gallery (id={ids.heroImage} for main image), color swatches, size/variant selector, Add to Cart CTA (id={ids.ctaButton}), Wishlist button, and product specs.
 2. For cards and stats: Each card in DEFAULT_STAT_CARDS has exactly two fields (field1: title/metric with fieldId1, field2: label/description with fieldId2).

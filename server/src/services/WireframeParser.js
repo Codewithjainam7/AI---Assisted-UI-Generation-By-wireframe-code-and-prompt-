@@ -13,7 +13,10 @@ export async function parse(file) {
     const base64 = imageData.toString('base64');
     
     const candidateModels = [
-      process.env.GEMINI_MODEL || 'gemini-2.5-flash'
+      process.env.GEMINI_MODEL || 'gemini-3.5-flash',
+      'gemini-3.5-flash',
+      'gemini-3.8-flash',
+      'gemini-flash-latest'
     ];
 
     const prompt = `You are an elite Senior UI/UX Architect and Vision Engine.
@@ -30,7 +33,17 @@ Analyze and extract a strict JSON object with this structure:
     "mediaPosition": "left" | "right" | "top" | "center" | "none",
     "columns": 1 | 2 | 3 | 4,
     "hasNavbar": true | false,
-    "hasSearchOrForm": true | false
+    "hasSearchOrForm": true | false,
+    "hasSidebar": true | false,
+    "sidebarPosition": "left" | "right" | "none",
+    "sidebarColor": "yellow-400" | "amber-400" | "zinc-900" | "blue-500",
+    "sidebarIcons": ["menu", "chart", "star", "grid", "settings"],
+    "hasCardGrid": true | false,
+    "cardGridRows": 2,
+    "cardGridCols": 3,
+    "hasDetailPanel": true | false,
+    "detailPanelPosition": "right" | "left" | "none",
+    "hasBottomRow": true | false
   },
   "theme": {
     "accent": "red-500" | "blue-500" | "indigo-500" | "purple-500" | "emerald-500" | "orange-500" | "cyan-500",
@@ -87,24 +100,29 @@ CRITICAL RULES:
 4. If the wireframe contains a grid of cards, product views, or feature blocks, extract ALL of them into featureCards or statCards.
 5. If the wireframe has below-the-fold CTA blocks, content blocks, or a footer, extract them into contentBlocks, ctaBlocks, and footer.
 6. For suggestedImageUrl: Provide a realistic, verified, working photo URL matching the domain. DO NOT suggest using the wireframe drawing itself.
-7. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
+7. If the wireframe contains a vertical navigation sidebar (such as a yellow, amber, or dark bar on the left with icon glyphs like hamburger, chart, star, grid, settings), set layout.hasSidebar: true, record its exact color and icons, and describe it clearly in imageConcept.
+8. If the wireframe contains a multi-column dashboard with a central card grid and a right-hand detail inspector panel, set sectionType: 'dashboard-hero', domain: 'dashboard', and extract each card in the grid into featureCards.
+9. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
 
     let result = null;
     let lastError = null;
 
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        const model = genAI.getGenerativeModel({ model: candidateModels[0] });
-        result = await model.generateContent([
-          { inlineData: { mimeType: file.mimetype || 'image/png', data: base64 } },
-          prompt
-        ]);
-        if (result && result.response) break;
-      } catch (err) {
-        lastError = err;
-        console.warn(`Gemini vision analysis attempt ${attempt} warning: ${err.message}. Retrying...`);
-        if (attempt < 3) await new Promise(r => setTimeout(r, 1500));
+    for (const modelName of candidateModels) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          result = await model.generateContent([
+            { inlineData: { mimeType: file.mimetype || 'image/png', data: base64 } },
+            prompt
+          ]);
+          if (result && result.response) break;
+        } catch (err) {
+          lastError = err;
+          console.warn(`Gemini vision analysis (${modelName}, attempt ${attempt}) warning: ${err.message}. Retrying...`);
+          if (attempt < 2) await new Promise(r => setTimeout(r, 1000));
+        }
       }
+      if (result && result.response) break;
     }
 
     if (!result || !result.response) {

@@ -84,6 +84,12 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
     /hoodie|clothing|apparel|fleece|sweatshirt/i.test(displayHeadline + ' ' + displaySub + ' ' + displayDesc) ||
     /hoodie|apparel/i.test(job?.sectionName || '');
 
+  // Detect whether this is a dashboard / multi-panel wireframe
+  const isDashboard = ir?.domain === 'dashboard' ||
+    ir?.sectionType === 'dashboard-hero' ||
+    ir?.layout?.hasSidebar ||
+    /dashboard|analytics|admin|console|overview|asset/i.test((job?.sectionName || '') + ' ' + displayHeadline + ' ' + displayBrand);
+
   if (displayImage.includes('uploads/') || displayImage.includes('wireframe') || displayImage.includes('1571434190823')) {
     displayImage = isEcommerce ? PRODUCT_IMAGES[0] : 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80';
   }
@@ -351,6 +357,189 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
             </div>
           </div>
         </footer>
+      </div>
+    );
+  }
+
+  if (isDashboard) {
+    return (
+      <div className="relative min-h-screen w-full bg-[#09090b] text-white font-sans antialiased overflow-x-hidden rounded-2xl flex flex-col md:flex-row">
+        {/* Left Vertical Yellow Sidebar (faithfully reconstructed from wireframe) */}
+        <aside className="w-full md:w-20 lg:w-24 bg-amber-400 text-zinc-950 flex md:flex-col items-center justify-between py-3 md:py-6 px-4 md:px-0 flex-shrink-0 z-30 shadow-2xl">
+          <div className="flex md:flex-col items-center gap-4 sm:gap-6">
+            <button className="w-10 h-10 rounded-2xl bg-zinc-950 text-amber-400 flex items-center justify-center font-black text-lg shadow-md hover:scale-105 transition">
+              <i className="pi pi-bars text-base" />
+            </button>
+            <div className="flex md:flex-col items-center gap-3 sm:gap-5 text-zinc-900">
+              <button className="p-2 hover:bg-zinc-950/10 rounded-xl transition" title="Navigation">
+                <i className="pi pi-caret-up text-base" />
+              </button>
+              <button className="p-2 hover:bg-zinc-950/10 rounded-xl transition" title="Analytics">
+                <i className="pi pi-chart-bar text-base" />
+              </button>
+              <button className="p-2 hover:bg-zinc-950/10 rounded-xl transition" title="Favorites">
+                <i className="pi pi-star text-base" />
+              </button>
+              <button className="w-11 h-11 rounded-2xl bg-zinc-950 text-amber-400 flex items-center justify-center shadow-lg hover:scale-105 transition" title="Grid View">
+                <i className="pi pi-th-large text-base" />
+              </button>
+              <div className="w-2.5 h-2.5 rounded-full bg-zinc-950/60" />
+            </div>
+          </div>
+          <div className="flex md:flex-col items-center gap-2">
+            <button className="p-2 hover:bg-zinc-950/10 rounded-xl transition" title="Settings">
+              <i className="pi pi-cog text-lg" />
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 bg-zinc-950">
+          {/* Top Header Bar */}
+          <header className="w-full border-b border-white/10 bg-zinc-950/80 backdrop-blur-xl px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 sm:gap-8">
+              <span className="text-lg sm:text-xl font-black tracking-wider uppercase text-white" dangerouslySetInnerHTML={{ __html: displayBrand }} />
+              <div className="hidden sm:flex items-center gap-2">
+                {['Overview', 'Assets', 'Analytics', 'Settings'].map((t, idx) => (
+                  <span key={t} className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition ${idx === 0 ? 'bg-amber-400 text-zinc-950 font-bold' : 'text-zinc-400 hover:text-white'}`}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="relative hidden md:block w-56 lg:w-72">
+                <input
+                  type="text"
+                  placeholder="Search assets, modules..."
+                  className="w-full px-4 py-1.5 pl-9 rounded-full bg-zinc-900 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                />
+                <i className="pi pi-search absolute left-3 top-2 text-xs text-zinc-400" />
+              </div>
+              <Button
+                className="bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold text-xs px-4 py-2 rounded-xl border-none shadow-md transition"
+                label={displayCta}
+                aria-label="Create Action"
+                onClick={() => {}}
+              />
+            </div>
+          </header>
+
+          {/* Main Dashboard Layout: Grid of Cards + Right Detail Panel */}
+          <main className="p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-6 max-w-[1920px] w-full mx-auto">
+            {/* Center: 3x2 Grid (6 Cards exactly as in wireframe) */}
+            <div className="flex-1 flex flex-col gap-6">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
+                <p className="text-sm text-zinc-400 mt-1" dangerouslySetInnerHTML={{ __html: displaySub }} />
+              </div>
+
+              {/* 3x2 Card Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                {[
+                  { title: 'Modular Grid System', tag: 'Core', metric: '6 Modules', desc: 'Organize data assets into customizable grid layouts with instant filtering.' },
+                  { title: 'Sidebar Quick Actions', tag: 'Navigation', metric: 'Fast', desc: 'Access system controls, favorites, and analytics with single-click navigation.' },
+                  { title: 'Real-time Metrics', tag: 'Analytics', metric: 'Live', desc: 'Track system health, conversion rates, and user engagement live.' },
+                  { title: 'Media Collection A', tag: 'Assets', metric: '1.2 GB', desc: 'High-resolution graphic assets and marketing collateral organized.' },
+                  { title: 'UI Components Library', tag: 'Design', metric: '340 Items', desc: 'Standardized component tokens and interactive UI patterns.' },
+                  { title: 'System Snapshots', tag: 'Security', metric: 'Daily', desc: 'Automated snapshot logs and database recovery points.' },
+                ].map((c, idx) => (
+                  <div key={idx} className="bg-zinc-900/60 border border-white/10 hover:border-amber-400/50 rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all group shadow-lg">
+                    <div className="w-full h-28 rounded-xl bg-zinc-800/80 mb-3 flex items-center justify-center text-zinc-500 overflow-hidden relative group-hover:scale-[1.02] transition-transform">
+                      <div className="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center text-amber-400 text-xl font-bold">
+                        {idx + 1}
+                      </div>
+                      <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 text-amber-400 border border-amber-400/30">
+                        {c.metric}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-md">
+                          {c.tag}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-white text-sm group-hover:text-amber-400 transition">{c.title}</h3>
+                      <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-relaxed">{c.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom Avatar Activity Row (Matching bottom circles in wireframe) */}
+              <div className="bg-zinc-900/40 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2">
+                    {['bg-amber-400', 'bg-blue-400', 'bg-emerald-400', 'bg-purple-400'].map((bg, i) => (
+                      <div key={i} className={`w-8 h-8 rounded-full border-2 border-zinc-950 ${bg} flex items-center justify-center text-zinc-950 font-bold text-xs`}>
+                        {String.fromCharCode(65 + i)}
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-white">Active Workspace Collaborators</span>
+                    <p className="text-[10px] text-zinc-400">4 team members currently viewing this board</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-semibold text-amber-400 hover:text-amber-300 cursor-pointer">
+                  <span>Manage Permissions &rarr;</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Inspector / Detail Panel (Drawn in wireframe with preview card, ratings, and action buttons) */}
+            <aside className="w-full lg:w-80 xl:w-96 flex-shrink-0 bg-zinc-900/60 border border-white/10 rounded-3xl p-5 sm:p-6 flex flex-col gap-4 shadow-2xl backdrop-blur-xl">
+              <div className="relative rounded-2xl overflow-hidden aspect-video bg-zinc-800 border border-white/10 shadow-lg group">
+                <img
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  src={displayImage}
+                  onError={errorImage}
+                  alt="Detail Preview"
+                />
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-black/60 text-white backdrop-blur-md border border-white/20">
+                  Live View
+                </span>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400">Active Selection</span>
+                <h2 className="text-lg font-black text-white mt-1" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
+                <div className="flex items-center gap-2 mt-1 text-xs text-amber-400">
+                  <span>★★★★★</span>
+                  <span className="text-zinc-400 font-medium">4.9 / 5.0 (2,450 ratings)</span>
+                </div>
+              </div>
+
+              <div className="border-t border-white/10 pt-3">
+                <p className="text-xs text-zinc-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: displayDesc }} />
+              </div>
+
+              {/* Key Specs / Stat list */}
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                {statCards.slice(0, 2).map((s, idx) => (
+                  <div key={idx} className="p-2.5 rounded-xl bg-zinc-800/60 border border-white/10 text-center">
+                    <div className="text-sm font-extrabold text-amber-400" dangerouslySetInnerHTML={{ __html: s.field1 }} />
+                    <div className="text-[10px] text-zinc-400 mt-0.5" dangerouslySetInnerHTML={{ __html: s.field2 }} />
+                  </div>
+                ))}
+              </div>
+
+              {/* 2 Action Buttons (matching wireframe buttons) */}
+              <div className="flex flex-col gap-2.5 pt-2">
+                <Button
+                  className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-amber-400 hover:bg-amber-300 text-zinc-950 border-none shadow-lg shadow-amber-400/10 transition"
+                  label={displayCta}
+                  aria-label="Action 1"
+                  onClick={() => {}}
+                />
+                <button className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-zinc-800 hover:bg-zinc-700 text-white border border-white/10 transition">
+                  Export Dataset
+                </button>
+              </div>
+            </aside>
+          </main>
+        </div>
       </div>
     );
   }
