@@ -19,7 +19,7 @@ The wireframe is an interactive Dashboard / Application Workspace. Reconstruct t
 1. Outer Container: Light neutral canvas (e.g. bg-[#e8eaed] or bg-gray-100 min-h-screen p-4 sm:p-8 flex items-center justify-center font-sans).
 2. Main Application Window: A large rounded white container (bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl w-full max-w-7xl flex flex-col md:flex-row gap-6 relative border border-gray-200/60).
 3. Floating Left Vertical Sidebar Capsule:
-   - A rounded vertical pill rail on the left (w-16 ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-3 flex flex-col items-center justify-between shadow-lg shadow-amber-500/20 min-h-[560px] flex-shrink-0 z-20):
+   - A rounded vertical pill rail on the left (w-16 min-w-[4rem] max-w-[4rem] ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-500/20 min-h-[580px] flex-shrink-0 z-20). Do NOT use 'w-full'. Ensure it is always a vertical rail with explicit width and min-width:
      * Top hamburger menu icon (= / ☰),
      * Triangle up (▲),
      * Bar chart (📊 / ☲),
@@ -27,14 +27,15 @@ The wireframe is an interactive Dashboard / Application Workspace. Reconstruct t
      * Active highlighted grid app square (⊞) with rounded white/dark pill backdrop,
      * Circle outline (○),
      * Bottom hexagon nut / gear settings icon (⬡).
+     * Every SVG icon MUST have explicit classes: 'w-5 h-5 min-w-[20px] min-h-[20px]'.
 4. Top Bar:
    - Category tab pills or breadcrumbs on left (e.g. Overview, Assets, Library).
    - Rounded search bar input on right with search icon and placeholder '${ir.inputPlaceholder || ir.content?.inputPlaceholder || 'Search...'}'.
 5. Central Content Area:
-   - Main card container holding a 3x2 grid of 6 rounded thumbnail cards (grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6).
+   - Main card container (flex-1 min-w-0) holding a 3x2 grid of 6 rounded thumbnail cards (grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6).
    - Each card has a gray rounded thumbnail rectangle (h-28 bg-gray-200/90 rounded-2xl mb-3) and two lines of text (title and subtitle).
 6. Right Detail Inspector Panel:
-   - A dedicated rounded panel (w-full md:w-80 bg-gray-50/90 rounded-2xl p-5 border border-gray-100 flex flex-col justify-between flex-shrink-0) containing:
+   - A dedicated rounded panel (w-80 min-w-[18rem] max-w-[20rem] bg-gray-50/90 rounded-2xl p-5 border border-gray-100 flex flex-col justify-between flex-shrink-0) containing:
      * Top large preview image card (<img id={ids.heroImage} className="dynamicStyle2 w-full h-44 object-cover rounded-xl mb-3" ... />),
      * Main headline (<h3 id={ids.headlineMain} className="dynamicStyle text-base font-bold text-gray-900" ... />),
      * Subtitle (<p id={ids.headlineSub} className="dynamicStyle text-xs text-gray-500" ... />),
