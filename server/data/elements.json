@@ -98,23 +98,23 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "heroImage",
-    "fieldId": "2000000075",
-    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000096",
+    "content": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.138Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "brandBadge",
-    "fieldId": "2000000076",
+    "fieldId": "2000000097",
     "content": "Wellness Page Wireframe",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -122,13 +122,13 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "headlineMain",
-    "fieldId": "2000000077",
+    "fieldId": "2000000098",
     "content": "Your Calories",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -136,41 +136,41 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "headlineSub",
-    "fieldId": "2000000078",
-    "content": "Daily nutritional tracking summary",
+    "fieldId": "2000000099",
+    "content": "Daily nutritional intake tracking",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "description",
-    "fieldId": "2000000079",
-    "content": "View your daily meal plans and calorie intake statistics for today.",
+    "fieldId": "2000000100",
+    "content": "Manage your daily meal planning and track caloric intake efficiently.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "statBadges",
-    "fieldId": "2000000080",
+    "fieldId": "2000000101",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,29 +179,29 @@
     "css": null,
     "loop": [
       {
-        "field1": "1999 Calories",
+        "field1": "1999",
         "fieldType1": "Text",
-        "fieldId1": "3000000057",
-        "field2": "Daily Total",
+        "fieldId1": "3000000075",
+        "field2": "Calories",
         "fieldType2": "Text",
-        "fieldId2": "3000000058"
+        "fieldId2": "3000000076"
       }
     ],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   },
   {
-    "sectionId": "1000000011",
+    "sectionId": "1000000014",
     "elementName": "ctaButton",
-    "fieldId": "2000000081",
-    "content": "GET STARTED",
+    "fieldId": "2000000102",
+    "content": "Log Meal",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T17:22:45.809Z",
-    "updatedAt": "2026-11-15T17:22:45.809Z"
+    "createdAt": "2026-11-15T18:00:03.145Z",
+    "updatedAt": "2026-11-15T18:00:03.145Z"
   }
 ]
