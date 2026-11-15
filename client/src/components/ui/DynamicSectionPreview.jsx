@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'primereact/button';
 import { fetchElementsByIds } from '../../features/cms/cmsSlice';
@@ -24,7 +24,6 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
   const headlineSub = getElementDefault('headlineSub', 'Manage and monitor your primary metrics and system activity.');
   const description = getElementDefault('description', 'Centralized interface for high-velocity teams.');
   const ctaButton = getElementDefault('ctaButton', 'GET STARTED');
-  const heroImage = getElementDefault('heroImage', 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80');
 
   // Look for CMS live value overrides
   const liveValues = {};
@@ -40,32 +39,21 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
   const displayDesc = liveValues.description || description;
   const displayCta = liveValues.ctaButton || ctaButton;
 
-  // Detect fitness / calories specifically
-  const isFitness = ir?.domain === 'fitness' ||
-    /calor|nutrition|diet|meal/i.test((job?.sectionName || '') + ' ' + (ir?.domain || '') + ' ' + (ir?.imageConcept || ''));
+  const isMultiMobile = ir?.screenArchetype === 'multi-screen-mobile' ||
+    layout.isMultiScreenMobile ||
+    (ir?.formFactor === 'mobile' && layout.columns === 3 && /browse|order|enjoy/i.test((ir?.content?.featureCards || []).map(c => c.title).join(' ')));
 
-  // Detect whether this is a dashboard / multi-panel wireframe
-  const isDashboard = ir?.screenType === 'desktop-dashboard' ||
-    ir?.sectionType === 'dashboard-hero' ||
-    layout.hasSidebar ||
-    layout.hasTabs ||
-    layout.hasDetailPanel ||
-    layout.sidebarType === 'icon-rail' ||
-    layout.sidebarType === 'profile-sidebar';
+  const isPortal = ir?.screenArchetype === 'corporate-portal' ||
+    layout.isPortal ||
+    (/company|intranet|portal|application/i.test((job?.sectionName || '') + ' ' + (ir?.content?.headlineMain || '')) && !isMultiMobile) ||
+    ir?.content?.headlineMain === 'My applications';
 
-  // Cards to render
-  const featureCards = Array.isArray(ir?.featureCards) && ir.featureCards.length > 0
-    ? ir.featureCards
-    : (Array.isArray(ir?.content?.featureCards) && ir.content.featureCards.length > 0 ? ir.content.featureCards : [
-      { title: 'Module 1', description: 'System asset module' },
-      { title: 'Module 2', description: 'System asset module' },
-      { title: 'Module 3', description: 'System asset module' }
-    ]);
+  const isWellness = ir?.screenArchetype === 'wellness-tracker' ||
+    ir?.domain === 'fitness' ||
+    /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((job?.sectionName || '') + ' ' + (ir?.domain || '') + ' ' + (ir?.imageConcept || ''));
 
-  const sidebarItems = layout.sidebarItems || ['Dashboard', 'Assets', 'Analytics', 'Settings'];
-  const sidebarUser = layout.sidebarUser?.name || 'User Profile';
-  const tabs = layout.tabs || ['Overview', 'Activity', 'Reports', 'Settings'];
-  const dateNav = layout.dateNavigator ? layout.dateNavigator.replace(/today/i, '').trim() : null;
+  const isAnalytics = ir?.screenArchetype === 'analytics-dashboard' ||
+    (layout.hasSidebar && layout.sidebarType === 'icon-rail' && layout.hasDetailPanel);
 
   useEffect(() => {
     if (job?.elementIds?.length > 0) {
@@ -73,215 +61,341 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
     }
   }, [dispatch, pageName, job?.sectionId]);
 
-  // 1. Dynamic Dashboard / Multi-Panel Wireframe View
-  if (isDashboard) {
+  // 1. MULTI-SCREEN MOBILE ONBOARDING
+  if (isMultiMobile) {
+    const screens = [
+      { step: 'STEP 1', title: 'Browse', desc: 'Explore a wide variety of catering menus curated for your team.', activeDot: 0, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80' },
+      { step: 'STEP 2', title: 'Order', desc: 'Customize dietary preferences and schedule delivery with precision.', activeDot: 1, image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80' },
+      { step: 'STEP 3', title: 'Enjoy', desc: 'Delight in fresh, restaurant-quality catering delivered directly to your venue.', activeDot: 2, image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80' }
+    ];
+
     return (
-      <div className="w-full min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900 rounded-2xl">
-        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900">
-          
-          {/* Top Header Bar */}
-          <header className="w-full bg-slate-200 border-b border-slate-300 px-6 py-3.5 flex items-center justify-between text-slate-900 font-bold text-base">
-            <div className="flex items-center gap-2 font-black text-lg text-slate-900">
-              <span dangerouslySetInnerHTML={{ __html: displayBrand }} />
-            </div>
-            {layout.hasSearchOrForm && (
-              <input type="text" placeholder="Search..." className="w-64 bg-white/90 border border-slate-300 rounded-full px-4 py-1.5 text-xs text-slate-800" />
-            )}
-          </header>
+      <div className="w-full min-h-screen bg-slate-950 p-4 sm:p-8 flex flex-col items-center justify-center font-sans overflow-x-hidden text-slate-900 rounded-2xl">
+        <div className="text-white text-base sm:text-lg font-black tracking-widest uppercase mb-8 flex items-center gap-2">
+          <span dangerouslySetInnerHTML={{ __html: displayBrand }} />
+        </div>
 
-          {/* Window Body: Sidebar + Main Content */}
-          <div className="flex flex-col md:flex-row w-full items-stretch">
-            
-            {/* Sidebar */}
-            {layout.hasSidebar !== false && (
-              layout.sidebarType === 'icon-rail' ? (
-                <aside className="w-16 min-w-[4rem] max-w-[4rem] bg-amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch my-3 ml-3">
-                  <div className="space-y-6 text-slate-900">
-                    <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-                    <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 14h16z"/></svg>
-                    <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
-                  </div>
-                  <div className="space-y-6 text-slate-900">
-                    <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <div className="bg-white/30 p-2 rounded-xl">
-                      <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
-                    </div>
-                    <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>
-                  </div>
-                  <svg className="w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/></svg>
-                </aside>
-              ) : layout.sidebarType === 'profile-sidebar' ? (
-                <aside className="w-full sm:w-60 md:w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 self-stretch">
-                  <div className="bg-pink-100 border-b border-pink-200 p-6 flex flex-col items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center border-2 border-pink-200 text-slate-400 overflow-hidden">
-                      <svg className="w-12 h-12 text-slate-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                    </div>
-                    <h2 className="text-center font-bold text-slate-800 text-base mt-2.5">{sidebarUser}</h2>
-                  </div>
-                  <nav className="p-5 flex flex-col gap-3.5">
-                    {sidebarItems.map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-slate-700 hover:text-slate-950 font-medium text-sm transition-colors cursor-pointer py-1">
-                        <span className="w-2 h-2 rounded-full bg-slate-400 flex-shrink-0"></span>
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </nav>
-                </aside>
-              ) : (
-                <aside className="w-full sm:w-56 bg-slate-50 border-r border-slate-200 p-4 flex flex-col gap-3 flex-shrink-0">
-                  {sidebarItems.map((item, idx) => (
-                    <div key={idx} className="text-slate-700 font-semibold text-sm hover:text-slate-950 py-1.5 cursor-pointer">{item}</div>
-                  ))}
-                </aside>
-              )
-            )}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 w-full max-w-7xl">
+          {screens.map((sc, i) => (
+            <div key={i} className="w-full max-w-[340px] bg-white rounded-[2.5rem] shadow-2xl border-4 border-slate-800 overflow-hidden flex flex-col relative min-h-[640px] p-6 justify-between">
+              <div>
+                <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase">
+                  <span>{sc.step}</span>
+                  <span className="text-rose-500 cursor-pointer">DONE</span>
+                </div>
+                <div className="w-48 h-48 mx-auto rounded-full overflow-hidden shadow-md my-6 border-4 border-slate-100">
+                  <img className="w-full h-full object-cover" src={sc.image} onError={errorImage} alt={sc.title} />
+                </div>
+                <h2 className="text-2xl font-black text-slate-900 text-center tracking-tight">
+                  {i === 2 ? <span dangerouslySetInnerHTML={{ __html: displayHeadline }} /> : sc.title}
+                </h2>
+                <p className="text-xs text-slate-600 text-center mt-2 leading-relaxed">
+                  {i === 2 ? <span dangerouslySetInnerHTML={{ __html: displayDesc }} /> : sc.desc}
+                </p>
+              </div>
 
-            {/* Main Content Area */}
-            <main className="flex-1 min-w-0 flex flex-col">
-              
-              {/* Sub-Header Bar with Tabs & Date Switcher */}
-              {(layout.hasTabs || dateNav) && (
-                <div className="border-b border-slate-200 px-6 pt-4 pb-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-6">
-                    {tabs.map((t, i) => (
-                      <button key={i} className={`pb-3 text-base tracking-tight ${i === 0 ? "text-slate-900 font-extrabold border-b-2 border-slate-900" : "text-slate-400 hover:text-slate-600 font-semibold transition-colors"}`}>
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                  {dateNav && (
-                    <div className="flex flex-col items-end pb-2 text-right">
-                      <div className="flex items-center gap-1.5 text-slate-700 font-semibold text-sm">
-                        <span className="text-slate-400 font-bold cursor-pointer hover:text-slate-700">&lt;</span>
-                        <span>{dateNav}</span>
-                        <span className="text-slate-400 font-bold cursor-pointer hover:text-slate-700">&gt;</span>
-                      </div>
-                      <span className="text-xs text-slate-500 font-bold">Today</span>
-                    </div>
+              <div>
+                <div className="flex justify-center gap-2.5 my-5">
+                  <div className={`w-2.5 h-2.5 rotate-45 ${sc.activeDot === 0 ? 'bg-rose-500' : 'bg-slate-300'} transition-all`} />
+                  <div className={`w-2.5 h-2.5 rotate-45 ${sc.activeDot === 1 ? 'bg-rose-500' : 'bg-slate-300'} transition-all`} />
+                  <div className={`w-2.5 h-2.5 rotate-45 ${sc.activeDot === 2 ? 'bg-rose-500' : 'bg-slate-300'} transition-all`} />
+                </div>
+
+                <div className="flex items-center gap-3 w-full">
+                  <button className="text-slate-400 text-xs font-bold uppercase py-3 px-2">SKIP</button>
+                  {i === 2 ? (
+                    <Button
+                      className="flex-1 py-3.5 rounded-full font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-lg text-xs"
+                      label={displayCta}
+                      aria-label="Action button"
+                    />
+                  ) : (
+                    <button className="flex-1 py-3.5 rounded-full font-bold bg-slate-100 text-slate-800 hover:bg-slate-200 transition text-xs">
+                      NEXT
+                    </button>
                   )}
                 </div>
-              )}
-
-              {/* Main Content Body */}
-              <div className="p-6 sm:p-8 flex flex-col gap-8">
-                
-                {isFitness ? (
-                  <div className="flex flex-col gap-3">
-                    <h3 className="text-xl font-extrabold text-rose-500 tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
-                    <div className="flex items-center gap-4">
-                      <svg className="w-14 h-14 text-slate-800 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                        {ir?.statCards?.[0]?.field1 || '1999'} {ir?.statCards?.[0]?.field2 || 'Calories'}
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
-                    <p className="text-sm text-slate-600 mt-1" dangerouslySetInnerHTML={{ __html: displaySub }} />
-                  </div>
-                )}
-
-                {/* Cards Grid */}
-                <div className={`grid grid-cols-1 ${featureCards.length === 2 ? 'sm:grid-cols-2' : featureCards.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2 lg:grid-cols-3'} gap-6`}>
-                  {featureCards.map((card, idx) => (
-                    <div key={idx} className="bg-slate-300 rounded-2xl overflow-hidden relative shadow-sm border border-slate-300 flex flex-col p-4">
-                      <div className="h-32 sm:h-36 rounded-xl bg-slate-200 mb-3 flex items-center justify-center">
-                        <svg className="w-12 h-12 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                      </div>
-                      <div className="text-sm font-bold text-slate-900">{card.title}</div>
-                      <div className="text-xs text-slate-600 mt-1">{card.description || 'System asset module'}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Action Button */}
-                <div className="pt-2">
-                  <Button className="w-full sm:w-auto px-8 py-3 rounded-full font-bold bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-sm self-start" label={displayCta} aria-label="Action button" />
-                </div>
-
               </div>
-            </main>
-
-            {/* Right Inspector Panel */}
-            {layout.hasDetailPanel && (
-              <aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 border-l border-slate-200 p-5 flex flex-col justify-between flex-shrink-0">
-                <div>
-                  <div className="relative rounded-xl overflow-hidden aspect-video bg-slate-200 mb-4 flex items-center justify-center">
-                    <svg className="w-12 h-12 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                  </div>
-                  <h3 className="text-base font-bold text-slate-900">Actionable Data Insights</h3>
-                  <div className="flex items-center gap-1.5 text-xs text-amber-500 my-1">
-                    <span>★★★★★</span>
-                    <span className="text-slate-600 font-semibold">4.9/5</span>
-                  </div>
-                  <p className="text-xs text-slate-600 leading-relaxed my-2">Monitor performance metrics and system health in real-time.</p>
-                </div>
-                <div className="pt-4 flex flex-col gap-2">
-                  <Button className="w-full py-2.5 rounded-xl font-bold text-xs bg-amber-400 text-slate-900 border-none" label="View Analytics" />
-                  <button className="w-full py-2.5 rounded-xl font-bold text-xs bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Export</button>
-                </div>
-              </aside>
-            )}
-
-          </div>
-
-          {/* Bottom Activity Row */}
-          {layout.hasBottomRow && (
-            <div className="bg-slate-50 border-t border-slate-200 p-4 rounded-b-3xl grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="p-3 bg-white rounded-xl border border-slate-200 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-amber-400/20 text-amber-600 font-bold flex items-center justify-center text-xs">{String.fromCharCode(64 + i)}</div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">Active Node {i}</div>
-                    <div className="text-[10px] text-slate-500">Live synchronized</div>
-                  </div>
-                </div>
-              ))}
             </div>
-          )}
-
+          ))}
         </div>
       </div>
     );
   }
 
-  // 2. Standard Responsive Split-Hero / Landing Fallback
-  return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-x-hidden bg-slate-100 text-slate-900 font-sans p-4 sm:p-8 rounded-2xl">
-      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 sm:p-12 flex flex-col md:flex-row items-center gap-8 lg:gap-12">
-        <div className="w-full md:w-1/2 flex items-center justify-center">
-          <img
-            className="max-w-full max-h-[480px] h-auto object-cover rounded-2xl shadow-lg border border-slate-200"
-            src={getImage(heroImage)}
-            alt="Hero Visual Blueprint"
-            onError={errorImage}
-          />
-        </div>
-        <div className="w-full md:w-1/2 flex flex-col gap-4 text-left">
-          <span
-            className="inline-block px-4 py-1.5 rounded-full bg-slate-200 text-slate-800 font-bold text-xs uppercase tracking-wider self-start"
-            dangerouslySetInnerHTML={{ __html: displayBrand }}
-          />
-          <h1
-            className="text-3xl sm:text-5xl font-black text-slate-900 uppercase tracking-tight leading-tight"
-            dangerouslySetInnerHTML={{ __html: displayHeadline }}
-          />
-          <p
-            className="text-base sm:text-lg font-medium text-slate-600"
-            dangerouslySetInnerHTML={{ __html: displaySub }}
-          />
-          <p
-            className="text-sm text-slate-500 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: displayDesc }}
-          />
-          <div className="pt-2">
-            <Button
-              className="px-8 py-3.5 rounded-full font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-md"
-              label={displayCta}
-              aria-label="Call to action"
-            />
+  // 2. CORPORATE INTRANET / PORTAL
+  if (isPortal) {
+    const portal = layout.portal || {};
+    const appShortcuts = portal.appShortcuts || ['Salesforce', 'My file', 'Chatter', 'Planner', 'Cornerstone', 'Repository', 'Standards'];
+    const sidebarUser = layout.sidebarUser?.name || 'Ivon Stoilov';
+
+    return (
+      <div className="w-full min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900 rounded-2xl">
+        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900">
+          
+          <header className="w-full bg-slate-200 border-b border-slate-300 px-6 py-3.5 flex items-center justify-between text-slate-900 font-bold text-base">
+            <div className="flex items-center gap-2 font-black text-lg text-slate-900">
+              <span dangerouslySetInnerHTML={{ __html: displayBrand }} />
+            </div>
+            <div className="flex items-center gap-3">
+              <input type="text" placeholder={ir?.inputPlaceholder || 'Start typing what are you looking for...'} className="w-64 sm:w-80 bg-white border border-slate-300 rounded-full px-4 py-1.5 text-xs text-slate-800 focus:outline-none" />
+              <span className="text-xs text-slate-500 font-semibold cursor-pointer hidden sm:inline">Advanced search</span>
+            </div>
+          </header>
+
+          <div className="flex flex-col lg:flex-row w-full items-stretch">
+            <aside className="w-full lg:w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
+              <div className="bg-slate-50 border-b border-slate-200 p-6 flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-full bg-slate-200 border-2 border-slate-300 flex items-center justify-center text-slate-400 shadow-inner">
+                  <svg className="w-12 h-12 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <span className="text-xs font-bold text-slate-500 mt-2">527 / 378</span>
+                <h2 className="text-base font-bold text-slate-900 mt-1">{sidebarUser}</h2>
+              </div>
+              <nav className="p-5 flex flex-col gap-3">
+                {['Home', 'About', 'Organisation', 'Support', 'News'].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-slate-700 hover:text-slate-950 font-medium text-sm py-1 cursor-pointer">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </nav>
+            </aside>
+
+            <main className="flex-1 min-w-0 p-6 sm:p-8 flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-black text-slate-900 tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
+                <a href="#" className="text-xs font-bold text-blue-600 hover:underline">Edit</a>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                {appShortcuts.map((app, idx) => (
+                  <div key={idx} className="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:shadow-xs transition text-center cursor-pointer">
+                    <div className="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 font-black text-xs mb-2">
+                      {app.slice(0, 2).toUpperCase()}
+                    </div>
+                    <span className="text-xs font-bold text-slate-800 truncate w-full">{app}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm mt-2">
+                <img
+                  className="w-full md:w-80 h-48 sm:h-auto object-cover"
+                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
+                  onError={errorImage}
+                  alt="Today's News"
+                />
+                <div className="p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <span className="text-xs font-bold text-rose-500 uppercase">Today's news</span>
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight mt-1" dangerouslySetInnerHTML={{ __html: displaySub }} />
+                    <p className="text-xs text-slate-600 mt-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: displayDesc }} />
+                  </div>
+                  <a href="#" className="text-xs font-bold text-slate-900 hover:underline mt-4 inline-flex items-center gap-1">Read full article →</a>
+                </div>
+              </div>
+            </main>
+
+            <aside className="w-full lg:w-72 bg-slate-50 border-l border-slate-200 p-6 flex flex-col gap-6 flex-shrink-0">
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+                <h4 className="text-xs font-bold uppercase text-slate-500 mb-2">Standardization</h4>
+                <p className="text-xs text-slate-600">Company standards & compliance protocols repository.</p>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+                <h4 className="text-xs font-bold uppercase text-slate-500 mb-2">My connections</h4>
+                <div className="flex -space-x-2 my-2">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-slate-300 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-700">
+                      U{i}
+                    </div>
+                  ))}
+                </div>
+                <span className="text-xs text-slate-500">7 active connections</span>
+              </div>
+
+              <Button
+                className="w-full py-3 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm text-xs"
+                label={displayCta}
+                aria-label="Action button"
+              />
+            </aside>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. WELLNESS / NUTRITION DASHBOARD
+  if (isWellness) {
+    const sidebarUser = layout.sidebarUser?.name || 'Kiraa';
+    const tabs = layout.tabs?.length ? layout.tabs : ['Meal Plan', 'Exercise Plan'];
+    const cards = ir?.featureCards?.length ? ir.featureCards : [
+      { title: 'BREAKFAST', description: 'Placeholder for breakfast meal details.' },
+      { title: 'MORNING SNACK', description: 'Placeholder for morning snack meal details.' }
+    ];
+
+    return (
+      <div className="w-full min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900 rounded-2xl">
+        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900">
+          
+          <header className="w-full bg-slate-200 border-b border-slate-300 px-6 py-3.5 flex items-center justify-between text-slate-900 font-bold text-base">
+            <div className="flex items-center gap-2 font-black text-lg text-slate-900">
+              <span dangerouslySetInnerHTML={{ __html: displayBrand }} />
+            </div>
+          </header>
+
+          <div className="flex flex-col md:flex-row w-full items-stretch">
+            <aside className="w-full sm:w-60 md:w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 self-stretch">
+              <div className="bg-pink-100 border-b border-pink-200 p-6 flex flex-col items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center border-2 border-pink-200 text-slate-400 overflow-hidden">
+                  <svg className="w-12 h-12 text-slate-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <h2 className="text-center font-bold text-slate-800 text-base mt-2.5">{sidebarUser}</h2>
+              </div>
+              <nav className="p-5 flex flex-col gap-3.5">
+                {['Diary', 'Shopping Lists', 'Your Progress', 'Your Profile', 'Settings'].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-slate-700 hover:text-slate-950 font-medium text-sm transition-colors cursor-pointer py-1">
+                    <span className="w-2 h-2 rounded-full bg-slate-400 flex-shrink-0"></span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </nav>
+            </aside>
+
+            <main className="flex-1 min-w-0 flex flex-col">
+              <div className="border-b border-slate-200 px-6 pt-4 pb-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-6">
+                  <button className="pb-3 text-slate-900 font-extrabold text-base border-b-2 border-slate-900 tracking-tight">{tabs[0] || 'Meal Plan'}</button>
+                  <button className="pb-3 text-slate-400 hover:text-slate-600 font-semibold text-base tracking-tight transition-colors">{tabs[1] || 'Exercise Plan'}</button>
+                </div>
+                <div className="flex flex-col items-end pb-2 text-right">
+                  <div className="flex items-center gap-1.5 text-slate-700 font-semibold text-sm">
+                    <span className="text-slate-400 font-bold cursor-pointer hover:text-slate-700">&lt;</span>
+                    <span dangerouslySetInnerHTML={{ __html: displaySub }} />
+                    <span className="text-slate-400 font-bold cursor-pointer hover:text-slate-700">&gt;</span>
+                  </div>
+                  <span className="text-xs text-slate-500 font-bold">Today</span>
+                </div>
+              </div>
+
+              <div className="p-6 sm:p-8 flex flex-col gap-8">
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-xl font-extrabold text-rose-500 tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
+                  <div className="flex items-center gap-4">
+                    <svg className="w-14 h-14 text-slate-800 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                    <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">{ir?.statCards?.[0]?.field1 || '1999 Calories'}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {cards.map((c, idx) => (
+                    <div key={idx} className="bg-slate-300 rounded-2xl overflow-hidden relative shadow-sm border border-slate-300 flex flex-col p-4">
+                      <div className="h-32 sm:h-36 rounded-xl bg-slate-200 mb-3 flex items-center justify-center">
+                        <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      </div>
+                      <div className="text-sm font-bold text-slate-900 uppercase">{c.title}</div>
+                      <div className="text-xs text-slate-600 mt-1">{c.description || 'Meal details placeholder'}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm self-start"
+                  label={displayCta}
+                  aria-label="Action button"
+                />
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 4. ANALYTICS / SAAS DASHBOARD (or default dashboard)
+  const cards = Array.isArray(ir?.featureCards) && ir.featureCards.length > 0
+    ? ir.featureCards
+    : (Array.isArray(ir?.statCards) && ir.statCards.length > 0 ? ir.statCards.map(s => ({ title: s.field1, description: s.field2 })) : [
+      { title: 'User Acquisition', description: 'Monthly growth metrics' },
+      { title: 'System Latency', description: 'Real-time edge performance' },
+      { title: 'Memory Usage', description: 'Cluster allocation logs' },
+      { title: 'Active Sessions', description: 'Concurrent users online' },
+      { title: 'Error Rates', description: 'SLA monitoring logs' },
+      { title: 'Storage Volume', description: 'Distributed capacity' }
+    ]);
+
+  return (
+    <div className="w-full min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900 rounded-2xl">
+      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900">
+        
+        <header className="w-full bg-slate-200 border-b border-slate-300 px-6 py-3.5 flex items-center justify-between text-slate-900 font-bold text-base">
+          <div className="flex items-center gap-2 font-black text-lg text-slate-900">
+            <span dangerouslySetInnerHTML={{ __html: displayBrand }} />
+          </div>
+          <input type="text" placeholder={ir?.inputPlaceholder || 'Search reports...'} className="w-64 bg-white/90 border border-slate-300 rounded-full px-4 py-1.5 text-xs text-slate-800 focus:outline-none" />
+        </header>
+
+        <div className="flex flex-col md:flex-row w-full items-stretch">
+          <aside className="w-16 min-w-[4rem] max-w-[4rem] bg-amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch my-3 ml-3">
+            <div className="space-y-6 text-slate-900">
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 14h16z"/></svg>
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+            </div>
+            <div className="space-y-6 text-slate-900">
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div className="bg-white/30 p-2 rounded-xl">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+              </div>
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>
+            </div>
+            <svg className="w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/></svg>
+          </aside>
+
+          <main className="flex-1 min-w-0 flex flex-col p-6 sm:p-8 gap-6">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div>
+                <h1 className="text-2xl font-black text-slate-900 tracking-tight" dangerouslySetInnerHTML={{ __html: displayHeadline }} />
+                <p className="text-xs text-slate-500 mt-1" dangerouslySetInnerHTML={{ __html: displaySub }} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cards.map((c, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200 p-4 rounded-2xl shadow-xs">
+                  <div className="h-24 bg-slate-200 rounded-xl mb-3 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+                  </div>
+                  <div className="font-bold text-sm text-slate-900">{c.title}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{c.description || 'System asset module'}</div>
+                </div>
+              ))}
+            </div>
+          </main>
+
+          <aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 border-l border-slate-200 p-5 flex flex-col justify-between flex-shrink-0">
+            <div>
+              <div className="relative rounded-xl overflow-hidden aspect-video bg-slate-200 mb-4">
+                <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" onError={errorImage} alt="Detail" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900">Actionable Data Insights</h3>
+              <div className="flex items-center gap-1.5 text-xs text-amber-500 my-1">
+                <span>★★★★★</span>
+                <span className="text-slate-600 font-semibold">4.9/5</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed my-2" dangerouslySetInnerHTML={{ __html: displayDesc }} />
+            </div>
+
+            <div className="pt-4 flex flex-col gap-2">
+              <Button
+                className="w-full py-2.5 rounded-xl font-bold text-xs bg-amber-400 text-slate-900 border-none shadow-sm hover:brightness-105"
+                label={displayCta}
+                aria-label="Action button"
+              />
+            </div>
+          </aside>
         </div>
       </div>
     </div>

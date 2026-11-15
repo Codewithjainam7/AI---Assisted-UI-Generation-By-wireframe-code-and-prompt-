@@ -1,3 +1,28 @@
+function standardizeImports(jsx) {
+  let cleaned = jsx;
+  if (/import\s*\{[^}]*fetchElementsByIds[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/.test(cleaned)) {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*fetchElementsByIds[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';\nimport { getImage, errorImage } from '../../utils/getImage';"
+    );
+  } else if (/import\s*\{[^}]*getImage[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/.test(cleaned)) {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*getImage[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';\nimport { getImage, errorImage } from '../../utils/getImage';"
+    );
+  } else {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';"
+    );
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { getImage, errorImage } from '../../utils/getImage';"
+    );
+  }
+  return cleaned;
+}
+
 import * as acorn from 'acorn';
 import jsx from 'acorn-jsx';
 
@@ -24,6 +49,14 @@ export function validate(jsxString) {
 
   // Remove any remaining fences
   cleaned = cleaned.replace(/^```[\w]*\n?/gm, '').replace(/\n?```$/gm, '').trim();
+  cleaned = standardizeImports(cleaned);
+
+  // Standardize module import paths so generated files resolve cleanly in Vite
+  cleaned = cleaned.replace(/from\s+['"][^'"]*cmsSlice['"]/g, "from '../../features/cms/cmsSlice'");
+  cleaned = cleaned.replace(/from\s+['"][^'"]*getImage['"]/g, "from '../../utils/getImage'");
+  cleaned = cleaned.replace(/from\s+['"]\.\/utils['"]/g, "from '../../utils/getImage'");
+  cleaned = cleaned.replace(/from\s+['"]\.\.\/utils['"]/g, "from '../../utils/getImage'");
+
 
   try {
     JSXParser.parse(cleaned, { sourceType: 'module', ecmaVersion: 2020 });

@@ -34,10 +34,11 @@ You must analyze and extract the EXACT user interface depicted in the image.
 
 Analyze and extract a strict JSON object with this structure:
 {
+  "screenArchetype": "multi-screen-mobile" | "corporate-portal" | "wellness-tracker" | "analytics-dashboard" | "ecommerce-product" | "form-wizard" | "split-hero" | "custom",
   "screenType": "desktop-dashboard" | "mobile-app" | "landing-page" | "ecommerce" | "form-wizard" | "data-grid" | "social-feed" | "settings-profile" | "custom",
   "sectionType": "split-hero" | "full-hero" | "dashboard-hero" | "features-grid" | "app-landing" | "mobile-screen",
-  "sectionName": "DescriptiveCamelCaseName (e.g. CryptoExchange, SmartParking, TaskDashboard, GenericLandingPage)",
-  "domain": "The industry/theme (e.g. ecommerce, fintech, saas-ai, fitness, healthcare, dashboard, iot, social, travel, education)",
+  "sectionName": "DescriptiveCamelCaseName (e.g. CateringDemand, CorporateIntranet, WellnessDashboard, AnalyticsDashboard)",
+  "domain": "The industry/theme (e.g. catering, ecommerce, fintech, saas-ai, fitness, healthcare, dashboard, iot, social, travel, education)",
   "formFactor": "desktop" | "mobile" | "responsive",
   "layout": {
     "direction": "row" | "column",
@@ -49,7 +50,7 @@ Analyze and extract a strict JSON object with this structure:
     "sidebarPosition": "left" | "right" | "none",
     "sidebarType": "icon-rail" | "text-menu" | "profile-sidebar" | "filter-panel" | "none",
     "sidebarColor": "e.g. pink-100, amber-400, slate-900, slate-100, white",
-    "sidebarUser": { "name": "extracted user name if present", "avatar": true },
+    "sidebarUser": { "name": "extracted user name if present", "avatar": true, "stats": "527 / 378" },
     "sidebarItems": ["extracted item 1", "extracted item 2"],
     "sidebarIcons": ["icon1", "icon2"],
     "hasTabs": true | false,
@@ -63,7 +64,18 @@ Analyze and extract a strict JSON object with this structure:
     "detailPanelPosition": "right" | "left" | "none",
     "hasBottomRow": true | false,
     "hasBottomNav": true | false,
-    "bottomNavItems": ["Home", "Search", "Profile"]
+    "bottomNavItems": ["Home", "Search", "Profile"],
+    "isMultiScreenMobile": true | false,
+    "multiScreens": [
+      { "title": "Browse", "description": "curated menu items", "step": 1, "cta": "SKIP" },
+      { "title": "Order", "description": "place orders with precision", "step": 2, "cta": "SKIP" },
+      { "title": "Enjoy", "description": "professional catering service", "step": 3, "cta": "GET STARTED" }
+    ],
+    "portal": {
+      "appShortcuts": ["Salesforce", "My file", "Chatter", "Planner", "Cornerstone", "Repository", "Standards"],
+      "newsCard": { "title": "The real deal: Company is growing big", "subtitle": "Today's news", "date": "10 Oct 2026" },
+      "rightWidgets": ["Standardization", "My connections"]
+    }
   },
   "theme": {
     "accent": "rose-500" | "amber-500" | "blue-500" | "indigo-500" | "purple-500" | "emerald-500" | "orange-500" | "cyan-500",
@@ -110,6 +122,14 @@ Analyze and extract a strict JSON object with this structure:
 }
 
 CRITICAL UNIVERSAL VISION RULES:
+1. UNIVERSAL BLUEPRINT IDENTIFICATION & SCREEN ARCHETYPE:
+   - Identify the exact archetype:
+     * "multi-screen-mobile": When 2 or 3 mobile phones are shown side-by-side (e.g. mobile onboarding walkthrough with Browse, Order, Enjoy). Record layout.isMultiScreenMobile = true and fill layout.multiScreens.
+     * "corporate-portal": When a corporate intranet/portal is drawn with application shortcuts (e.g. 'My applications'), top search, news banner ('Today's news'), and side widgets. Record layout.portal.
+     * "wellness-tracker": When a fitness/wellness dashboard is drawn with pink profile sidebar, tabs (Meal Plan/Exercise Plan), calorie tracker with pie chart, and meal cards (BREAKFAST, MORNING SNACK). Set layout.hasDetailPanel = false!
+     * "analytics-dashboard": When a SaaS analytics UI is drawn with vertical capsule icon rail, 3x2 metric cards, detail inspector panel, and collaborator row. Set layout.hasDetailPanel = true!
+     * "ecommerce-product": When an e-commerce product page is drawn.
+     * "form-wizard": When a wizard/form is drawn.
 1. UNIVERSAL BLUEPRINT EXTRACTION:
    - This vision system analyzes ANY wireframe: desktop dashboards, mobile app screens, e-commerce stores, SaaS landing pages, forms/wizards, data tables, or profile screens.
    - Do NOT assume any default wireframe. Extract ONLY what is visible in this specific uploaded image.
@@ -180,6 +200,26 @@ CRITICAL UNIVERSAL VISION RULES:
           field1: f.metric || f.title || `0${i + 1}`,
           field2: f.title || f.description || `Feature ${i + 1}`
         }));
+      }
+    }
+
+    
+    // Infer screenArchetype if not explicitly returned
+    if (!parsed.screenArchetype) {
+      if (parsed.layout?.isMultiScreenMobile || (parsed.formFactor === 'mobile' && parsed.content?.featureCards?.length === 3 && /browse|order|enjoy|welcome|get started/i.test((parsed.content?.featureCards || []).map(c => c.title).join(' ')))) {
+        parsed.screenArchetype = 'multi-screen-mobile';
+        parsed.layout.isMultiScreenMobile = true;
+      } else if (parsed.domain === 'fitness' || /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((parsed.domain || '') + ' ' + (parsed.sectionName || '') + ' ' + (parsed.content?.headlineMain || ''))) {
+        parsed.screenArchetype = 'wellness-tracker';
+        parsed.layout.hasDetailPanel = false;
+        parsed.layout.hasBottomRow = false;
+      } else if (/company|intranet|portal|application/i.test((parsed.sectionName || '') + ' ' + (parsed.content?.headlineMain || '')) || parsed.content?.headlineMain === 'My applications') {
+        parsed.screenArchetype = 'corporate-portal';
+        parsed.layout.hasDetailPanel = false;
+      } else if (parsed.layout?.hasSidebar && parsed.layout?.sidebarType === 'icon-rail' && parsed.layout?.hasDetailPanel) {
+        parsed.screenArchetype = 'analytics-dashboard';
+      } else {
+        parsed.screenArchetype = parsed.screenType || 'custom';
       }
     }
 

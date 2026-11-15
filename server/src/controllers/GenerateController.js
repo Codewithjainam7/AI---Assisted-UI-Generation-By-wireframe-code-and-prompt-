@@ -1,3 +1,28 @@
+function standardizeImports(jsx) {
+  let cleaned = jsx;
+  if (/import\s*\{[^}]*fetchElementsByIds[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/.test(cleaned)) {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*fetchElementsByIds[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';\nimport { getImage, errorImage } from '../../utils/getImage';"
+    );
+  } else if (/import\s*\{[^}]*getImage[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/.test(cleaned)) {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*getImage[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';\nimport { getImage, errorImage } from '../../utils/getImage';"
+    );
+  } else {
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*fetchElementsByIds[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { fetchElementsByIds } from '../../features/cms/cmsSlice';"
+    );
+    cleaned = cleaned.replace(
+      /import\s*\{[^}]*getImage[^}]*\}\s*from\s*['"][^'"]+['"];?/,
+      "import { getImage, errorImage } from '../../utils/getImage';"
+    );
+  }
+  return cleaned;
+}
+
 import * as WireframeParser from '../services/WireframeParser.js';
 import * as CodeParser from '../services/CodeParser.js';
 import * as IRBuilder from '../services/IRBuilder.js';
@@ -81,7 +106,12 @@ export async function generate(req, res, next) {
       synthResult.jsx = validation.cleaned;
     }
     
-    let finalJsx = synthResult.jsx;
+    let finalJsx = standardizeImports(synthResult.jsx);
+    // Standardize module import paths
+    finalJsx = finalJsx.replace(/from\s+['"][^'"]*cmsSlice['"]/g, "from '../../features/cms/cmsSlice'");
+    finalJsx = finalJsx.replace(/from\s+['"][^'"]*getImage['"]/g, "from '../../utils/getImage'");
+    finalJsx = finalJsx.replace(/from\s+['"]\.\/utils['"]/g, "from '../../utils/getImage'");
+    finalJsx = finalJsx.replace(/from\s+['"]\.\.\/utils['"]/g, "from '../../utils/getImage'");
     const sectionId = IdAllocator.nextSectionId();
     
     const elementsToInsert = ir.elements.map(e => {

@@ -20,6 +20,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
   const defaultHeroImage = wireframeIR?.content?.suggestedImageUrl || "default/images/hero-placeholder.jpg";
 
   let baseIR = {
+    screenArchetype: wireframeIR?.screenArchetype || "custom",
     screenType: wireframeIR?.screenType || "custom",
     sectionType: wireframeIR?.sectionType || "custom",
     sectionName: sectionName || wireframeIR?.sectionName || "Custom",
