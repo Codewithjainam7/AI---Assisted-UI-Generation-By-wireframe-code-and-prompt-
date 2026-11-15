@@ -42,6 +42,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
     imageConcept: wireframeIR?.content?.imageConcept || "",
     contentBlocks: wireframeIR?.content?.contentBlocks || null,
     featureCards: wireframeIR?.content?.featureCards || null,
+    bottomRowItems: wireframeIR?.content?.bottomRowItems || null,
     ctaBlocks: wireframeIR?.content?.ctaBlocks || null,
     footer: wireframeIR?.content?.footer || wireframeIR?.footer || null,
     elements: [

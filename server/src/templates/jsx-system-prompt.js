@@ -7,19 +7,28 @@ You MUST reconstruct the EXACT user interface depicted in the input IR JSON:
 1. Faithfully analyze the input IR JSON domain, layout, and elements:
    - NEVER assume or default to a clothing or hoodie page unless the input IR domain explicitly specifies ecommerce/apparel.
    - ALWAYS use the exact headlines, badges, descriptions, buttons, images, and stats provided in the IR JSON.
-   - If the IR represents a SaaS Landing page / Hero:
-     Generate a modern split or centered hero with sticky navbar, brand badge, headline, subhead, description, responsive stat cards, and primary/secondary CTA buttons.
-   - If the IR represents a Dashboard / Analytics / IoT / App interface (or layout.hasSidebar is true or domain === 'dashboard' or sectionType === 'dashboard-hero'):
+   - If the IR represents a Dashboard / Analytics / Workspace / App interface (or layout.hasSidebar is true or domain === 'dashboard' or sectionType === 'dashboard-hero'):
      Reconstruct the EXACT multi-panel app interface faithfully matching the drawing:
-     a) Left Vertical Sidebar: Render a dedicated vertical icon sidebar rail or rounded floating strip styled with the exact color from IR (e.g. bg-yellow-400 / amber-400 or dark zinc-900), containing vertical icon glyphs for Hamburger Menu, Dashboard, Analytics/Chart, Star/Favorites, Apps Grid, and Settings/Gear.
-     b) Top Header Bar: Clean search bar input with search icon, category/tab filter pills, and brand/action buttons.
-     c) Central Card Grid: A 3x2 (or 3-column) grid of content cards representing modules/assets, each with a rounded container, thumbnail area, title, description, and status tag.
-     d) Right-hand Inspector / Detail Panel: A dedicated detail panel with hero preview card (id={ids.heroImage}), headline (id={ids.headlineMain}), subtitle (id={ids.headlineSub}), rating stars or specifications, description (id={ids.description}), and primary CTA button (id={ids.ctaButton}).
-     e) Bottom Row: User avatar chips or horizontal metric cards.
+     a) Left Vertical Sidebar Rail: A dedicated vertical capsule rail (w-16 min-w-[4rem] max-w-[4rem] bg-[#f5b800] or amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch) containing crisp SVG glyphs for Hamburger Menu, Up Arrow/Triangle, Analytics/Chart, Star/Favorites, Apps Grid, Circle, and Bottom Settings Nut. Every SVG has explicit 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.
+     b) Top Header Bar: Full-width header spanning the top of the app container with Brand Logo/Badge, category filter pills (e.g. All, Reports, Metrics), and a rounded search bar input with search icon.
+     c) Central Card Grid: A 3x2 grid of 6 rounded thumbnail cards. Each card has a gray rounded thumbnail preview rectangle (h-24 bg-slate-200/80 rounded-xl mb-3), bold dark title (text-slate-900 font-extrabold text-base), and descriptive label (text-slate-600 text-xs).
+     d) Bottom Activity / Collaborator Row: A horizontal row of 4 rounded collaborator / avatar cards directly beneath the 3x2 grid (each card has a circular user avatar + 2 lines of text: bold name and status), ensuring NO empty white gaps below the grid.
+     e) Right-hand Inspector / Detail Panel: A dedicated inspector panel (w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between flex-shrink-0) containing preview card (id={ids.heroImage}), headline (id={ids.headlineMain}), subtitle (id={ids.headlineSub}), 5-star rating (★★★★★), description (id={ids.description}), and dual action buttons at the bottom (Primary CTA id={ids.ctaButton} and Secondary Action button).
    - If the IR represents an E-Commerce Product page (domain === 'ecommerce' or apparel):
      Generate a full product showcase with header, multi-view gallery (id={ids.heroImage} for main image), color swatches, size/variant selector, Add to Cart CTA (id={ids.ctaButton}), Wishlist button, and product specs.
+   - If the IR represents a SaaS Landing page / Hero:
+     Generate a modern split or centered hero with sticky navbar, brand badge, headline, subhead, description, responsive stat cards, value proposition cards, and primary/secondary CTA buttons.
 2. For cards and stats: Each card in DEFAULT_STAT_CARDS has exactly two fields (field1: title/metric with fieldId1, field2: label/description with fieldId2).
-3. Provide a rich, modern, high-production aesthetic with Tailwind CSS (dark zinc-950 canvas, accent highlights matching ir.theme.accent, smooth borders, glassmorphism, and rounded capsules).
+3. EXPLICIT HIGH CONTRAST & VISIBILITY (CRITICAL):
+   - The body CSS uses white text (#fafafa) on dark backgrounds. Therefore, whenever the component renders a white or light surface (such as bg-white or bg-slate-50), the container MUST specify 'text-slate-900'.
+   - All text inside light cards MUST have explicit dark text colors:
+     * Titles / Headlines / Metrics: 'text-slate-900 font-extrabold' or 'text-gray-900 font-black'.
+     * Subtitles / Descriptions: 'text-slate-600' or 'text-gray-600'.
+     * Labels / Metadata: 'text-slate-500' or 'text-gray-500'.
+   - NEVER output text on light backgrounds without explicit dark text color classes, or it will inherit white text and become invisible!
+4. PROPORTION & ALIGNMENT (CRITICAL):
+   - Do NOT leave giant empty white chasms or awkward vertical gaps. Fill the content areas proportionally:
+   - In dashboards, include the bottom collaborator row and fill the inspector panel body so that all columns stretch cleanly and align side-by-side.
 
 === MANDATORY CONTRACT RULES (R1–R14) ===
 

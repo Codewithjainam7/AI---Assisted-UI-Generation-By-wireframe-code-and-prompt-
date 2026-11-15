@@ -16,37 +16,42 @@ export async function generate(ir) {
 Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-panel workspace dashboard'}
 CRITICAL RECONSTRUCTION DIRECTIVES:
 The wireframe is an interactive Dashboard / Application Workspace. Reconstruct the EXACT layout shown in the wireframe:
-1. Outer Container: Light neutral canvas (e.g. bg-[#e8eaed] or bg-gray-100 min-h-screen p-4 sm:p-8 flex items-center justify-center font-sans).
-2. Main Application Window: A large rounded white container (bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-2xl w-full max-w-7xl flex flex-col md:flex-row gap-6 relative border border-gray-200/60).
-3. Floating Left Vertical Sidebar Capsule:
-   - A rounded vertical pill rail on the left (w-16 min-w-[4rem] max-w-[4rem] ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-500/20 min-h-[580px] flex-shrink-0 z-20). Do NOT use 'w-full'. Ensure it is always a vertical rail with explicit width and min-width:
-     * Top hamburger menu icon (= / ☰),
-     * Triangle up (▲),
-     * Bar chart (📊 / ☲),
-     * Star with active indicator dot (★ •),
-     * Active highlighted grid app square (⊞) with rounded white/dark pill backdrop,
-     * Circle outline (○),
-     * Bottom hexagon nut / gear settings icon (⬡).
-     * Every SVG icon MUST have explicit classes: 'w-5 h-5 min-w-[20px] min-h-[20px]'.
-4. Top Bar:
-   - Category tab pills or breadcrumbs on left (e.g. Overview, Assets, Library).
-   - Rounded search bar input on right with search icon and placeholder '${ir.inputPlaceholder || ir.content?.inputPlaceholder || 'Search...'}'.
-5. Central Content Area:
-   - Main card container (flex-1 min-w-0) holding a 3x2 grid of 6 rounded thumbnail cards (grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6).
-   - Each card has a gray rounded thumbnail rectangle (h-28 bg-gray-200/90 rounded-2xl mb-3) and two lines of text (title and subtitle).
-6. Right Detail Inspector Panel:
-   - A dedicated rounded panel (w-80 min-w-[18rem] max-w-[20rem] bg-gray-50/90 rounded-2xl p-5 border border-gray-100 flex flex-col justify-between flex-shrink-0) containing:
-     * Top large preview image card (<img id={ids.heroImage} className="dynamicStyle2 w-full h-44 object-cover rounded-xl mb-3" ... />),
-     * Main headline (<h3 id={ids.headlineMain} className="dynamicStyle text-base font-bold text-gray-900" ... />),
-     * Subtitle (<p id={ids.headlineSub} className="dynamicStyle text-xs text-gray-500" ... />),
-     * Star rating row (5 golden stars: ★★★★★) and score text,
-     * Body description (<p id={ids.description} className="dynamicStyle text-xs text-gray-600 my-2" ... />),
-     * Bottom action row with Primary CTA (<Button id={ids.ctaButton} className="dynamicStyle flex-1 py-2.5 rounded-xl font-bold" ... />) and Secondary action button.
-7. Bottom Activity Row:
-   - A horizontal row of 4 rounded collaborator / avatar cards (rounded avatar circle + 2 lines of text).
-8. STRICT REQUIREMENT:
+1. Outer Container: Light neutral canvas (bg-[#eef2f6] min-h-screen p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900).
+2. Main Application Window: A large rounded white container (w-full max-w-7xl bg-white rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-slate-200/80 p-5 sm:p-8 flex flex-col gap-6 text-slate-900 relative).
+3. Top Header Bar:
+   - Spans the full width of the main window at the top (header className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4"):
+     * Left side: Brand badge / Logo (<h1 id={ids.brandBadge} className="text-lg font-black tracking-tight text-slate-900" ... />) + category filter pills (e.g. All, Reports, Metrics, Settings).
+     * Right side: Rounded search input with search icon (<input type="text" placeholder="${ir.inputPlaceholder || ir.content?.inputPlaceholder || 'Search...'}" className="w-64 bg-slate-100 border border-slate-200 rounded-full px-4 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400" />).
+4. Main 3-Column Body Row:
+   - The body below the header consists of 3 columns side-by-side (div className="flex flex-col lg:flex-row gap-6 items-stretch w-full"):
+     a) Left Vertical Sidebar Rail:
+        * A vertical capsule rail docked on the left (aside className="w-16 min-w-[4rem] max-w-[4rem] ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-400/20 flex-shrink-0 self-stretch"):
+          - Top hamburger menu icon (= / ☰),
+          - Triangle up (▲),
+          - Bar chart (📊 / ☲),
+          - Star with active indicator dot (★ •),
+          - Active highlighted grid app square (⊞) with rounded backdrop,
+          - Circle outline (○),
+          - Bottom hexagon nut / gear settings icon (⬡).
+          - Every SVG icon MUST have explicit classes: 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.
+     b) Central Content Area:
+        * Takes the remaining space (div className="flex-1 min-w-0 flex flex-col justify-between gap-6"):
+          - Top: 3x2 Grid of 6 rounded thumbnail cards (div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"):
+            Each card has a gray rounded thumbnail rectangle (h-24 bg-slate-200/80 rounded-xl mb-3 flex items-center justify-center overflow-hidden), a bold high-contrast title (text-slate-900 font-extrabold text-sm sm:text-base truncate), and descriptive metadata (text-slate-600 text-xs mt-0.5 truncate).
+          - Bottom: Collaborator / Activity row (div className="bg-slate-50/90 rounded-2xl border border-slate-200/80 p-4 mt-auto"):
+            Contains a small uppercase header ("Active Collaborators") and a row of 4 rounded user avatar cards (grid grid-cols-2 sm:grid-cols-4 gap-3), each with a circular avatar and 2 lines of high-contrast text. This ensures there are NO empty white gaps below the grid.
+     c) Right Detail Inspector Panel:
+        * A dedicated rounded inspector panel (aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between flex-shrink-0"):
+          - Top large preview image card (<img id={ids.heroImage} className="dynamicStyle2 w-full h-44 object-cover rounded-xl border border-slate-200 mb-3 shadow-sm" ... />),
+          - Main headline (<h3 id={ids.headlineMain} className="dynamicStyle text-base font-extrabold text-slate-900 tracking-tight" ... />),
+          - Subtitle (<p id={ids.headlineSub} className="dynamicStyle text-xs text-slate-500 mt-0.5" ... />),
+          - Star rating row (5 golden stars: ★★★★★ with 4.9/5 score text),
+          - Body description (<p id={ids.description} className="dynamicStyle text-xs text-slate-600 leading-relaxed my-2" ... />),
+          - Bottom action row with Primary CTA (<Button id={ids.ctaButton} className="dynamicStyle flex-1 py-2.5 rounded-xl font-bold bg-[#f5b800] text-slate-950 border-none shadow-sm hover:brightness-105" ... />) and Secondary action button (<Button className="dynamicStyle px-3 py-2.5 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50" label="Export" ... />).
+5. STRICT CONTRAST & PROPORTIONS:
+   - All text on white/light cards MUST have explicit 'text-slate-900', 'text-slate-600', or 'text-slate-500'. NEVER omit text colors on light backgrounds.
    - Do NOT generate an unrelated marketing landing page hero headline banner or footer email signup. Reconstruct the EXACT dashboard layout depicted in the wireframe!
-9. Ensure strict adherence to R1–R14 contract rules:
+6. Ensure strict adherence to R1–R14 contract rules:
    - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
    - Dispatch fetchElementsByIds on mount with all IDs including card field IDs (TBD-cardField1 through TBD-cardField6).
    - Text nodes use dangerouslySetInnerHTML with default fallback copy.

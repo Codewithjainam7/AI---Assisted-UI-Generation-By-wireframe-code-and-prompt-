@@ -1,46 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "primereact/button";
 import { fetchElementsByIds } from "../../features/cms/cmsSlice";
-import { getSectionTextContrastClass } from "../../utils/sectionContrast";
 import { getImage, errorImage } from "../../utils/getImage";
 
-const ids = {
-  heroImage: "2000000031",
-  brandBadge: "2000000032",
-  headlineMain: "2000000033",
-  headlineSub: "2000000034",
-  description: "2000000035",
-  statBadges: "2000000036",
-  ctaButton: "2000000037",
-};
-
-const DEFAULT_STAT_CARDS = [
-  { field1: "1,248", fieldType1: "Text", fieldId1: "3000000025", field2: "Total Assets", fieldType2: "Text", fieldId2: "3000000026" },
-  { field1: "84.2 GB", fieldType1: "Text", fieldId1: "3000000027", field2: "Storage Used", fieldType2: "Text", fieldId2: "3000000028" },
-  { field1: "14", fieldType1: "Text", fieldId1: "3000000029", field2: "Active Collaborators", fieldType2: "Text", fieldId2: "3000000030" }
-];
-
-const YellowDashboard = ({ pageName = "Home" }) => {
+const CustomSection = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.cms?.allSections?.[pageName]);
-  const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
-
-  const [activeTab, setActiveTab] = useState("All Assets");
-  const [activeSidebarIcon, setActiveSidebarIcon] = useState("grid");
-  const [selectedAsset, setSelectedAsset] = useState(0);
+  const ids = {
+    heroImage: "2000000054",
+    brandBadge: "2000000055",
+    headlineMain: "2000000056",
+    headlineSub: "2000000057",
+    description: "2000000058",
+    statBadges: "2000000059",
+    ctaButton: "2000000060",
+  };
 
   useEffect(() => {
     dispatch(fetchElementsByIds({
       elementIds: [
         ids.heroImage, ids.brandBadge, ids.headlineMain, ids.headlineSub,
         ids.description, ids.statBadges, ids.ctaButton,
-        "3000000025", "3000000026", "3000000027",
-        "3000000028", "3000000029", "3000000030",
+        "3000000043", "3000000044", "3000000045",
+        "3000000046", "3000000047", "3000000048",
       ],
       pageName,
     }));
   }, [dispatch, pageName]);
+
+  const data = useSelector((state) => state.cms?.allSections?.[pageName]);
+  const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
 
   useEffect(() => {
     Object.values(ids).forEach(id => {
@@ -51,296 +40,129 @@ const YellowDashboard = ({ pageName = "Home" }) => {
     });
   }, [cssData]);
 
-  const statBadgesArr = Array.isArray(data?.[ids.statBadges]) && data[ids.statBadges].length > 0
-    ? data[ids.statBadges]
-    : DEFAULT_STAT_CARDS;
-
-  const featureCards = [
-    {
-      title: "Hero Video Reel",
-      description: "MP4 • 4K Resolution • 142 MB",
-      metric: "v2.4",
-      bg: "bg-indigo-900/10 border-indigo-200",
-      iconColor: "text-indigo-600",
-      tag: "Video"
-    },
-    {
-      title: "UI Kit Component Library",
-      description: "Figma • Vector Tokens • 45 MB",
-      metric: "v1.0",
-      bg: "bg-amber-900/10 border-amber-200",
-      iconColor: "text-amber-600",
-      tag: "Figma"
-    },
-    {
-      title: "Brand Guidelines 2024",
-      description: "PDF • 24 Pages • 12 MB",
-      metric: "v3.1",
-      bg: "bg-emerald-900/10 border-emerald-200",
-      iconColor: "text-emerald-600",
-      tag: "Doc"
-    },
-    {
-      title: "Product Presentation Deck",
-      description: "Keynote • 18 Slides • 28 MB",
-      metric: "v1.2",
-      bg: "bg-rose-900/10 border-rose-200",
-      iconColor: "text-rose-600",
-      tag: "Slides"
-    },
-    {
-      title: "3D Render Pack",
-      description: "OBJ/FBX • Textures Included • 310 MB",
-      metric: "v1.5",
-      bg: "bg-purple-900/10 border-purple-200",
-      iconColor: "text-purple-600",
-      tag: "3D Asset"
-    },
-    {
-      title: "Mobile App Prototype",
-      description: "Protopie • Interactive • 85 MB",
-      metric: "v2.0",
-      bg: "bg-sky-900/10 border-sky-200",
-      iconColor: "text-sky-600",
-      tag: "Interactive"
-    }
-  ];
-
-  const teamCollaborators = [
-    { name: "Sarah K.", role: "Lead Designer", status: "Online", color: "bg-emerald-500" },
-    { name: "Alex R.", role: "3D Artist", status: "In Figma", color: "bg-indigo-500" },
-    { name: "Elena M.", role: "Motion Designer", status: "Reviewing", color: "bg-amber-500" },
-    { name: "David P.", role: "Product Manager", status: "Idle", color: "bg-slate-400" }
+  const DEFAULT_STAT_CARDS = [
+    { field1: "12.5%", field2: "User Acquisition" },
+    { field1: "42ms", field2: "System Latency" },
+    { field1: "68%", field2: "Memory Usage" },
+    { field1: "1,204", field2: "Active Sessions" },
+    { field1: "0.02%", field2: "Error Rates" },
+    { field1: "84TB", field2: "Storage Volume" }
   ];
 
   return (
-    <div className="w-full overflow-x-hidden min-h-screen bg-[#e2e8f0] py-4 sm:py-8 px-2 sm:px-6 lg:px-8 font-sans flex items-center justify-center">
-      <div className="w-full max-w-[1440px] bg-white rounded-2xl sm:rounded-[2.5rem] shadow-2xl border border-slate-200/80 p-3 sm:p-6 lg:p-8 flex flex-col gap-6">
+    <div className="w-full min-h-screen bg-[#eef2f6] p-3 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900">
+      <div className="bg-white rounded-3xl sm:rounded-[2.5rem] p-5 sm:p-8 shadow-2xl w-full max-w-7xl flex flex-col gap-6 relative border border-slate-200/80 text-slate-900">
         
-        {/* TOP NAVIGATION BAR */}
-        <header className="w-full flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-5">
-          <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
-            <div className="flex items-center gap-3">
-              <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-400 flex items-center justify-center font-black text-slate-900 text-lg sm:text-xl shadow-md shadow-amber-400/30">
-                A
-              </span>
-              <span className="font-extrabold text-xl tracking-tight text-slate-900">
-                AssetHub
-              </span>
-            </div>
-
-            <span
+        {/* Full Top Header Bar */}
+        <header className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="w-9 h-9 rounded-xl bg-amber-400 flex items-center justify-center font-black text-slate-950 text-base shadow-sm">
+              ✦
+            </span>
+            <h1
               id={ids.brandBadge}
-              className="dynamicStyle text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-1 bg-amber-100 text-amber-800 rounded-full border border-amber-200/60"
-              dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "WORKSPACE" }}
+              className="text-lg sm:text-xl font-black text-slate-900 tracking-tight"
+              dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "ANALYTICS-CORE" }}
             />
+            <div className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600">
+              <span className="bg-white text-slate-900 px-3 py-1 rounded-lg shadow-2xs">Overview</span>
+              <span className="px-3 py-1 hover:text-slate-900 cursor-pointer">Reports</span>
+              <span className="px-3 py-1 hover:text-slate-900 cursor-pointer">Metrics</span>
+              <span className="px-3 py-1 hover:text-slate-900 cursor-pointer">Settings</span>
+            </div>
           </div>
-
-          {/* Nav Links */}
-          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-            {["All Assets", "Recent", "Shared", "Favorites", "Trash"].map((link) => (
-              <button
-                key={link}
-                onClick={() => setActiveTab(link)}
-                className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                  activeTab === link
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                {link}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Bar & Actions */}
-          <div className="w-full md:w-auto flex items-center gap-2">
-            <div className="relative flex-1 md:w-64 lg:w-72">
-              <svg className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
                 type="text"
-                placeholder="Search assets, tags, or team members..."
-                className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-full bg-slate-100 border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:bg-white transition-all"
+                placeholder="Search reports..."
+                className="w-full bg-slate-100 border border-slate-200/80 rounded-full pl-9 pr-4 py-1.5 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
             </div>
-            <Button
-              className="dynamicStyle px-4 py-2 text-xs sm:text-sm rounded-full font-semibold border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 flex-shrink-0"
-              label="Filter View"
-              aria-label="Filter View"
-            />
           </div>
         </header>
 
-        {/* MAIN BODY: SIDEBAR + CONTENT GRID + INSPECTOR DETAIL PANEL */}
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start w-full">
+        {/* 3-Column Main Body */}
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch w-full">
           
-          {/* FLOATING AMBER SIDEBAR RAIL */}
-          <aside className="w-16 min-w-[4rem] max-w-[4rem] bg-amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-400/20 flex-shrink-0 min-h-[580px]">
-            <div className="flex flex-col items-center gap-4 sm:gap-5 lg:gap-6 w-full justify-start">
-              <button
-                onClick={() => setActiveSidebarIcon("menu")}
-                className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors"
-                title="Menu"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {/* Column 1: Left floating amber capsule */}
+          <nav className="w-16 min-w-[4rem] max-w-[4rem] bg-[#f5b800] rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-500/20 flex-shrink-0 self-stretch min-h-[520px]">
+            <div className="flex flex-col items-center gap-5 w-full">
+              <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors" title="Menu">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-
-              <button
-                onClick={() => setActiveSidebarIcon("arrow")}
-                className={`p-2 rounded-xl transition-all ${
-                  activeSidebarIcon === "arrow" ? "bg-slate-900 text-amber-400 shadow-md" : "text-slate-900 hover:bg-amber-500/30"
-                }`}
-                title="Upload Activity"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors" title="Upload">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
               </button>
-
-              <button
-                onClick={() => setActiveSidebarIcon("chart")}
-                className={`p-2 rounded-xl transition-all ${
-                  activeSidebarIcon === "chart" ? "bg-slate-900 text-amber-400 shadow-md" : "text-slate-900 hover:bg-amber-500/30"
-                }`}
-                title="Analytics"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors" title="Analytics">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </button>
-
-              <button
-                onClick={() => setActiveSidebarIcon("star")}
-                className={`p-2 rounded-xl transition-all relative ${
-                  activeSidebarIcon === "star" ? "bg-slate-900 text-amber-400 shadow-md" : "text-slate-900 hover:bg-amber-500/30"
-                }`}
-                title="Favorites"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors relative" title="Favorites">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-slate-900"></span>
               </button>
-
-              <button
-                onClick={() => setActiveSidebarIcon("grid")}
-                className={`p-2 rounded-xl transition-all ${
-                  activeSidebarIcon === "grid" ? "bg-slate-900 text-amber-400 shadow-md" : "text-slate-900 hover:bg-amber-500/30"
-                }`}
-                title="Asset Grid"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="p-2 rounded-xl bg-slate-900 text-amber-400 shadow-md" title="Grid Apps">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
               </button>
-            </div>
-
-            <div className="flex flex-col items-center gap-4">
-              <button
-                onClick={() => setActiveSidebarIcon("circle")}
-                className="p-2 text-slate-900 hover:bg-amber-500/30 rounded-xl"
-                title="Storage Meter"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors" title="Status">
+                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </button>
-
-              <button
-                onClick={() => setActiveSidebarIcon("settings")}
-                className="p-2 text-slate-900 hover:bg-amber-500/30 rounded-xl"
-                title="Settings"
-              >
-                <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </button>
             </div>
-          </aside>
+            <button className="p-2 rounded-xl text-slate-900 hover:bg-amber-500/30 transition-colors" title="Settings">
+              <svg className="w-5 h-5 min-w-[20px] min-h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+          </nav>
 
-          {/* MAIN CONTENT AREA */}
-          <div className="flex-1 flex flex-col gap-6 min-w-0">
-            
-            {/* STAT BADGES ROW */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              {statBadgesArr.map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-300 transition-all shadow-sm"
-                >
-                  <span
-                    id={stat.fieldId2 || `2000000038${(idx + 1) * 2}`}
-                    className="dynamicStyle text-xs font-bold text-slate-500 uppercase tracking-wider"
-                    dangerouslySetInnerHTML={{ __html: stat.field2 || "Metric Label" }}
-                  />
-                  <span
-                    id={stat.fieldId1 || `2000000039${idx * 2 + 1}`}
-                    className="dynamicStyle text-xl sm:text-2xl font-black text-slate-900 mt-1"
-                    dangerouslySetInnerHTML={{ __html: stat.field1 || "00.0" }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* CARD GRID (2 rows x 3 cols = 6 cards) */}
+          {/* Column 2: Center main content (3x2 grid + bottom collaborator row) */}
+          <main className="flex-1 min-w-0 flex flex-col justify-between gap-6">
+            {/* 3x2 Grid of 6 rounded thumbnail cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {featureCards.map((card, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedAsset(idx)}
-                  className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 flex flex-col justify-between bg-white ${
-                    selectedAsset === idx
-                      ? "ring-2 ring-amber-400 border-amber-400 shadow-md"
-                      : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
-                      {card.tag}
-                    </span>
-                    <span className="text-xs font-semibold text-slate-400">
-                      {card.metric}
-                    </span>
+              {DEFAULT_STAT_CARDS.map((card, i) => (
+                <div key={i} className="bg-slate-50 hover:bg-white p-4 rounded-2xl border border-slate-200/80 transition-all hover:shadow-md flex flex-col justify-between">
+                  <div className="h-20 bg-slate-200/80 rounded-xl mb-3 flex items-center justify-center text-slate-400">
+                    <svg className="w-6 h-6 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
                   </div>
-
-                  <div className={`h-24 sm:h-28 rounded-xl ${card.bg} border flex items-center justify-center mb-3 relative overflow-hidden group`}>
-                    <div className={`w-10 h-10 rounded-full bg-white/80 backdrop-blur flex items-center justify-center ${card.iconColor} shadow-sm transition-transform group-hover:scale-110`}>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                  </div>
-
                   <div>
-                    <h4 className="font-bold text-sm text-slate-900 truncate">
-                      {card.title}
-                    </h4>
-                    <p className="text-xs text-slate-500 mt-0.5 truncate">
-                      {card.description}
-                    </p>
+                    <h3 className="font-extrabold text-base text-slate-900 tracking-tight" id={`card-title-${i}`} dangerouslySetInnerHTML={{ __html: card.field1 }} />
+                    <p className="text-xs text-slate-600 font-medium mt-0.5 truncate" id={`card-desc-${i}`} dangerouslySetInnerHTML={{ __html: card.field2 }} />
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* BOTTOM COLLABORATORS / ACTIVITY ROW */}
-            <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-4">
+            {/* Bottom Activity / Collaborator Row */}
+            <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-4 mt-auto">
               <div className="flex items-center justify-between mb-3">
-                <h5 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Active Team Members
-                </h5>
-                <span className="text-xs text-amber-600 font-semibold cursor-pointer hover:underline">
-                  + Invite Member
-                </span>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">Active Collaborators</h4>
+                <span className="text-xs text-amber-600 font-semibold cursor-pointer hover:underline">+ Invite</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {teamCollaborators.map((user, idx) => (
+                {[
+                  { name: "Sarah K.", role: "Lead Designer", color: "bg-emerald-500" },
+                  { name: "Alex R.", role: "Data Scientist", color: "bg-indigo-500" },
+                  { name: "Elena M.", role: "System Admin", color: "bg-amber-500" },
+                  { name: "David P.", role: "Product Manager", color: "bg-rose-500" },
+                ].map((user, idx) => (
                   <div key={idx} className="flex items-center gap-2.5 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
                     <div className="relative">
                       <div className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-bold">
@@ -350,137 +172,70 @@ const YellowDashboard = ({ pageName = "Home" }) => {
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold text-slate-900 truncate">{user.name}</p>
-                      <p className="text-[10px] text-slate-500 truncate">{user.status}</p>
+                      <p className="text-[10px] text-slate-500 truncate">{user.role}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+          </main>
 
-          </div>
-
-          {/* RIGHT DETAIL INSPECTOR PANEL */}
-          <aside className="w-full lg:w-80 min-w-[18rem] lg:max-w-[20rem] bg-slate-50 border border-slate-200/90 rounded-2xl p-4 sm:p-5 flex flex-col justify-between flex-shrink-0">
+          {/* Column 3: Right Inspector Detail Panel */}
+          <aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
             <div>
-              {/* PANEL HEADER */}
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                  Inspector Panel
-                </span>
-                <span className="text-xs font-bold px-2 py-0.5 bg-amber-400 text-slate-900 rounded-md">
-                  Active Card
-                </span>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500">Inspector Panel</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-400 text-slate-950 rounded-md">Active</span>
               </div>
-
-              {/* INSPECTOR IMAGE PREVIEW */}
-              <div className="relative mb-4 group">
-                <img
-                  id={ids.heroImage}
-                  className="dynamicStyle2 w-full h-44 sm:h-48 object-cover rounded-xl border border-slate-200 shadow-sm"
-                  src={
-                    data?.[ids.heroImage]
-                      ? getImage(data[ids.heroImage])
-                      : getImage("https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80")
-                  }
-                  onError={errorImage}
-                  alt="Visual representation"
-                />
-                <div className="absolute top-2 right-2 bg-slate-900/80 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded-md">
-                  4K RAW
-                </div>
-              </div>
-
-              {/* MAIN HEADLINE */}
+              <img
+                id={ids.heroImage}
+                className="dynamicStyle2 w-full h-44 object-cover rounded-xl border border-slate-200 mb-3 shadow-sm"
+                src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"}
+                onError={errorImage}
+                alt="Preview"
+              />
               <h3
                 id={ids.headlineMain}
-                className="dynamicStyle text-base sm:text-lg font-black text-slate-900 tracking-tight"
-                dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "Digital Asset Workspace" }}
+                className="dynamicStyle text-base font-extrabold text-slate-900 tracking-tight"
+                dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "Actionable Data Insights" }}
               />
-
-              {/* SUBTITLE */}
               <p
                 id={ids.headlineSub}
-                className="dynamicStyle text-xs font-medium text-slate-500 mt-1"
-                dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Manage, inspect, and organize your team's creative assets seamlessly." }}
+                className="dynamicStyle text-xs text-slate-500 mt-0.5"
+                dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Monitor performance metrics in real-time." }}
               />
-
-              {/* RATING & SPECS ROW */}
-              <div className="flex items-center gap-2 my-3 py-2 border-y border-slate-200/80">
-                <div className="flex text-amber-400 text-xs">
-                  {"★".repeat(5)}
-                </div>
-                <span className="text-xs font-bold text-slate-700">4.9</span>
-                <span className="text-xs text-slate-400">• 128 Reviews</span>
+              <div className="flex items-center gap-1.5 text-amber-500 text-sm my-2">
+                <span>★★★★★</span>
+                <span className="text-slate-700 font-bold text-xs">4.9 / 5.0</span>
               </div>
-
-              {/* DESCRIPTION */}
               <p
                 id={ids.description}
-                className="dynamicStyle text-xs leading-relaxed text-slate-600 my-3"
-                dangerouslySetInnerHTML={{
-                  __html: data?.[ids.description] || "Centralized asset repository with real-time detail previewing, granular metadata tracking, and integrated review workflows."
-                }}
+                className="dynamicStyle text-xs text-slate-600 leading-relaxed my-2"
+                dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "A comprehensive dashboard designed for rapid data visualization and asset management." }}
               />
-
-              {/* METADATA LIST */}
-              <div className="space-y-2 mt-4 bg-white p-3 rounded-xl border border-slate-200/70 text-xs">
-                <div className="flex justify-between text-slate-600">
-                  <span className="font-medium">File Format:</span>
-                  <span className="font-bold text-slate-900">MP4 / ProRes</span>
-                </div>
-                <div className="flex justify-between text-slate-600">
-                  <span className="font-medium">License:</span>
-                  <span className="font-bold text-slate-900">Enterprise Commercial</span>
-                </div>
-                <div className="flex justify-between text-slate-600">
-                  <span className="font-medium">Last Modified:</span>
-                  <span className="font-bold text-slate-900">Today, 2:45 PM</span>
-                </div>
+              <div className="bg-white rounded-xl p-3 border border-slate-200/70 my-3 space-y-1.5 text-[11px]">
+                <div className="flex justify-between text-slate-500"><span>Update Frequency</span><span className="font-bold text-slate-800">Real-time</span></div>
+                <div className="flex justify-between text-slate-500"><span>Telemetry Nodes</span><span className="font-bold text-slate-800">142 Clusters</span></div>
+                <div className="flex justify-between text-slate-500"><span>SLA Performance</span><span className="font-bold text-emerald-600">99.98%</span></div>
               </div>
             </div>
-
-            {/* ACTION BUTTONS & CTA */}
-            <div className="mt-6 flex flex-col gap-2">
+            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-200/60">
               <Button
                 id={ids.ctaButton}
-                className="dynamicStyle w-full py-3 bg-amber-400 hover:bg-amber-500 text-slate-900 border-none rounded-xl font-bold text-sm shadow-md shadow-amber-400/20"
-                label={data?.[ids.ctaButton] || "Upload Asset"}
-                aria-label="Upload Asset"
-                onClick={() => {}}
+                className="dynamicStyle flex-1 py-2.5 rounded-xl font-bold bg-[#f5b800] text-slate-950 border-none shadow-sm hover:brightness-105 transition-all text-xs sm:text-sm"
+                label={data?.[ids.ctaButton] || "View Analytics"}
               />
-
-              <div className="text-center mt-2">
-                <p className="text-[11px] font-semibold text-slate-500">
-                  Upgrade storage capacity anytime
-                </p>
-                <p className="text-[10px] text-slate-400">
-                  Flexible team plans starting at $12/user/mo
-                </p>
-              </div>
+              <Button
+                className="dynamicStyle px-3 py-2.5 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 text-xs sm:text-sm"
+                label="Export"
+              />
             </div>
           </aside>
-
         </div>
-
-        {/* FOOTER */}
-        <footer className="w-full pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div className="flex items-center gap-4">
-            <span className="font-semibold text-slate-700">© 2024 AssetHub Inc.</span>
-            <span>Documentation</span>
-            <span>Storage Rules</span>
-            <span>API Keys</span>
-            <span>Support</span>
-          </div>
-          <div className="flex items-center gap-3 font-medium text-slate-600">
-            <span className="hover:text-slate-900 cursor-pointer">Twitter</span>
-            <span className="hover:text-slate-900 cursor-pointer">GitHub</span>
-            <span className="hover:text-slate-900 cursor-pointer">Discord</span>
-          </div>
-        </footer>
 
       </div>
     </div>
   );
 };
 
-export default YellowDashboard;
+export default CustomSection;

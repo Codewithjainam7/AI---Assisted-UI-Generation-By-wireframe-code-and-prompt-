@@ -60,18 +60,16 @@ export default function PreviewPage() {
       .catch(() => setElements([]))
       .finally(() => setLoadingElems(false));
 
-    // If jsxCode isn't in redux state, try getting the section info
-    if (!jsxCode) {
-      axios.get(`${API_URL}/sections`, { params: { pageName } })
-        .then(res => {
-          const sections = res.data?.sections || res.data || [];
-          if (sections.length > 0 && sections[0].jsx) {
-            setJsxCode(sections[0].jsx);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [pageName, dispatch, jsxCode]);
+    // Fetch latest section code for pageName
+    axios.get(`${API_URL}/sections`, { params: { pageName } })
+      .then(res => {
+        const sections = res.data?.sections || res.data || [];
+        if (sections.length > 0 && sections[0].jsx) {
+          setJsxCode(sections[0].jsx);
+        }
+      })
+      .catch(() => {});
+  }, [pageName, dispatch]);
 
   const downloadZip = () => {
     const sectionId = currentJob?.sectionId || 'latest';

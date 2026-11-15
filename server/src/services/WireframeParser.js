@@ -87,6 +87,12 @@ Analyze and extract a strict JSON object with this structure:
       { "field1": "10x", "field2": "Faster Deployment" },
       { "field1": "24/7", "field2": "Intelligent Monitoring" }
     ],
+    "bottomRowItems": [
+      { "title": "Sarah K.", "subtitle": "Lead Designer", "status": "Online" },
+      { "title": "Alex R.", "subtitle": "3D Artist", "status": "In Review" },
+      { "title": "Elena M.", "subtitle": "Motion Designer", "status": "Active" },
+      { "title": "David P.", "subtitle": "Product Manager", "status": "Idle" }
+    ],
     "ctaBlocks": [
       { "headline": "Ready to transform your UI workflows?", "buttonText": "Start Free Trial", "subtext": "No credit card required • Instant access" }
     ],
@@ -111,7 +117,9 @@ CRITICAL RULES:
 6. For suggestedImageUrl: Provide a realistic, verified, working photo URL matching the domain. DO NOT suggest using the wireframe drawing itself.
 7. If the wireframe contains a vertical navigation sidebar (such as a yellow, amber, or dark bar on the left with icon glyphs like hamburger, chart, star, grid, settings), set layout.hasSidebar: true, record its exact color and icons, and describe it clearly in imageConcept.
 8. If the wireframe contains a multi-column dashboard with a central card grid and a right-hand detail inspector panel, set sectionType: 'dashboard-hero', domain: 'dashboard', and extract each card in the grid into featureCards.
-9. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
+9. If the wireframe contains a bottom row (such as a row of 4 user avatars, collaborator cards, or metrics beneath the card grid), set layout.hasBottomRow: true and extract them into content.bottomRowItems.
+10. If the wireframe background is white/light, set theme.surface: 'light' and theme.text: 'slate-900'.
+11. Return ONLY the raw JSON object. No markdown fences, no explanatory comments.`;
 
     let result = null;
     let lastError = null;
