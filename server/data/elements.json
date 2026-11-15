@@ -98,79 +98,79 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "heroImage",
-    "fieldId": "2000000096",
-    "content": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000110",
+    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.138Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "brandBadge",
-    "fieldId": "2000000097",
-    "content": "Wellness Page Wireframe",
+    "fieldId": "2000000111",
+    "content": "Analytics Dashboard",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "headlineMain",
-    "fieldId": "2000000098",
-    "content": "Your Calories",
+    "fieldId": "2000000112",
+    "content": "Performance Overview",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "headlineSub",
-    "fieldId": "2000000099",
-    "content": "Daily nutritional intake tracking",
+    "fieldId": "2000000113",
+    "content": "Monitor your key metrics and system activity",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "description",
-    "fieldId": "2000000100",
-    "content": "Manage your daily meal planning and track caloric intake efficiently.",
+    "fieldId": "2000000114",
+    "content": "A comprehensive dashboard view displaying system status, analytics, and recent project activity.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "statBadges",
-    "fieldId": "2000000101",
+    "fieldId": "2000000115",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,29 +179,53 @@
     "css": null,
     "loop": [
       {
-        "field1": "1999",
+        "field1": "Module One",
         "fieldType1": "Text",
-        "fieldId1": "3000000075",
-        "field2": "Calories",
+        "fieldId1": "3000000089",
+        "field2": "Module One",
         "fieldType2": "Text",
-        "fieldId2": "3000000076"
+        "fieldId2": "3000000090"
+      },
+      {
+        "field1": "Module Two",
+        "fieldType1": "Text",
+        "fieldId1": "3000000091",
+        "field2": "Module Two",
+        "fieldType2": "Text",
+        "fieldId2": "3000000092"
+      },
+      {
+        "field1": "Module Three",
+        "fieldType1": "Text",
+        "fieldId1": "3000000093",
+        "field2": "Module Three",
+        "fieldType2": "Text",
+        "fieldId2": "3000000094"
+      },
+      {
+        "field1": "Module Four",
+        "fieldType1": "Text",
+        "fieldId1": "3000000095",
+        "field2": "Module Four",
+        "fieldType2": "Text",
+        "fieldId2": "3000000096"
       }
     ],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   },
   {
-    "sectionId": "1000000014",
+    "sectionId": "1000000016",
     "elementName": "ctaButton",
-    "fieldId": "2000000102",
-    "content": "Log Meal",
+    "fieldId": "2000000116",
+    "content": "Export Data",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T18:00:03.145Z",
-    "updatedAt": "2026-11-15T18:00:03.145Z"
+    "createdAt": "2026-11-15T18:48:08.221Z",
+    "updatedAt": "2026-11-15T18:48:08.221Z"
   }
 ]
