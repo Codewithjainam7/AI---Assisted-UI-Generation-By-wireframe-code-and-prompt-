@@ -294,23 +294,37 @@
     "updatedAt": "2026-11-15T19:26:40.293Z"
   },
   {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "heroImage",
-    "fieldId": "2000000222",
-    "content": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000229",
+    "content": "https://images.unsplash.com/photo-1542881165-23637dd71e54?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:26:52.137Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   },
   {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "brandBadge",
-    "fieldId": "2000000223",
+    "fieldId": "2000000230",
+    "content": "HappyPiggy",
+    "contentType": "Text",
+    "projectName": "sample-brand",
+    "pageName": "Home",
+    "isCustom": true,
+    "css": null,
+    "loop": [],
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
+  },
+  {
+    "sectionId": "1000000034",
+    "elementName": "headlineMain",
+    "fieldId": "2000000231",
     "content": "Wellness Page Wireframe",
     "contentType": "Text",
     "projectName": "sample-brand",
@@ -318,55 +332,41 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   },
   {
-    "sectionId": "1000000033",
-    "elementName": "headlineMain",
-    "fieldId": "2000000224",
-    "content": "Your Calories",
-    "contentType": "Text",
-    "projectName": "sample-brand",
-    "pageName": "Home",
-    "isCustom": true,
-    "css": null,
-    "loop": [],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
-  },
-  {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "headlineSub",
-    "fieldId": "2000000225",
-    "content": "Daily nutritional tracking summary",
+    "fieldId": "2000000232",
+    "content": "Daily Nutrition and Fitness Tracker",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   },
   {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "description",
-    "fieldId": "2000000226",
-    "content": "Monitor your daily intake and progress with our comprehensive wellness dashboard.",
+    "fieldId": "2000000233",
+    "content": "Monitor your daily caloric intake and track your scheduled meal and exercise plans through this integrated wellness dashboard.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   },
   {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "statBadges",
-    "fieldId": "2000000227",
+    "fieldId": "2000000234",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -377,19 +377,19 @@
       {
         "field1": "1999 Calories",
         "fieldType1": "Text",
-        "fieldId1": "3000000144",
-        "field2": "Daily Calorie Count",
+        "fieldId1": "3000000146",
+        "field2": "Daily Calorie Target",
         "fieldType2": "Text",
-        "fieldId2": "3000000145"
+        "fieldId2": "3000000147"
       }
     ],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   },
   {
-    "sectionId": "1000000033",
+    "sectionId": "1000000034",
     "elementName": "ctaButton",
-    "fieldId": "2000000228",
+    "fieldId": "2000000235",
     "content": "GET STARTED",
     "contentType": "Button",
     "projectName": "sample-brand",
@@ -397,7 +397,7 @@
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:26:52.139Z",
-    "updatedAt": "2026-11-15T21:26:52.139Z"
+    "createdAt": "2026-11-15T21:35:34.464Z",
+    "updatedAt": "2026-11-15T21:35:34.464Z"
   }
 ]

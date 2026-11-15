@@ -66,10 +66,12 @@ export default function LiveComponentRenderer({ code = '', pageName = 'Home', jo
   const cmsData = useSelector((state) => state.cms?.allSections?.[pageName]) || {};
   const cmsCss  = useSelector((state) => state.cms?.allSectionsCss?.[pageName]) || {};
 
-  const boundFetchElementsByIds = useCallback((ids) => {
-    if (ids && ids.length > 0) {
-      dispatch(fetchElementsByIds({ elementIds: ids, pageName }));
+  const boundFetchElementsByIds = useCallback((args) => {
+    const elementIds = Array.isArray(args) ? args : (args?.elementIds || []);
+    if (elementIds && elementIds.length > 0) {
+      dispatch(fetchElementsByIds({ elementIds, pageName }));
     }
+    return { type: 'cms/noop' };
   }, [dispatch, pageName]);
 
   const [CompiledComponent, setCompiledComponent] = useState(null);
@@ -168,7 +170,7 @@ export default function LiveComponentRenderer({ code = '', pageName = 'Home', jo
         useSelector,
         useDispatch,
         Button,
-        boundFetchElementsByIds,
+        fetchElementsByIds,
         getSectionTextContrastClass,
         getImage,
         errorImage,
