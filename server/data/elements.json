@@ -294,79 +294,79 @@
     "updatedAt": "2026-11-15T19:26:40.293Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "heroImage",
-    "fieldId": "2000000215",
-    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000222",
+    "content": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.137Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "brandBadge",
-    "fieldId": "2000000216",
-    "content": "HappyPiggy",
+    "fieldId": "2000000223",
+    "content": "Wellness Page Wireframe",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "headlineMain",
-    "fieldId": "2000000217",
-    "content": "Wellness Dashboard",
+    "fieldId": "2000000224",
+    "content": "Your Calories",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "headlineSub",
-    "fieldId": "2000000218",
-    "content": "Daily Nutrition Tracking",
+    "fieldId": "2000000225",
+    "content": "Daily nutritional tracking summary",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "description",
-    "fieldId": "2000000219",
-    "content": "Monitor your daily caloric intake and manage your dietary goals with ease.",
+    "fieldId": "2000000226",
+    "content": "Monitor your daily intake and progress with our comprehensive wellness dashboard.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "statBadges",
-    "fieldId": "2000000220",
+    "fieldId": "2000000227",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -377,27 +377,27 @@
       {
         "field1": "1999 Calories",
         "fieldType1": "Text",
-        "fieldId1": "3000000142",
-        "field2": "Total Daily Intake",
+        "fieldId1": "3000000144",
+        "field2": "Daily Calorie Count",
         "fieldType2": "Text",
-        "fieldId2": "3000000143"
+        "fieldId2": "3000000145"
       }
     ],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   },
   {
-    "sectionId": "1000000031",
+    "sectionId": "1000000033",
     "elementName": "ctaButton",
-    "fieldId": "2000000221",
-    "content": "Log Meal",
+    "fieldId": "2000000228",
+    "content": "GET STARTED",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T20:24:35.271Z",
-    "updatedAt": "2026-11-15T20:24:35.271Z"
+    "createdAt": "2026-11-15T21:26:52.139Z",
+    "updatedAt": "2026-11-15T21:26:52.139Z"
   }
 ]
