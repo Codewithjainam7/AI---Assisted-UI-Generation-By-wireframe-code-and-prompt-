@@ -176,17 +176,25 @@ ${featureCards.map((card, idx) => `       Card ${idx + 1} (${card.title}): (div 
 c) DO NOT RENDER any right inspector panel!
 d) DO NOT RENDER any collaborator row!`;
   } else if (isAnalytics) {
+    const rawCards = (ir.featureCards && ir.featureCards.length > 0) ? ir.featureCards : (ir.content?.featureCards || []);
+    const cards = rawCards.length > 0 ? rawCards : [
+      { title: 'System Metric 1', description: 'Real-time performance index' },
+      { title: 'System Metric 2', description: 'Latency and throughput rate' }
+    ];
+    const cardsListStr = cards.map((c, i) => '     Card ' + (i + 1) + ': ' + c.title + ' - ' + (c.description || '')).join('\n');
     userContent += `
 === BLUEPRINT: ANALYTICS SAAS DASHBOARD ===
 Outer Canvas: 'min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans text-slate-900 overflow-x-hidden'
 Main Window: 'w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900'
 
-1. Top Header: Brand badge 'ANALYTICS-CORE', Search input.
+1. Top Header: Brand badge '${ir.navbar?.logoText || ir.brandBadge || 'ANALYTICS-CORE'}', Search input.
 2. Window Body:
-a) Left Yellow Capsule Rail: (aside className="w-16 min-w-[4rem] max-w-[4rem] bg-amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch my-3 ml-3") with 7 SVG action icons.
-b) Central Content: Sub-header tabs, 3x2 grid of 6 metric cards.
-c) Right Inspector Panel: Image preview, 'Actionable Data Insights', 4.9/5 stars rating, description, and yellow 'View Analytics' button.
-d) Bottom Collaborator Row: User avatar bubbles.`;
+a) Left Vertical Capsule Rail: (aside className="w-16 min-w-[4rem] max-w-[4rem] bg-amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch my-3 ml-3") with SVG action icons.
+b) Central Content:
+   - Sub-header tabs / date navigator
+   - Grid of ${cards.length} cards:
+${cardsListStr}
+${layout.hasDetailPanel ? `c) Right Inspector Panel: Image preview, '${ir.content?.headlineMain || 'Actionable Data Insights'}', description, and CTA button.` : 'c) No right inspector panel.'}`;
   } else {
     // Universal Blueprint
     userContent += `
@@ -226,11 +234,8 @@ ${layout.hasBottomRow ? `d) Bottom Row: Render collaborator row.` : 'd) DO NOT r
     }
     const geminiModels = [
       process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
-      'gemini-3.1-flash-lite',
-      'gemini-3.5-flash-lite',
       'gemini-flash-lite-latest',
-      'gemini-3.5-flash',
-      'gemini-flash-latest'
+      'gemini-3.1-flash-lite'
     ];
     for (const gModelName of geminiModels) {
       for (let attempt = 1; attempt <= 2; attempt++) {

@@ -22,10 +22,8 @@ export async function parse(file) {
     
     const candidateModels = [
       process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
-      'gemini-3.1-flash-lite',
-      'gemini-3.5-flash-lite',
-      'gemini-3.5-flash',
-      'gemini-flash-lite-latest'
+      'gemini-flash-lite-latest',
+      'gemini-3.1-flash-lite'
     ];
 
     const prompt = `You are an elite Senior UI/UX Architect and Universal Vision Engine.

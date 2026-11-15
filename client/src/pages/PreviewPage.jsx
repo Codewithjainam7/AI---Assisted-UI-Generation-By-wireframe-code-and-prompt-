@@ -2,6 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import {
+  ArrowLeft,
+  Eye,
+  Columns2,
+  Code2,
+  Smartphone,
+  Monitor,
+  Download,
+  Edit3,
+  X,
+  Sparkles,
+  Layers
+} from 'lucide-react';
 import PageShell from '../components/layout/PageShell';
 import GlassCard from '../components/ui/GlassCard';
 import ElementEditor from '../components/ui/ElementEditor';
@@ -19,7 +32,7 @@ export default function PreviewPage() {
   const { currentJob } = useSelector(state => state.generate);
 
   const [viewportSize, setViewportSize] = useState('desktop');
-  const [viewMode,     setViewMode]     = useState('split'); // 'preview' | 'split' | 'code'
+  const [viewMode,     setViewMode]     = useState('preview'); // 'preview' | 'split' | 'code'
   const [showEditor,   setShowEditor]   = useState(false);
   const [elements,     setElements]     = useState([]);
   const [loadingElems, setLoadingElems] = useState(true);
@@ -78,113 +91,127 @@ export default function PreviewPage() {
 
   return (
     <PageShell showNav={false}>
-      {/* ── Top Control Bar ───────────────────────────────── */}
-      <div className="fixed top-0 left-0 right-0 h-16 glass z-50 flex items-center justify-between px-2 sm:px-4 md:px-6 border-b border-white/10 gap-1.5 sm:gap-3">
+      {/* ── Top Floating Liquid Dock Bar ───────────────────────────────── */}
+      <div className="fixed top-3 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl h-14 glass-dock rounded-full z-50 flex items-center justify-between px-4 sm:px-6 shadow-2xl">
         
-        {/* Left: Back + Title */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+        {/* Left: Back Navigation + Target Page */}
+        <div className="flex items-center gap-3 flex-shrink-0">
           <button
             onClick={() => navigate('/generate')}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors text-white flex-shrink-0"
-            aria-label="Back to Generate"
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 flex items-center justify-center transition-all text-slate-300 hover:text-white border border-white/10"
+            aria-label="Back to Studio"
           >
-            <i className="pi pi-arrow-left text-xs sm:text-sm" />
+            <ArrowLeft className="w-4 h-4" />
           </button>
-          <div>
-            <p className="font-semibold text-xs sm:text-sm leading-tight text-white max-w-[85px] sm:max-w-none truncate">
-              <span className="gradient-text">✦</span> {pageName}
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <p className="font-bold text-xs sm:text-sm text-white font-mono tracking-tight">
+              {pageName}
             </p>
-            <p className="hidden md:block text-[10px] text-gray-500">Live Render + Generated Code</p>
+            <span className="hidden md:inline text-[10px] text-slate-500 font-mono border-l border-white/10 pl-2">Live Render</span>
           </div>
         </div>
 
-        {/* Center: Mode Selector + Viewport Switcher */}
+        {/* Center: Mode Switcher + Viewport Switcher */}
         <div className="flex items-center gap-2">
           {/* Mode Switcher */}
-          <div className="flex items-center gap-0.5 sm:gap-1 bg-black/50 rounded-full p-0.5 sm:p-1 border border-white/10">
+          <div className="flex items-center gap-1 bg-white/[0.04] rounded-full p-1 border border-white/10 shadow-inner">
             <button
               onClick={() => setViewMode('preview')}
-              className={`px-2 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all ${
-                viewMode === 'preview' ? 'bg-red-500 text-white shadow-glow-sm' : 'text-gray-400 hover:text-white'
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'preview'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              🖥️ <span className="hidden sm:inline">Preview Only</span><span className="sm:hidden">Preview</span>
+              <Eye className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Preview</span>
             </button>
             <button
               onClick={() => setViewMode('split')}
-              className={`px-2 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all ${
-                viewMode === 'split' ? 'bg-red-500 text-white shadow-glow-sm' : 'text-gray-400 hover:text-white'
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'split'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              🌓 <span className="hidden sm:inline">Split Screen</span><span className="sm:hidden">Split</span>
+              <Columns2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Split</span>
             </button>
             <button
               onClick={() => setViewMode('code')}
-              className={`px-2 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all ${
-                viewMode === 'code' ? 'bg-red-500 text-white shadow-glow-sm' : 'text-gray-400 hover:text-white'
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'code'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              💻 <span className="hidden sm:inline">Code (JSX)</span><span className="sm:hidden">Code</span>
+              <Code2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Code</span>
             </button>
           </div>
 
-          {/* Viewport (if viewing preview) */}
+          {/* Viewport Toggles (only when previewing) */}
           {viewMode !== 'code' && (
-            <div className="hidden lg:flex items-center gap-1 bg-black/40 rounded-full p-1 border border-white/10">
+            <div className="hidden lg:flex items-center gap-0.5 bg-white/[0.04] rounded-full p-1 border border-white/10">
               <button
                 onClick={() => setViewportSize('mobile')}
-                className={`px-2.5 h-7 rounded-full flex items-center gap-1 text-xs font-medium transition-all ${
-                  viewportSize === 'mobile' ? 'bg-white/15 text-white' : 'text-gray-400 hover:text-white'
+                className={`px-2.5 h-6 rounded-full flex items-center gap-1 text-[11px] font-semibold transition-all ${
+                  viewportSize === 'mobile' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <i className="pi pi-mobile text-xs" /> 375px
+                <Smartphone className="w-3 h-3" />
+                <span>375px</span>
               </button>
               <button
                 onClick={() => setViewportSize('desktop')}
-                className={`px-2.5 h-7 rounded-full flex items-center gap-1 text-xs font-medium transition-all ${
-                  viewportSize === 'desktop' ? 'bg-white/15 text-white' : 'text-gray-400 hover:text-white'
+                className={`px-2.5 h-6 rounded-full flex items-center gap-1 text-[11px] font-semibold transition-all ${
+                  viewportSize === 'desktop' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <i className="pi pi-desktop text-xs" /> 1280px
+                <Monitor className="w-3 h-3" />
+                <span>Desktop</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Right: CMS Edit Toggle + Export */}
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        {/* Right: CMS Edit Drawer Toggle + Export */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={downloadZip}
-            className="hidden md:flex px-3.5 py-1.5 rounded-full text-xs glass border-white/10 hover:bg-white/10 text-gray-300 items-center gap-1.5 transition-colors"
+            className="hidden md:flex px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 text-slate-300 hover:text-white items-center gap-1.5 transition-all shadow-sm"
           >
-            <i className="pi pi-download text-xs" />
+            <Download className="w-3.5 h-3.5" />
             <span>Export ZIP</span>
           </button>
           <button
             onClick={() => setShowEditor(!showEditor)}
-            className={`px-2.5 sm:px-4 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
-              showEditor ? 'bg-red-500 text-white shadow-glow-sm' : 'glass border-white/10 hover:bg-white/10 text-white'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm ${
+              showEditor
+                ? 'bg-blue-600 text-white'
+                : 'bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white'
             }`}
           >
-            <i className="pi pi-pencil text-xs" />
-            <span className="hidden sm:inline">{showEditor ? 'Close CMS' : 'Edit Content'}</span>
+            {showEditor ? <X className="w-3.5 h-3.5" /> : <Edit3 className="w-3.5 h-3.5 text-cyan-400" />}
+            <span className="hidden sm:inline">{showEditor ? 'Close CMS' : 'Edit CMS Data'}</span>
             <span className="sm:hidden">{showEditor ? 'Close' : 'CMS'}</span>
           </button>
         </div>
       </div>
 
-      {/* ── Main Area ─────────────────────────────────────── */}
-      <div className="pt-20 pb-4 px-2 sm:px-4 md:px-6 flex gap-4 h-[calc(100vh)] min-h-0 overflow-hidden">
+      {/* ── Main Preview Area ─────────────────────────────────────── */}
+      <div className="pt-20 pb-4 px-4 sm:px-6 flex gap-6 h-screen min-h-0 overflow-hidden">
 
         {/* Canvas & Code Container */}
-        <div className={`flex-1 flex ${viewMode === 'split' ? 'flex-col md:flex-row' : 'flex-row'} gap-4 overflow-hidden min-h-0 h-full`}>
+        <div className={`flex-1 flex ${viewMode === 'split' ? 'flex-col md:flex-row' : 'flex-row'} gap-6 overflow-hidden min-h-0 h-full`}>
 
           {/* Rendered Live Canvas */}
           {(viewMode === 'split' || viewMode === 'preview') && (
             <div className={`flex-1 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden min-h-0 h-full w-full pr-1 scroll-smooth ${viewMode === 'split' ? 'h-1/2 md:h-full md:w-1/2' : 'w-full'}`}>
               <div
-                className={`bg-zinc-950 transition-all duration-300 w-full flex-shrink-0 mb-12 shadow-2xl border border-white/10 ${
-                  viewportSize === 'mobile' ? 'max-w-[375px] my-4 rounded-3xl overflow-hidden' : 'max-w-full rounded-2xl'
+                className={`transition-all duration-300 w-full flex-shrink-0 mb-12 shadow-2xl ${
+                  viewportSize === 'mobile' ? 'max-w-[375px] my-4 rounded-[2.5rem] overflow-hidden border-4 border-slate-800' : 'max-w-full rounded-2xl'
                 }`}
               >
                 <LiveComponentRenderer code={jsxCode || currentJob?.jsx} pageName={pageName} job={currentJob} />
@@ -199,45 +226,44 @@ export default function PreviewPage() {
                 value={jsxCode || currentJob?.jsx || '// Generated section code will appear here'}
                 readOnly={true}
                 language="jsx"
-                fileName={`${currentJob?.sectionName || 'Custom'}Section.jsx`}
-                maxHeight="calc(100vh - 120px)"
+                fileName={`${pageName}Section.jsx`}
+                maxHeight="100%"
               />
             </div>
           )}
 
         </div>
 
-        {/* CMS Editor Sidebar */}
-        <div
-          className={`h-full flex-shrink-0 transition-all duration-300 ease-out overflow-hidden min-h-0 ${
-            showEditor
-              ? 'fixed inset-y-16 right-0 w-80 z-40 bg-zinc-950/95 shadow-2xl md:static md:w-80 md:bg-transparent md:shadow-none opacity-100'
-              : 'w-0 opacity-0 pointer-events-none'
-          }`}
-        >
-          <GlassCard className="h-full flex flex-col p-0 overflow-hidden rounded-2xl">
-            <div className="p-4 border-b border-white/10 bg-black/20 flex-shrink-0">
-              <h3 className="font-bold text-sm text-white">CMS Live Editor</h3>
-              <p className="text-xs text-gray-400 mt-0.5">Edit inputs to update live UI in real-time</p>
-            </div>
-            <div className="flex-1 overflow-y-auto p-3">
-              {loadingElems ? (
-                <div className="flex flex-col items-center justify-center py-12 gap-3">
-                  <i className="pi pi-spin pi-spinner text-2xl text-red-500" />
-                  <p className="text-xs text-gray-500">Loading elements...</p>
+        {/* CMS Live Element Editor Drawer */}
+        {showEditor && (
+          <div className="w-80 sm:w-96 flex-shrink-0 h-full min-h-0 animate-slide-in">
+            <GlassCard className="h-full flex flex-col overflow-hidden p-0 border border-white/15">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>Redux CMS Live Editor</span>
+                  </h3>
+                  <p className="text-[11px] text-slate-400">Live synchronized with store</p>
                 </div>
-              ) : elements.length === 0 ? (
-                <div className="text-center py-12">
-                  <i className="pi pi-inbox text-3xl text-gray-600 mb-3 block" />
-                  <p className="text-sm text-gray-500">No elements found.</p>
-                  <p className="text-xs text-gray-600 mt-1">Generate a section first.</p>
-                </div>
-              ) : (
-                <ElementEditor elements={elements} pageName={pageName} />
-              )}
-            </div>
-          </GlassCard>
-        </div>
+                <button
+                  onClick={() => setShowEditor(false)}
+                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 min-h-0">
+                <ElementEditor
+                  elements={elements}
+                  pageName={pageName}
+                  loading={loadingElems}
+                />
+              </div>
+            </GlassCard>
+          </div>
+        )}
 
       </div>
     </PageShell>

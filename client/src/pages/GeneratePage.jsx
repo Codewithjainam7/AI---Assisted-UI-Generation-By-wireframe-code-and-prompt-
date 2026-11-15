@@ -1,6 +1,31 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  Image as ImageIcon,
+  Code2,
+  Sparkles,
+  Layers,
+  Sliders,
+  Eye,
+  Columns2,
+  Smartphone,
+  Monitor,
+  CheckCircle2,
+  Download,
+  Copy,
+  Check,
+  ExternalLink,
+  History,
+  Trash2,
+  Wand2,
+  RefreshCw,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  FileCode,
+  ArrowRight
+} from 'lucide-react';
 import PageShell from '../components/layout/PageShell';
 import PillTab from '../components/ui/PillTab';
 import DropZone from '../components/ui/DropZone';
@@ -13,13 +38,13 @@ import LiveComponentRenderer from '../components/ui/LiveComponentRenderer';
 import { submitGenerateJob, clearHistory } from '../features/generate/generateSlice';
 
 const MODES = [
-  { id: 'wireframe', label: 'Wireframe', icon: '🖼️' },
-  { id: 'code',      label: 'Code',      icon: '💻' },
-  { id: 'prompt',    label: 'Prompt',    icon: '✍️' },
-  { id: 'combined',  label: 'Combined',  icon: '⚡' },
+  { id: 'wireframe', label: 'Wireframe', iconComponent: ImageIcon },
+  { id: 'code',      label: 'Code',      iconComponent: Code2 },
+  { id: 'prompt',    label: 'Prompt',    iconComponent: Sparkles },
+  { id: 'combined',  label: 'Combined',  iconComponent: Layers },
 ];
 
-const STEPS = ['Parsing Input', 'Building IR', 'Synthesizing JSX', 'Allocating IDs', 'Saved to Store'];
+const STEPS = ['Parsing Vision/AST', 'Synthesizing IR', 'Generating JSX', 'Allocating Field IDs', 'Syncing CMS Store'];
 
 const SAMPLE_PROMPT = `Create a fitness hero for Pulse Fit. Layout: two columns on desktop, stacked on mobile.
 Left: athlete image. Right: uppercase red badge "PULSE FIT", bold headline "CHALLENGE YOUR LIMITS",
@@ -61,12 +86,11 @@ export default function GeneratePage() {
   const [showOptions,    setShowOptions]    = useState(false);
   const [copySuccess,    setCopySuccess]    = useState(false);
   const [loadingSample,  setLoadingSample]  = useState(false);
-  
+
   // Results view mode: 'split' | 'preview' | 'code'
   const [resultViewMode, setResultViewMode] = useState('split');
   const [previewViewport, setPreviewViewport] = useState('desktop');
 
-  // Helper to load sample wireframe
   const loadSampleWireframe = async () => {
     setLoadingSample(true);
     try {
@@ -105,7 +129,7 @@ export default function GeneratePage() {
       if (fileToSend) formData.append('wireframe', fileToSend);
       if (optionalPrompt.trim()) formData.append('prompt', optionalPrompt);
     }
-    
+
     if (activeMode === 'code') {
       const codeToSend = codeValue.trim() || SAMPLE_CODE;
       if (!codeValue.trim()) setCodeValue(SAMPLE_CODE);
@@ -144,73 +168,89 @@ export default function GeneratePage() {
 
   return (
     <PageShell>
-      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
 
-        {/* Header */}
-        <div className="py-8 md:py-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-white/10 text-xs font-medium text-gray-300 mb-3">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            AI-Assisted UI Studio (Nemotron 3 Ultra + Gemini 2.5 Flash)
+        {/* Studio Workspace Header */}
+        <div className="py-8 md:py-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-semibold text-cyan-300 mb-4 shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <span>Neural Vision 3.1 &bull; Redux CMS Pipeline</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-2">
+              Studio <span className="gradient-text-liquid">Workspace</span>
+            </h1>
+            <p className="text-slate-400 text-sm md:text-base max-w-2xl leading-relaxed">
+              Synthesize production-grade React components with live Redux CMS state from wireframes, code, or natural language prompts.
+            </p>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-1">
-            ✦ Generation <span className="gradient-text">Studio</span>
-          </h1>
-          <p className="text-gray-400 text-sm">Generate production React components with live CMS bindings from wireframe, code, or prompt.</p>
+
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs text-slate-400 font-medium">Target Page:</span>
+            <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-bold text-white font-mono shadow-sm">
+              {pageName}
+            </span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Grid: Workspace & Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
 
-          {/* ── Main Workspace ──────────────────────── */}
+          {/* Left Column: Generation Studio Canvas */}
           <div className="lg:col-span-3 flex flex-col gap-6">
 
-            {/* Mode selector */}
+            {/* Mode Selector & Quick Fill Controls */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <PillTab tabs={MODES} active={activeMode} onChange={setActiveMode} />
 
-              {activeMode === 'wireframe' && (
-                <button
-                  onClick={loadSampleWireframe}
-                  disabled={loadingSample}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
-                >
-                  <i className={`pi ${loadingSample ? 'pi-spin pi-spinner' : 'pi-download'} text-xs`} />
-                  Load Sample Wireframe
-                </button>
-              )}
-              {activeMode === 'prompt' && (
-                <button
-                  onClick={() => setPromptValue(SAMPLE_PROMPT)}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
-                >
-                  <i className="pi pi-file-edit text-xs" />
-                  Load Sample Prompt
-                </button>
-              )}
-              {activeMode === 'code' && (
-                <button
-                  onClick={() => setCodeValue(SAMPLE_CODE)}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium glass border border-white/10 text-red-400 hover:text-red-300 hover:bg-white/10 transition-colors flex items-center gap-1.5"
-                >
-                  <i className="pi pi-code text-xs" />
-                  Load Sample JSX
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {activeMode === 'wireframe' && (
+                  <button
+                    onClick={loadSampleWireframe}
+                    disabled={loadingSample}
+                    className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <Download className={`w-3.5 h-3.5 ${loadingSample ? 'animate-spin' : ''}`} />
+                    <span>Load Sample Wireframe</span>
+                  </button>
+                )}
+                {activeMode === 'prompt' && (
+                  <button
+                    onClick={() => setPromptValue(SAMPLE_PROMPT)}
+                    className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Load Sample Prompt</span>
+                  </button>
+                )}
+                {activeMode === 'code' && (
+                  <button
+                    onClick={() => setCodeValue(SAMPLE_CODE)}
+                    className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <Code2 className="w-3.5 h-3.5" />
+                    <span>Load Sample JSX</span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Input Panel */}
-            <GlassCard className="flex flex-col gap-5">
+            {/* Input Card Container */}
+            <GlassCard className="flex flex-col gap-6">
 
-              {/* Wireframe Mode */}
+              {/* 1. Wireframe Mode */}
               {activeMode === 'wireframe' && (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-5">
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                        <span>🖼️</span> Upload Wireframe Sketch or Screenshot
-                      </p>
+                    <div className="flex justify-between items-center mb-2.5">
+                      <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4 text-cyan-400" />
+                        <span>Wireframe Sketch or Screenshot</span>
+                      </label>
                       {wireframeFile && (
-                        <span className="text-xs text-green-400 font-medium flex items-center gap-1">
-                          <i className="pi pi-check text-xs" /> Ready to generate
+                        <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Image Staged</span>
                         </span>
                       )}
                     </div>
@@ -218,82 +258,108 @@ export default function GeneratePage() {
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-400 mb-1.5 font-medium">Optional: Design Notes / Copy Tweaks</p>
+                    <label className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block mb-2">
+                      Design Directives / Intent Overrides (Optional)
+                    </label>
                     <input
                       type="text"
                       value={optionalPrompt}
                       onChange={(e) => setOptionalPrompt(e.target.value)}
-                      placeholder="e.g. Make CTA red and use 3 stat cards for a fitness brand"
-                      className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60"
+                      placeholder="e.g. Ensure 2 large meal cards, pink profile sidebar, and calorie gauge"
+                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 transition-all shadow-inner"
                     />
                   </div>
                 </div>
               )}
 
-              {/* Code Mode */}
+              {/* 2. Code Mode */}
               {activeMode === 'code' && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                      <span>💻</span> Paste Static React / JSX
-                    </p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <Code2 className="w-4 h-4 text-emerald-400" />
+                      <span>Existing JSX Component Code</span>
+                    </label>
+                    <span className="text-xs text-slate-400 font-mono">React 18 / Tailwind</span>
                   </div>
-                  <CodeEditor
+                  <textarea
                     value={codeValue}
-                    onChange={setCodeValue}
-                    language="jsx"
-                    placeholder="Paste your static JSX here... (or click 'Load Sample JSX' above)"
+                    onChange={(e) => setCodeValue(e.target.value)}
+                    placeholder="Paste JSX code here. The parser extracts content elements, binds CMS IDs, and outputs clean dynamic components..."
+                    className="w-full h-52 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white font-mono text-xs placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
                   />
+                  <div>
+                    <label className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block mb-2">
+                      Enhancement Notes (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={optionalPrompt}
+                      onChange={(e) => setOptionalPrompt(e.target.value)}
+                      placeholder="e.g. Add 3 responsive stat badges and upgrade styling"
+                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 transition-all shadow-inner"
+                    />
+                  </div>
                 </div>
               )}
 
-              {/* Prompt Mode */}
+              {/* 3. Prompt Mode */}
               {activeMode === 'prompt' && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                      <span>✍️</span> Natural Language Prompt
-                    </p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>Natural Language Design Specification</span>
+                    </label>
                   </div>
                   <textarea
                     value={promptValue}
                     onChange={(e) => setPromptValue(e.target.value)}
-                    placeholder="Describe the section you want to generate...&#10;&#10;e.g. Create a fitness hero for Pulse Fit. Left: athlete image. Right: red badge, bold headline, 3 stats, red CTA."
-                    className="w-full h-44 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 resize-none text-sm leading-relaxed transition-all"
+                    placeholder="Describe the desired layout, hierarchy, sections, content copy, brand colors, and interactive elements..."
+                    className="w-full h-44 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
                   />
                 </div>
               )}
 
-              {/* Combined Mode */}
+              {/* 4. Combined Mode */}
               {activeMode === 'combined' && (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-5">
                   <div>
-                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-2">1. Wireframe Image (Spatial Layout)</p>
+                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2 mb-2.5">
+                      <ImageIcon className="w-4 h-4 text-cyan-400" />
+                      <span>1. Spatial Blueprint (Wireframe Image)</span>
+                    </label>
                     <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/*" maxSizeMB={8} />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider mb-1.5">2. Prompt Overrides (Colours, Copy, CTA)</p>
+                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>2. Visual Polish & Copy Overrides (Prompt)</span>
+                    </label>
                     <textarea
                       value={promptValue}
                       onChange={(e) => setPromptValue(e.target.value)}
-                      placeholder="Prompt instructions take precedence for colours, copy, and CTA behaviour..."
-                      className="w-full h-28 bg-black/20 border border-white/10 rounded-2xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-red-500/60 resize-none text-sm transition-all"
+                      placeholder="Prompt instructions take precedence for colors, typography, button copy, and interactive behavior..."
+                      className="w-full h-28 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
                     />
                   </div>
                 </div>
               )}
 
-              {/* Options Accordion */}
-              <div className="border border-white/8 rounded-2xl overflow-hidden">
+              {/* Target Metadata Configuration Drawer */}
+              <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/[0.02]">
                 <button
                   onClick={() => setShowOptions(!showOptions)}
-                  className="w-full bg-white/3 px-4 py-3 flex justify-between items-center hover:bg-white/6 transition-colors text-left"
+                  className="w-full px-5 py-3.5 flex justify-between items-center hover:bg-white/[0.04] transition-colors text-left"
                 >
-                  <span className="text-sm font-medium text-gray-300">⚙️ Target Page & Section Metadata</span>
-                  <i className={`pi pi-chevron-${showOptions ? 'up' : 'down'} text-xs text-gray-500`} />
+                  <span className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                    <Sliders className="w-4 h-4 text-slate-400" />
+                    <span>Target Page & Component Architecture</span>
+                  </span>
+                  {showOptions ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                 </button>
                 {showOptions && (
-                  <div className="p-4 bg-black/20 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-5 bg-black/20 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/8 animate-fade-up">
                     <GlassInput
                       label="Page Name"
                       value={pageName}
@@ -310,158 +376,184 @@ export default function GeneratePage() {
                 )}
               </div>
 
-              {/* Generate Button */}
+              {/* Primary Synthesize Action Button */}
               <button
                 onClick={handleGenerate}
                 disabled={status === 'loading'}
-                className={`w-full py-4 rounded-full font-bold text-lg transition-all focus-visible:ring-2 focus-visible:ring-red-500 ${
+                className={`w-full py-4 rounded-2xl font-bold text-base transition-all flex items-center justify-center gap-2.5 ${
                   status === 'loading'
-                    ? 'bg-zinc-800 text-gray-500 cursor-not-allowed'
-                    : 'shimmer-bg text-white hover:shadow-glow-red active:scale-[0.98]'
+                    ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                    : 'liquid-button text-white shadow-liquid-glow active:scale-[0.99]'
                 }`}
               >
                 {status === 'loading' ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <i className="pi pi-spin pi-spinner" />
-                    <span>Analyzing & Synthesizing React Section...</span>
-                  </span>
+                  <>
+                    <RefreshCw className="w-5 h-5 animate-spin text-cyan-300" />
+                    <span>Analyzing Blueprint & Synthesizing React Section...</span>
+                  </>
                 ) : (
-                  <span>Generate Section from {MODES.find(m => m.id === activeMode)?.label} ✦</span>
+                  <>
+                    <Wand2 className="w-5 h-5 text-cyan-300" />
+                    <span>Synthesize React Section ✦</span>
+                  </>
                 )}
               </button>
             </GlassCard>
 
-            {/* Progress Bar */}
+            {/* Pipeline Step Progress Bar */}
             {status === 'loading' && (
               <GlassCard className="animate-fade-up">
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-xs text-gray-300 font-semibold uppercase tracking-wider">AI Generation Pipeline Active</p>
-                  <span className="text-xs text-red-400 font-mono animate-pulse">Running Gemini Vision + Nemotron...</span>
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                    <span>Neural Pipeline Active</span>
+                  </p>
+                  <span className="text-xs text-cyan-400 font-mono animate-pulse">Running Gemini Vision 3.1...</span>
                 </div>
                 <StepProgress currentStep={currentStep} steps={STEPS} />
               </GlassCard>
             )}
 
-            {/* ── Live Generated Studio (Side-by-Side Live Preview + Code) ────────── */}
+            {/* Error Message Card */}
+            {status === 'error' && (
+              <GlassCard className="animate-fade-up border border-rose-500/30 bg-rose-500/[0.05]">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-bold text-rose-300">Synthesis Encountered an Issue</h3>
+                    <p className="text-slate-300 text-xs mt-1 leading-relaxed">{error}</p>
+                    <p className="text-slate-500 text-[11px] mt-2 font-mono">Verify backend server is active on port 4000.</p>
+                  </div>
+                </div>
+              </GlassCard>
+            )}
+
+            {/* Live Studio Result Panel */}
             {currentJob && (
-              <div className="flex flex-col gap-4 animate-fade-up">
+              <div className="flex flex-col gap-5 animate-fade-up">
+                
                 {/* Result Status Banner */}
-                <GlassCard className="border border-green-500/30 shadow-glow-sm py-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <GlassCard className="border border-emerald-500/30 py-4.5 bg-emerald-500/[0.03]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-base font-bold text-green-400 flex items-center gap-2">
-                        <span>✅</span> Section Generated & Bound to Redux Store
+                      <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Section Generated & Bound to Redux Store</span>
                       </h3>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        Section ID: <span className="font-mono text-white font-bold">{currentJob.sectionId}</span>
-                        <span className="mx-2">•</span>
-                        Page: <span className="font-mono text-white font-bold">{currentJob.pageName || pageName}</span>
+                      <p className="text-xs text-slate-400 mt-1 flex items-center gap-2 font-mono">
+                        <span>Section ID:</span>
+                        <span className="font-bold text-white px-2 py-0.5 rounded bg-white/10">{currentJob.sectionId}</span>
+                        <span>•</span>
+                        <span>Page:</span>
+                        <span className="font-bold text-white px-2 py-0.5 rounded bg-white/10">{currentJob.pageName || pageName}</span>
                       </p>
                     </div>
 
                     {/* View mode switcher */}
-                    <div className="flex items-center gap-1 bg-black/50 rounded-full p-1 border border-white/10">
+                    <div className="flex items-center gap-1 bg-white/[0.05] rounded-full p-1 border border-white/10 shadow-inner">
                       <button
                         onClick={() => setResultViewMode('preview')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                          resultViewMode === 'preview' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                          resultViewMode === 'preview'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        🖥️ Live Preview
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Preview</span>
                       </button>
                       <button
                         onClick={() => setResultViewMode('split')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                          resultViewMode === 'split' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                          resultViewMode === 'split'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        🌓 Split View
+                        <Columns2 className="w-3.5 h-3.5" />
+                        <span>Split</span>
                       </button>
                       <button
                         onClick={() => setResultViewMode('code')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                          resultViewMode === 'code' ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white'
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                          resultViewMode === 'code'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'text-slate-400 hover:text-white'
                         }`}
                       >
-                        💻 Code (JSX)
+                        <Code2 className="w-3.5 h-3.5" />
+                        <span>Code</span>
                       </button>
                     </div>
                   </div>
 
                   {/* Actions Row */}
-                  <div className="flex flex-wrap gap-2.5 pt-3 mt-3 border-t border-white/10 items-center justify-between">
+                  <div className="flex flex-wrap gap-2.5 pt-4 mt-4 border-t border-white/8 items-center justify-between">
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
-                        className="px-4 py-2 rounded-full bg-white text-black font-bold text-xs hover:bg-gray-200 transition-colors flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-full bg-white text-slate-950 font-bold text-xs hover:bg-slate-200 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                       >
-                        <span>Open Fullscreen Preview</span>
-                        <i className="pi pi-arrow-up-right text-xs" />
+                        <span>Open Studio Preview</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={downloadZip}
-                        className="px-4 py-2 rounded-full glass border border-white/10 text-xs hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs text-white font-medium transition-all flex items-center gap-1.5 shadow-sm"
                       >
-                        <i className="pi pi-download text-xs" />
+                        <Download className="w-3.5 h-3.5" />
                         <span>Download ZIP</span>
                       </button>
                       <button
                         onClick={copyJsx}
-                        className="px-4 py-2 rounded-full glass border border-white/10 text-xs hover:bg-white/10 transition-colors flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs text-white font-medium transition-all flex items-center gap-1.5 shadow-sm"
                       >
-                        <i className={`pi ${copySuccess ? 'pi-check text-green-400' : 'pi-copy'} text-xs`} />
-                        <span>{copySuccess ? 'Copied JSX!' : 'Copy Code'}</span>
+                        {copySuccess ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copySuccess ? 'Copied Code!' : 'Copy JSX'}</span>
                       </button>
                     </div>
 
                     {resultViewMode !== 'code' && (
-                      <div className="flex items-center gap-1 bg-black/40 rounded-full p-0.5 border border-white/10">
+                      <div className="flex items-center gap-1 bg-white/[0.04] rounded-full p-0.5 border border-white/10">
                         <button
                           onClick={() => setPreviewViewport('mobile')}
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
-                            previewViewport === 'mobile' ? 'bg-white/20 text-white' : 'text-gray-400'
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            previewViewport === 'mobile' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
                           }`}
                         >
-                          📱 375px
+                          <Smartphone className="w-3 h-3" />
+                          <span>375px</span>
                         </button>
                         <button
                           onClick={() => setPreviewViewport('desktop')}
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
-                            previewViewport === 'desktop' ? 'bg-white/20 text-white' : 'text-gray-400'
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            previewViewport === 'desktop' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
                           }`}
                         >
-                          💻 Desktop
+                          <Monitor className="w-3 h-3" />
+                          <span>Desktop</span>
                         </button>
                       </div>
                     )}
                   </div>
                 </GlassCard>
 
-                {/* Main View Area: Split / Preview / Code */}
-                <div className={`grid gap-4 ${resultViewMode === 'split' ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1'}`}>
+                {/* View Area: Live Preview / Split / Code */}
+                <div className={`grid gap-6 ${resultViewMode === 'split' ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1'}`}>
                   
                   {/* Live Rendered Canvas */}
                   {(resultViewMode === 'split' || resultViewMode === 'preview') && (
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between px-1">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          Live Interactive Rendered UI
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>Live Interactive Rendered UI</span>
                         </span>
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
-                            className="text-[11px] text-red-400 hover:text-red-300 hover:underline flex items-center gap-1 font-medium transition"
-                          >
-                            <span>Open Studio Preview</span>
-                            <i className="pi pi-external-link text-[10px]" />
-                          </button>
-                          <span className="text-[11px] text-gray-500 font-mono hidden sm:inline">React 18 + Redux CMS</span>
-                        </div>
+                        <span className="text-[11px] text-slate-500 font-mono">React 18 &bull; Redux CMS</span>
                       </div>
-                      <div className="w-full bg-[#09090b] rounded-2xl border border-white/10 p-3 shadow-2xl flex justify-center min-h-[550px] max-h-[850px] overflow-y-auto overflow-x-hidden scroll-smooth">
+                      <div className="w-full bg-[#030508] rounded-3xl border border-white/12 p-3.5 shadow-2xl flex justify-center min-h-[550px] max-h-[850px] overflow-y-auto overflow-x-hidden scroll-smooth">
                         <div
-                          className={`bg-zinc-950 rounded-xl transition-all duration-300 w-full pb-8 ${
+                          className={`bg-slate-950 rounded-2xl transition-all duration-300 w-full pb-8 ${
                             previewViewport === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
                           }`}
                         >
@@ -475,10 +567,11 @@ export default function GeneratePage() {
                   {(resultViewMode === 'split' || resultViewMode === 'code') && (
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between px-1">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                          <span>💻</span> Generated React Component
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                          <FileCode className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Production React Component</span>
                         </span>
-                        <span className="text-[11px] text-gray-500 font-mono">{currentJob.componentFile || 'CustomSection.jsx'}</span>
+                        <span className="text-[11px] text-slate-500 font-mono">{currentJob.componentFile || 'CustomSection.jsx'}</span>
                       </div>
                       <CodeEditor
                         value={currentJob.jsx || ''}
@@ -493,74 +586,43 @@ export default function GeneratePage() {
                 </div>
               </div>
             )}
-
-            {/* Error Message */}
-            {status === 'error' && (
-              <GlassCard className="animate-fade-up border border-red-500/30 bg-red-900/10">
-                <h3 className="text-base font-bold text-red-400 mb-2 flex items-center gap-2">
-                  <i className="pi pi-exclamation-triangle" />Generation Failed
-                </h3>
-                <p className="text-gray-300 text-sm">{error}</p>
-                <p className="text-gray-500 text-xs mt-2">Make sure the backend is running on port 4000.</p>
-              </GlassCard>
-            )}
           </div>
 
-          {/* ── Job History Sidebar ──────────────────── */}
+          {/* Right Column: Generation History Sidebar */}
           <div className="lg:col-span-1">
             <div className="flex items-center justify-between mb-3 px-1">
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold">
-                Recent Generated Sections
+              <p className="text-[11px] text-slate-400 uppercase tracking-wider font-bold flex items-center gap-2">
+                <History className="w-3.5 h-3.5 text-slate-400" />
+                <span>Recent Generations</span>
               </p>
               {jobs.length > 0 && (
                 <button
                   onClick={() => dispatch(clearHistory())}
-                  className="text-[11px] text-red-400 hover:text-red-300 flex items-center gap-1 transition-colors hover:underline"
-                  title="Clear generation history"
+                  className="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 transition-colors"
+                  title="Clear history"
                 >
-                  <i className="pi pi-trash text-[10px]" />
+                  <Trash2 className="w-3 h-3" />
                   <span>Clear</span>
                 </button>
               )}
             </div>
+
             {jobs.length === 0 ? (
-              <GlassCard className="text-center py-8">
-                <i className="pi pi-history text-2xl text-gray-600 mb-2 block" />
-                <p className="text-sm text-gray-500">No generation jobs yet.</p>
-                <p className="text-xs text-gray-600 mt-1">Upload a wireframe or enter a prompt above.</p>
+              <GlassCard className="text-center py-10 text-slate-500 text-xs">
+                <p>No recent components generated yet.</p>
+                <p className="text-[11px] mt-1 text-slate-600">Generated sections will appear here.</p>
               </GlassCard>
             ) : (
-              <div className="flex flex-col gap-3">
-                {jobs.map((job, idx) => (
-                  <JobHistoryCard key={idx} job={job} />
+              <div className="flex flex-col gap-2">
+                {jobs.map((j) => (
+                  <JobHistoryCard key={j.sectionId || j.timestamp} job={j} />
                 ))}
               </div>
             )}
-
-            {/* Quick reference */}
-            <GlassCard className="mt-4">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Target CMS Elements</p>
-              {[
-                { name: 'heroImage', type: 'Image' },
-                { name: 'brandBadge', type: 'Text' },
-                { name: 'headlineMain', type: 'Text' },
-                { name: 'headlineSub', type: 'Text' },
-                { name: 'description', type: 'Textfield' },
-                { name: 'statBadges', type: 'Cards (Loop)' },
-                { name: 'ctaButton', type: 'Button' }
-              ].map(item => (
-                <div key={item.name} className="flex items-center justify-between py-1 border-b border-white/5 last:border-0">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                    <span className="text-xs font-mono text-gray-300">{item.name}</span>
-                  </div>
-                  <span className="text-[10px] text-gray-500 uppercase">{item.type}</span>
-                </div>
-              ))}
-            </GlassCard>
           </div>
 
         </div>
+
       </div>
     </PageShell>
   );

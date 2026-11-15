@@ -5,16 +5,16 @@ import { fetchElementsByIds } from '../../features/cms/cmsSlice';
 import { getImage, errorImage } from '../../utils/getImage';
 
 const ids = {
-  heroImage: "2000000180",
-  brandBadge: "2000000181",
-  headlineMain: "2000000182",
-  headlineSub: "2000000183",
-  description: "2000000184",
-  statBadges: "2000000185",
-  ctaButton: "2000000186",
+  heroImage: "2000000215",
+  brandBadge: "2000000216",
+  headlineMain: "2000000217",
+  headlineSub: "2000000218",
+  description: "2000000219",
+  statBadges: "2000000220",
+  ctaButton: "2000000221",
 };
 
-const CorporatePortal = ({ pageName = "CorporatePage" }) => {
+const WellnessDashboard = ({ pageName = "Home" }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.cms?.allSections?.[pageName]);
   const cssData = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
@@ -35,79 +35,85 @@ const CorporatePortal = ({ pageName = "CorporatePage" }) => {
     });
   }, [cssData]);
 
-  const apps = ["Salesforce", "My file", "Chatter", "Planner", "Cornerstone", "Repository", "Standards"];
-
   return (
     <div className="min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans text-slate-900 overflow-x-hidden">
       <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900">
         
         <header className="w-full bg-slate-200 border-b border-slate-300 px-6 py-3.5 flex items-center justify-between text-slate-900 font-bold text-base">
           <div className="flex items-center gap-2 font-black text-lg text-slate-900">
-            <span id={ids.brandBadge} className="dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "CompanyName" }} />
-          </div>
-          <div className="flex items-center gap-3">
-            <input type="text" placeholder="Start typing what are you looking for..." className="w-64 sm:w-80 bg-white border border-slate-300 rounded-full px-4 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400" />
-            <span className="text-xs text-slate-500 font-semibold cursor-pointer hidden sm:inline">Advanced search</span>
+            <span id={ids.brandBadge} dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "HappyPiggy" }} />
           </div>
         </header>
 
-        <div className="flex flex-col lg:flex-row w-full items-stretch">
-          <aside className="w-full lg:w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
-            <div className="bg-slate-50 border-b border-slate-200 p-6 flex flex-col items-center text-center">
-              <div className="w-20 h-20 rounded-full bg-slate-200 border-2 border-slate-300 flex items-center justify-center text-slate-400 font-bold">IS</div>
-              <span className="text-xs font-bold text-slate-500 mt-2">527 / 378</span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">Ivon Stoilov</h2>
+        <div className="flex flex-col md:flex-row w-full items-stretch">
+          <aside className="w-full sm:w-60 md:w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 self-stretch">
+            <div className="bg-pink-100 border-b border-pink-200 p-6 flex flex-col items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center border-2 border-pink-200 text-slate-400 overflow-hidden">
+                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+              <h2 className="text-center font-bold text-slate-800 text-base mt-2.5">Kiraa</h2>
             </div>
-            <nav className="p-5 flex flex-col gap-3">
-              {["Home", "About", "Organisation", "Support", "News"].map((item) => (
-                <a key={item} href="#" className={`text-sm font-bold ${item === "Home" ? "text-emerald-600" : "text-slate-600 hover:text-slate-900"}`}>{item}</a>
+            <nav className="p-5 flex flex-col gap-3.5 text-slate-600 font-medium text-sm">
+              {["Diary", "Shopping Lists", "Your Progress", "Your Profile", "Settings"].map((item) => (
+                <div key={item} className="cursor-pointer hover:text-rose-500 transition-colors">{item}</div>
               ))}
             </nav>
           </aside>
 
-          <main className="flex-1 min-w-0 p-6 sm:p-8 flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <h2 id={ids.headlineMain} className="text-xl font-black text-slate-900 tracking-tight dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "My applications" }} />
-              <a href="#" className="text-xs font-bold text-blue-600 hover:underline">Edit</a>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-              {apps.map((app, i) => (
-                <div key={i} className="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:shadow-xs transition text-center cursor-pointer">
-                  <div className="w-8 h-8 rounded-lg bg-slate-200" />
-                  <span className="text-xs font-bold text-slate-800 mt-2 truncate w-full">{app}</span>
-                </div>
-              ))}
-            </div>
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm mt-4">
-              <img id={ids.heroImage} className="w-full md:w-80 h-48 sm:h-auto object-cover" src={data?.[ids.heroImage] ? getImage(data[ids.heroImage]) : "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"} onError={errorImage} alt="News banner" />
-              <div className="p-6 flex flex-col justify-between flex-1">
-                <div>
-                  <span className="text-xs font-bold text-rose-500 uppercase">Today's news</span>
-                  <h3 id={ids.headlineSub} className="text-xl font-black text-slate-900 tracking-tight mt-1 dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "The real deal: Company is growing big" }} />
-                  <p id={ids.description} className="text-xs text-slate-600 mt-2 leading-relaxed dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "Significant strategic milestones achieved across global operational centers." }} />
-                </div>
-                <a href="#" className="text-xs font-bold text-slate-900 hover:underline mt-4 inline-flex items-center gap-1">Read full article →</a>
+          <main className="flex-1 min-w-0 flex flex-col">
+            <div className="border-b border-slate-200 px-6 pt-4 pb-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex gap-6">
+                <button className="pb-3 text-slate-900 font-extrabold text-base border-b-2 border-slate-900 tracking-tight">Meal Plan</button>
+                <button className="pb-3 text-slate-400 hover:text-slate-600 font-semibold text-base tracking-tight transition-colors">Exercise Plan</button>
               </div>
+              <div className="flex flex-col items-end pb-2 text-right">
+                <div className="flex items-center gap-1.5 text-slate-700 font-semibold text-sm">
+                  <span className="text-slate-400 cursor-pointer">&lt;</span>
+                  <span id={ids.headlineSub} dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "Friday 23rd December" }} />
+                  <span className="text-slate-400 cursor-pointer">&gt;</span>
+                </div>
+                <span className="text-xs text-slate-500 font-bold">Today</span>
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-8 flex flex-col gap-8">
+              <div className="flex flex-col gap-3">
+                <h3 id={ids.headlineMain} className="text-xl font-extrabold text-rose-500 tracking-tight" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "Your Calories" }} />
+                <div className="flex items-center gap-4">
+                  <svg className="w-14 h-14 text-slate-800 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                  <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">1999 Calories</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-slate-300 rounded-2xl overflow-hidden relative shadow-sm border border-slate-300 flex flex-col p-4">
+                  <div className="h-36 sm:h-40 rounded-xl bg-slate-200 mb-3 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-slate-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 18l-5.5-9h11L12 20z"/></svg>
+                  </div>
+                  <div className="text-sm font-bold text-slate-900 uppercase">Breakfast</div>
+                  <div className="text-xs text-slate-600 mt-1">View and edit your breakfast meal details.</div>
+                </div>
+                <div className="bg-slate-300 rounded-2xl overflow-hidden relative shadow-sm border border-slate-300 flex flex-col p-4">
+                  <div className="h-36 sm:h-40 rounded-xl bg-slate-200 mb-3 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-slate-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 18l-5.5-9h11L12 20z"/></svg>
+                  </div>
+                  <div className="text-sm font-bold text-slate-900 uppercase">Morning Snack</div>
+                  <div className="text-xs text-slate-600 mt-1">View and edit your morning snack details.</div>
+                </div>
+              </div>
+
+              <Button 
+                id={ids.ctaButton} 
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm self-start" 
+                label={data?.[ids.ctaButton] || "GET STARTED"} 
+                aria-label="Action button" 
+              />
             </div>
           </main>
-
-          <aside className="w-full lg:w-72 bg-slate-50 border-l border-slate-200 p-6 flex flex-col gap-6 flex-shrink-0">
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
-              <h4 className="text-xs font-bold uppercase text-slate-500 mb-2">Standardization</h4>
-              <p className="text-xs text-slate-600">Company standards & compliance protocols</p>
-            </div>
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
-              <h4 className="text-xs font-bold uppercase text-slate-500 mb-2">My connections</h4>
-              <div className="flex -space-x-2">
-                {[1,2,3,4,5].map(i => <div key={i} className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white" />)}
-              </div>
-            </div>
-            <Button id={ids.ctaButton} className="w-full py-3 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm text-xs" label={data?.[ids.ctaButton] || "Contact site admin"} />
-          </aside>
         </div>
       </div>
     </div>
   );
 };
 
-export default CorporatePortal;
+export default WellnessDashboard;

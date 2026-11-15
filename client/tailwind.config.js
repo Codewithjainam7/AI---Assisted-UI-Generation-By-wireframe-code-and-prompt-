@@ -21,31 +21,29 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["'SF Pro Display'", '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
+        'ios': '1.75rem',
+        'ios-sm': '1.125rem',
         '4xl': '2rem',
         '5xl': '2.5rem',
       },
       backdropBlur: {
+        '2xl': '40px',
         '3xl': '64px',
       },
-      colors: {
-        glass: {
-          white: 'rgba(255,255,255,0.08)',
-          border: 'rgba(255,255,255,0.12)',
-        },
-      },
       boxShadow: {
-        'glow-red': '0 0 40px rgba(239,68,68,0.35)',
-        'glow-sm': '0 0 20px rgba(239,68,68,0.2)',
-        'glass': '0 8px 32px rgba(0,0,0,0.4)',
+        'liquid': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), 0 20px 40px -15px rgba(0, 0, 0, 0.7)',
+        'liquid-glow': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 0 35px rgba(59, 130, 246, 0.35)',
+        'glow-blue': '0 0 40px rgba(59, 130, 246, 0.35)',
+        'glow-cyan': '0 0 40px rgba(6, 182, 212, 0.3)',
       },
       animation: {
         'shimmer': 'shimmer 2s linear infinite',
-        'fade-up': 'fadeUp 0.4s ease-out',
-        'slide-in': 'slideIn 0.3s ease-out',
-        'pulse-slow': 'pulse 3s ease-in-out infinite',
+        'fade-up': 'fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-in': 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        'pulse-subtle': 'pulseSubtle 4s ease-in-out infinite',
       },
       keyframes: {
         shimmer: {
@@ -53,12 +51,16 @@ export default {
           '100%': { backgroundPosition: '200% 0' },
         },
         fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         slideIn: {
-          '0%': { opacity: '0', transform: 'translateX(20px)' },
+          '0%': { opacity: '0', transform: 'translateX(16px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        pulseSubtle: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.8' },
         }
       }
     },

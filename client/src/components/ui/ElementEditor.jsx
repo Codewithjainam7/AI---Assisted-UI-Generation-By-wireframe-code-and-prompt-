@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Check, X, Info, Sliders, Type, Image as ImageIcon, Layers } from 'lucide-react';
 import { patchElement, updateLiveCmsValue } from '../../features/cms/cmsSlice';
 
 export default function ElementEditor({ elements = [], pageName }) {
@@ -56,28 +57,44 @@ export default function ElementEditor({ elements = [], pageName }) {
 
   if (!elements || elements.length === 0) {
     return (
-      <div className="text-gray-500 text-sm text-center py-8">
-        <i className="pi pi-info-circle text-2xl mb-2 block text-gray-600" />
-        No editable elements found for this section.
+      <div className="text-slate-400 text-sm text-center py-12 flex flex-col items-center justify-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-slate-400">
+          <Info className="w-5 h-5 text-cyan-400" />
+        </div>
+        <p className="text-xs font-mono text-slate-400">No editable CMS elements registered for this view.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-5 pb-6">
+    <div className="flex flex-col gap-4 pb-6">
       {elements.map((el, idx) => (
-        <div key={`${el.fieldId}-${idx}`} className="flex flex-col gap-2 relative group bg-black/20 p-3.5 rounded-2xl border border-white/5">
+        <div
+          key={`${el.fieldId}-${idx}`}
+          className="flex flex-col gap-2.5 relative group bg-white/[0.03] backdrop-blur-xl p-4 rounded-2xl border border-white/8 hover:border-cyan-500/30 transition-all shadow-xs"
+        >
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-              <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                {el.elementName || el.fieldId}
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400/80 shadow-xs" />
+              <label className="text-xs font-bold text-slate-200 tracking-wide flex items-center gap-1.5">
+                {el.contentType === 'Image' ? <ImageIcon className="w-3.5 h-3.5 text-cyan-400" /> : el.contentType === 'Cards' ? <Layers className="w-3.5 h-3.5 text-indigo-400" /> : <Type className="w-3.5 h-3.5 text-slate-400" />}
+                <span>{el.elementName || el.fieldId}</span>
               </label>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono text-gray-500">{el.fieldId}</span>
-              {saveStatus[el.fieldId] === 'saved' && <i className="pi pi-check text-green-400 text-xs animate-fade-up" />}
-              {saveStatus[el.fieldId] === 'error' && <i className="pi pi-times text-red-400 text-xs animate-fade-up" />}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-slate-500 bg-white/[0.05] px-1.5 py-0.5 rounded border border-white/5">{el.fieldId}</span>
+              {saveStatus[el.fieldId] === 'saved' && (
+                <span className="text-emerald-400 text-xs flex items-center gap-1 animate-fade-up">
+                  <Check className="w-3.5 h-3.5" />
+                  <span className="text-[10px]">Synced</span>
+                </span>
+              )}
+              {saveStatus[el.fieldId] === 'error' && (
+                <span className="text-rose-400 text-xs flex items-center gap-1 animate-fade-up">
+                  <X className="w-3.5 h-3.5" />
+                  <span className="text-[10px]">Error</span>
+                </span>
+              )}
             </div>
           </div>
           
@@ -87,7 +104,8 @@ export default function ElementEditor({ elements = [], pageName }) {
               value={localValues[el.fieldId] || ''}
               onChange={(e) => handleChange(el.fieldId, e.target.value)}
               onBlur={() => handleBlur(el.fieldId)}
-              className="bg-black/40 border border-white/10 rounded-xl p-2.5 text-xs text-white w-full resize-none focus:outline-none focus:border-red-500/60 focus:ring-1 focus:ring-red-500/20 leading-relaxed font-sans"
+              className="bg-black/30 border border-white/10 rounded-xl p-3 text-xs text-white w-full resize-none focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/15 leading-relaxed font-sans shadow-inner transition-all placeholder-slate-600"
+              placeholder={`Enter ${el.elementName || 'content'}...`}
             />
           )}
 
@@ -98,8 +116,8 @@ export default function ElementEditor({ elements = [], pageName }) {
                 value={localValues[el.fieldId] || ''}
                 onChange={(e) => handleChange(el.fieldId, e.target.value)}
                 onBlur={() => handleBlur(el.fieldId)}
-                placeholder="Image path or URL"
-                className="bg-black/40 border border-white/10 rounded-xl p-2.5 text-xs text-white w-full focus:outline-none focus:border-red-500/60"
+                placeholder="Image path or https:// URL"
+                className="bg-black/30 border border-white/10 rounded-xl p-3 text-xs text-white w-full focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/15 shadow-inner transition-all placeholder-slate-600 font-mono"
               />
             </div>
           )}
@@ -107,23 +125,23 @@ export default function ElementEditor({ elements = [], pageName }) {
           {el.contentType === 'Cards' && Array.isArray(localValues[el.fieldId]) && (
             <div className="flex flex-col gap-2.5 pt-1">
               {localValues[el.fieldId].map((item, cIdx) => (
-                <div key={item.fieldId1 || cIdx} className="bg-black/40 p-2.5 rounded-xl border border-white/5 flex flex-col gap-1.5">
-                  <span className="text-[10px] text-gray-400 font-semibold uppercase">Card {cIdx + 1}</span>
+                <div key={item.fieldId1 || cIdx} className="bg-black/30 p-3 rounded-xl border border-white/8 flex flex-col gap-2 shadow-inner">
+                  <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">Card {cIdx + 1}</span>
                   <input
                     type="text"
                     value={item.field1 || ''}
-                    placeholder="Stat Value (e.g. 1000+)"
+                    placeholder="Stat Metric (e.g. 1999 Calories, 1000+)"
                     onChange={(e) => handleCardFieldChange(el.fieldId, cIdx, 'field1', e.target.value)}
                     onBlur={() => handleBlur(el.fieldId)}
-                    className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-white font-bold focus:border-red-500/60 focus:outline-none"
+                    className="bg-black/40 border border-white/10 rounded-lg p-2 text-xs text-white font-bold focus:border-cyan-500/60 focus:outline-none focus:ring-1 focus:ring-cyan-500/20"
                   />
                   <input
                     type="text"
                     value={item.field2 || ''}
-                    placeholder="Stat Label"
+                    placeholder="Stat Label or Title"
                     onChange={(e) => handleCardFieldChange(el.fieldId, cIdx, 'field2', e.target.value)}
                     onBlur={() => handleBlur(el.fieldId)}
-                    className="bg-black/30 border border-white/10 rounded-lg p-1.5 text-xs text-gray-300 focus:border-red-500/60 focus:outline-none"
+                    className="bg-black/40 border border-white/10 rounded-lg p-2 text-xs text-slate-300 focus:border-cyan-500/60 focus:outline-none focus:ring-1 focus:ring-cyan-500/20"
                   />
                 </div>
               ))}
