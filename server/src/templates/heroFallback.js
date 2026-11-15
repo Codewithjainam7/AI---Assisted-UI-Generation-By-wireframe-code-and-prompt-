@@ -1,3 +1,4 @@
+import { resolveDomainConfig } from '../utils/domainConfig.js';
 /**
  * generateFallback(ir)
  * High-Fidelity Universal Layout Engine that transforms any wireframe
@@ -279,7 +280,455 @@ const ${sectionName}Section = ({ pageName = "${pageName}" }) => {
 export default ${sectionName}Section;`;
   }
 
-  // 3. UNIVERSAL HIGH-FIDELITY WIREFRAME RECONSTRUCTION
+  // 2.7 INTERACTIVE MULTI-PAGE & FORM APPLICATION
+  const isMultiPageWithForm = (ir.isMultiPage || ir.hasForm || (Array.isArray(ir.pages) && ir.pages.length > 1) || /appointment|booking|reservation|form|consultation|signup|inquiry|doctor|clinic|hospital/i.test((ir.sectionName || '') + ' ' + (ir.content?.headlineMain || '') + ' ' + (ir.formType || ''))) && !isWellness && !isMultiMobile && !isPortal;
+
+  if (isMultiPageWithForm) {
+    const domainCfg = resolveDomainConfig(ir);
+    const pages = (Array.isArray(ir.pages) && ir.pages.length > 0)
+      ? ir.pages
+      : ['Home', domainCfg.bookingPageName, domainCfg.teamPageName, 'Services', 'Contact'];
+
+    const formConfig = ir.formConfig || {};
+    const servicesList = formConfig.services || domainCfg.categories;
+    const timeSlotsList = formConfig.timeSlots || domainCfg.timeSlots;
+    const datesList = ['Mon, Nov 16', 'Tue, Nov 17', 'Wed, Nov 18', 'Thu, Nov 19', 'Fri, Nov 20', 'Sat, Nov 21'];
+    const specialists = domainCfg.specialists;
+
+    const currentBookingPage = pages.find(p => /appointment|booking|reservation|schedule|consultation/i.test(p)) || domainCfg.bookingPageName;
+    const currentTeamPage = pages.find(p => /doctor|team|specialist|chef|trainer|attorney|agent/i.test(p)) || domainCfg.teamPageName;
+
+    return `import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Button } from "primereact/button";
+import { fetchElementsByIds } from "../../features/cms/cmsSlice";
+import { getImage, errorImage } from "../../utils/getImage";
+
+const ids = {
+  heroImage:    "${idsMap.heroImage}",
+  brandBadge:   "${idsMap.brandBadge}",
+  headlineMain: "${idsMap.headlineMain}",
+  headlineSub:  "${idsMap.headlineSub}",
+  description:  "${idsMap.description}",
+  statBadges:   "${idsMap.statBadges}",
+  ctaButton:    "${idsMap.ctaButton}",
+};
+
+const ${sectionName}Section = ({ pageName = "${pageName}", data: propData, cssData: propCss, fetchElementsByIds: propFetch }) => {
+  const dispatch = useDispatch();
+  const reduxData = useSelector((state) => state.cms?.allSections?.[pageName]);
+  const reduxCss = useSelector((state) => state.cms?.allSectionsCss?.[pageName]);
+  const data = propData || reduxData || {};
+  const cssData = propCss || reduxCss || {};
+
+  const [activePage, setActivePage] = useState(initialPage || (pageName !== "Home" && pagesList.includes(pageName) ? pageName : '${pages[0] || "Home"}'));
+
+  useEffect(() => {
+    if (initialPage && pagesList.includes(initialPage)) {
+      setActivePage(initialPage);
+    } else if (pageName && pageName !== "Home" && pagesList.includes(pageName)) {
+      setActivePage(pageName);
+    }
+  }, [initialPage, pageName]);
+  const [selectedService, setSelectedService] = useState('${servicesList[0]}');
+  const [selectedSpecialist, setSelectedSpecialist] = useState('${specialists[0]?.name || "Specialist"}');
+  const [selectedDate, setSelectedDate] = useState('Mon, Nov 16');
+  const [selectedTime, setSelectedTime] = useState('${timeSlotsList[0] || "10:30 AM"}');
+  const [formData, setFormData] = useState({ name: '', phone: '', email: '', notes: '' });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [bookingRef, setBookingRef] = useState('');
+
+  useEffect(() => {
+    if (propFetch) {
+      propFetch(Object.values(ids));
+    } else if (dispatch) {
+      dispatch(fetchElementsByIds({
+        elementIds: Object.values(ids),
+        pageName,
+      }));
+    }
+  }, [dispatch, pageName, propFetch]);
+
+  useEffect(() => {
+    Object.values(ids).forEach((id) => {
+      if (id && cssData?.[id]) {
+        const el = document.getElementById(id);
+        if (el) el.style.cssText = cssData[id];
+      }
+    });
+  }, [cssData]);
+
+  const pagesList = ${JSON.stringify(pages)};
+  const servicesList = ${JSON.stringify(servicesList)};
+  const timeSlotsList = ${JSON.stringify(timeSlotsList)};
+  const datesList = ['Mon, Nov 16', 'Tue, Nov 17', 'Wed, Nov 18', 'Thu, Nov 19', 'Fri, Nov 20', 'Sat, Nov 21'];
+  const specialists = ${JSON.stringify(specialists)};
+
+  const currentBookingPage = '${currentBookingPage}';
+  const currentTeamPage = '${currentTeamPage}';
+
+  return (
+    <div className="w-full min-h-screen bg-slate-50 p-3 sm:p-6 lg:p-8 flex items-center justify-center font-sans text-slate-900 overflow-x-hidden">
+      <div className="w-full max-w-7xl bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden flex flex-col relative text-slate-900 animate-fade-in">
+        
+        {/* Top Multi-Page Navigation Header */}
+        <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 px-6 sm:px-10 py-4 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActivePage('Home')}>
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-base shadow-md">
+              ${(domainCfg.brand || 'U')[0]}
+            </div>
+            <div className="flex flex-col">
+              <span id={ids.brandBadge} className="font-black text-base text-slate-900 tracking-tight leading-none dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.brandBadge] || "${domainCfg.brand}" }} />
+              <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-1">${domainCfg.badge}</span>
+            </div>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200 shadow-inner">
+            {pagesList.map((p) => (
+              <button
+                key={p}
+                onClick={() => setActivePage(p)}
+                className={\`px-4 py-2 rounded-full text-xs font-bold transition-all \${activePage === p ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-white'}\`}
+              >
+                {p}
+              </button>
+            ))}
+          </nav>
+
+          <button
+            onClick={() => setActivePage(currentBookingPage)}
+            className="px-5 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition shadow-md shadow-blue-500/20 hidden sm:inline-flex items-center gap-1.5"
+          >
+            <span>${domainCfg.actionLabel}</span>
+            <span>→</span>
+          </button>
+        </header>
+
+        {/* VIEW 1: HOME PAGE */}
+        {activePage === 'Home' && (
+          <main className="flex flex-col">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 p-6 sm:p-12">
+              <div className="w-full lg:w-1/2 flex flex-col gap-4">
+                <span className="px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold self-start">
+                  ${domainCfg.badge}
+                </span>
+                <h1 id={ids.headlineMain} className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15] dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineMain] || "${domainCfg.heroHeadline}" }} />
+                <p id={ids.headlineSub} className="text-slate-500 font-semibold text-base mt-1 dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.headlineSub] || "${domainCfg.heroSub}" }} />
+                <p id={ids.description} className="text-slate-600 text-sm leading-relaxed dynamicStyle" dangerouslySetInnerHTML={{ __html: data?.[ids.description] || "${domainCfg.heroDesc}" }} />
+                <div className="flex flex-wrap items-center gap-3 mt-4">
+                  <button
+                    onClick={() => setActivePage(currentBookingPage)}
+                    className="px-7 py-3.5 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition shadow-lg shadow-blue-500/25 flex items-center gap-2"
+                  >
+                    <span>${domainCfg.actionLabel}</span>
+                    <span>→</span>
+                  </button>
+                  <button
+                    onClick={() => setActivePage(currentTeamPage)}
+                    className="px-6 py-3.5 rounded-full bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition"
+                  >
+                    Meet Our ${domainCfg.teamPageName}
+                  </button>
+                </div>
+              </div>
+
+              <div className="w-full lg:w-1/2 rounded-3xl overflow-hidden shadow-2xl border border-slate-200 relative">
+                <img
+                  id={ids.heroImage}
+                  src="${domainCfg.heroImage}"
+                  alt="${domainCfg.brand}"
+                  className="w-full h-80 lg:h-96 object-cover"
+                />
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-white/40 shadow-lg flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-black text-slate-900">${domainCfg.brand}</p>
+                    <p className="text-[10px] text-slate-500 font-bold">100% Certified Quality Assurance</p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
+                    Active Now
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 sm:p-12 pt-0">
+              {specialists.slice(0, 3).map((sp, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition">
+                  <div>
+                    <span className="text-xs font-black text-blue-600 uppercase tracking-wider">Feature 0{idx + 1}</span>
+                    <h3 className="font-extrabold text-base text-slate-900 mt-2">{sp.specialty}</h3>
+                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                      Led by {sp.name} with {sp.exp} of dedicated domain expertise.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => { setSelectedSpecialist(sp.name); setActivePage(currentBookingPage); }}
+                    className="text-xs font-bold text-blue-600 hover:underline mt-4 text-left"
+                  >
+                    ${domainCfg.actionLabel} →
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Metrics Bar */}
+            <div className="border-t border-slate-100 p-6 sm:p-12 flex flex-wrap items-center justify-around gap-6 bg-slate-50/50">
+              <div className="text-center">
+                <p className="text-2xl font-black text-slate-900">15,000+</p>
+                <p className="text-xs font-bold text-slate-400 uppercase mt-0.5">Satisfied Clients</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-black text-blue-600">4.9 ★</p>
+                <p className="text-xs font-bold text-slate-400 uppercase mt-0.5">Average Review</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-black text-slate-900">24/7</p>
+                <p className="text-xs font-bold text-slate-400 uppercase mt-0.5">Support Availability</p>
+              </div>
+            </div>
+          </main>
+        )}
+
+        {/* VIEW 2: BOOKING / APPOINTMENT / RESERVATION FORM */}
+        {activePage === currentBookingPage && (
+          <main className="p-6 sm:p-12 flex flex-col gap-8 max-w-4xl mx-auto w-full">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wider text-blue-600">Instant Online Scheduling</span>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight mt-1">${domainCfg.actionLabel}</h2>
+              <p className="text-slate-500 text-sm mt-1">${domainCfg.formNotice}</p>
+            </div>
+
+            {!isSubmitted ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setBookingRef('#REF-' + Math.floor(100000 + Math.random() * 900000));
+                  setIsSubmitted(true);
+                }}
+                className="flex flex-col gap-8"
+              >
+                <div className="flex flex-col gap-3">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">1. Select ${domainCfg.categoriesTitle}</label>
+                  <div className="flex flex-wrap gap-2">
+                    {servicesList.map((svc) => (
+                      <button
+                        key={svc}
+                        type="button"
+                        onClick={() => setSelectedService(svc)}
+                        className={\`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all border \${selectedService === svc ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'}\`}
+                      >
+                        {svc}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500">2. Choose a ${domainCfg.specialistLabel}</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {specialists.map((doc) => (
+                      <div
+                        key={doc.name}
+                        onClick={() => setSelectedSpecialist(doc.name)}
+                        className={\`p-4 rounded-2xl border cursor-pointer transition-all flex items-center gap-3.5 \${selectedSpecialist === doc.name ? 'border-blue-600 bg-blue-50/50 shadow-md ring-2 ring-blue-500/20' : 'border-slate-200 bg-white hover:border-slate-300'}\`}
+                      >
+                        <img src={doc.photo} alt={doc.name} className="w-12 h-12 rounded-xl object-cover" />
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-extrabold text-xs text-slate-900 truncate">{doc.name}</span>
+                          <span className="text-[10px] text-slate-500 font-semibold">{doc.specialty}</span>
+                          <span className="text-[10px] font-bold text-amber-500 mt-0.5">{doc.rating}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-500">3. Select Date</label>
+                    <div className="flex flex-wrap gap-2">
+                      {datesList.map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setSelectedDate(d)}
+                          className={\`px-3 py-2 rounded-xl text-xs font-bold transition-all border \${selectedDate === d ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200'}\`}
+                        >
+                          {d}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-500">4. Select Time Slot</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {timeSlotsList.map((slot) => (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => setSelectedTime(slot)}
+                          className={\`px-2.5 py-2 rounded-xl text-xs font-bold transition-all border text-center \${selectedTime === slot ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200'}\`}
+                        >
+                          {slot}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col gap-4">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">5. Contact Information</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Your Name"
+                        className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 block mb-1">Phone Number</label>
+                      <input
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder="+1 (555) 000-0000"
+                        className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 block mb-1">Special Notes / Requests (Optional)</label>
+                    <textarea
+                      rows="2"
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      placeholder="Any specific requests or requirements..."
+                      className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-4 rounded-2xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition shadow-xl shadow-blue-500/25 text-sm uppercase tracking-wider"
+                >
+                  Confirm ${domainCfg.actionLabel} & Send Notification →
+                </button>
+              </form>
+            ) : (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 flex flex-col items-center text-center shadow-lg">
+                <div className="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center font-black text-2xl shadow-lg mb-4">
+                  ✓
+                </div>
+                <h3 className="text-2xl font-black text-slate-900">${domainCfg.confirmedTitle}</h3>
+                <p className="text-slate-600 text-xs mt-1">${domainCfg.confirmedSub}</p>
+                
+                <div className="bg-white rounded-2xl border border-emerald-200/80 p-5 mt-6 w-full max-w-md text-left flex flex-col gap-2 text-xs">
+                  <div className="flex justify-between border-b border-slate-100 pb-2">
+                    <span className="text-slate-500">Booking Reference:</span>
+                    <span className="font-mono font-bold text-slate-900">{bookingRef}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-100 py-1.5">
+                    <span className="text-slate-500">${domainCfg.specialistLabel}:</span>
+                    <span className="font-bold text-slate-900">{selectedSpecialist}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-100 py-1.5">
+                    <span className="text-slate-500">Option:</span>
+                    <span className="font-bold text-slate-900">{selectedService}</span>
+                  </div>
+                  <div className="flex justify-between py-1.5">
+                    <span className="text-slate-500">Scheduled Time:</span>
+                    <span className="font-bold text-emerald-600">{selectedDate} at {selectedTime}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-6 px-6 py-2.5 rounded-full bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition"
+                >
+                  Make Another Booking
+                </button>
+              </div>
+            )}
+          </main>
+        )}
+
+        {/* VIEW 3: SPECIALISTS DIRECTORY */}
+        {activePage === currentTeamPage && (
+          <main className="p-6 sm:p-12 flex flex-col gap-8">
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Our Certified ${domainCfg.teamPageName}</h2>
+              <p className="text-slate-500 text-sm mt-1">World-class professionals dedicated to exceptional care and results.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {specialists.map((doc, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl overflow-hidden flex flex-col shadow-xs hover:shadow-md transition">
+                  <img src={doc.photo} alt={doc.name} className="w-full h-48 object-cover" />
+                  <div className="p-5 flex flex-col justify-between flex-1">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-blue-600">{doc.role || doc.specialty}</span>
+                        <span className="text-xs font-bold text-amber-500">{doc.rating}</span>
+                      </div>
+                      <h4 className="font-extrabold text-base text-slate-900 mt-1">{doc.name}</h4>
+                      <p className="text-xs text-slate-500 mt-1">{doc.exp}</p>
+                    </div>
+                    <button
+                      onClick={() => { setSelectedSpecialist(doc.name); setActivePage(currentBookingPage); }}
+                      className="mt-4 w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition"
+                    >
+                      ${domainCfg.actionLabel} →
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </main>
+        )}
+
+        {/* VIEW 4: SERVICES & CONTACT */}
+        {(activePage === 'Services' || activePage === 'Contact') && (
+          <main className="p-6 sm:p-12 flex flex-col gap-8">
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Comprehensive Offerings & Contact</h2>
+              <p className="text-slate-500 text-sm mt-1">24/7 dedicated support and specialized assistance.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {servicesList.map((s, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-blue-600">Department 0{idx + 1}</span>
+                    <h4 className="font-extrabold text-sm text-slate-900 mt-1">{s}</h4>
+                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">Dedicated professional guidance, assessment, and tailored delivery.</p>
+                  </div>
+                  <button
+                    onClick={() => { setSelectedService(s); setActivePage(currentBookingPage); }}
+                    className="text-xs font-bold text-blue-600 hover:underline mt-4 text-left"
+                  >
+                    Select this option →
+                  </button>
+                </div>
+              ))}
+            </div>
+          </main>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default ${sectionName}Section;`;
+  }
+// 3. UNIVERSAL HIGH-FIDELITY WIREFRAME RECONSTRUCTION
   // (Handles Wellness / Nutrition, E-Commerce, SaaS, Dashboards, and ANY Wireframe)
 
   const isWellness = ir.screenArchetype === 'wellness-tracker' ||

@@ -1,6 +1,14 @@
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getIRSystemPrompt } from '../templates/ir-system-prompt.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 let client;
 let genAI;
@@ -114,11 +122,25 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       if (!genAI) genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-          const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-3.5-flash' });
-          const res = await model.generateContent([
-            { text: irSystemPrompt },
-            { text: `Extract the UI structure for this user prompt:\n${promptText}` }
-          ]);
+          const geminiModels = [
+      process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
+      'gemini-3.1-flash-lite',
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash'
+    ];
+          let res = null;
+          for (const mName of geminiModels) {
+            try {
+              const model = genAI.getGenerativeModel({ model: mName });
+              res = await model.generateContent([
+                { text: irSystemPrompt },
+                { text: `Extract the UI structure for this user prompt:\n${promptText}` }
+              ]);
+              if (res) break;
+            } catch (mErr) {
+              console.warn(`Gemini IR model ${mName} error:`, mErr.message);
+            }
+          }
           const raw = res?.response?.text() || '';
           const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
           const generated = JSON.parse(cleaned);
@@ -136,11 +158,12 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
 
     // 2. Fallback to OpenRouter
     if (!parsedSuccess && client) {
-      const candidateModels = [
-        'nvidia/nemotron-3-ultra-550b-a55b:free',
-        process.env.LLM_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b',
-        'nvidia/nemotron-3.5-lightning:free'
-      ];
+      const geminiModels = [
+      process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
+      'gemini-3.1-flash-lite',
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash'
+    ];
 
       for (const mName of candidateModels) {
         try {
@@ -177,15 +200,64 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
     });
   }
 
+  
+  // Universal natural-language intent reinforcement for multi-page & forms
+  const pLower = (promptText || '').toLowerCase();
+  if (pLower.includes('multiple pages') || pLower.includes('multi page') || pLower.includes('multi-page') || pLower.includes('pages')) {
+    baseIR.isMultiPage = true;
+    if (!baseIR.pages || baseIR.pages.length <= 1) {
+      if (/doctor|clinic|hospital|medical|patient|dentist|healthcare|health/i.test(pLower)) {
+        baseIR.pages = ['Home', 'Appointments', 'Doctors', 'Services', 'Contact'];
+      } else if (/restaurant|dining|food|cafe|bistro|menu|table/i.test(pLower)) {
+        baseIR.pages = ['Home', 'Reservations', 'Menu', 'Chefs', 'Contact'];
+      } else if (/gym|fitness|trainer|workout|club/i.test(pLower)) {
+        baseIR.pages = ['Home', 'Book Session', 'Trainers', 'Programs', 'Contact'];
+      } else if (/law|attorney|lawyer|legal/i.test(pLower)) {
+        baseIR.pages = ['Home', 'Consultation', 'Attorneys', 'Practice Areas', 'Contact'];
+      } else if (/real estate|property|realtor|homes|villa/i.test(pLower)) {
+        baseIR.pages = ['Home', 'Schedule Tour', 'Properties', 'Agents', 'Contact'];
+      } else {
+        baseIR.pages = ['Home', 'Appointments', 'Specialists', 'Services', 'Contact'];
+      }
+    }
+  }
+
+  if (pLower.includes('form') || pLower.includes('appointment') || pLower.includes('booking') || pLower.includes('reservation') || pLower.includes('schedule')) {
+    baseIR.hasForm = true;
+    if (!baseIR.formType) {
+      baseIR.formType = pLower.includes('appointment') ? 'appointment-booking' : pLower.includes('reservation') ? 'reservation' : 'booking';
+    }
+  }
+
   return baseIR;
 }
 
 function applyGeneratedToIR(baseIR, generated) {
   if (!generated) return;
   if (generated.domain) baseIR.domain = generated.domain;
+  if (generated.siteType) baseIR.siteType = generated.siteType;
+  if (generated.isMultiPage !== undefined) {
+    baseIR.isMultiPage = generated.isMultiPage;
+  } else if (Array.isArray(generated.pages) && generated.pages.length > 1) {
+    baseIR.isMultiPage = true;
+  }
+  if (Array.isArray(generated.pages) && generated.pages.length > 0) {
+    baseIR.pages = generated.pages;
+    baseIR.activePage = generated.activePage || generated.pages[0];
+  }
+  if (generated.hasForm !== undefined) baseIR.hasForm = generated.hasForm;
+  if (generated.formType) baseIR.formType = generated.formType;
+  if (generated.formConfig) baseIR.formConfig = generated.formConfig;
+  if (generated.navbar) baseIR.navbar = generated.navbar;
+  if (generated.content?.featureCards || generated.featureCards) {
+    baseIR.featureCards = generated.content?.featureCards || generated.featureCards;
+  }
+  if (generated.content?.statCards || generated.statCards) {
+    baseIR.statCards = generated.content?.statCards || generated.statCards;
+  }
   if (generated.theme) baseIR.theme = { ...baseIR.theme, ...generated.theme };
   if (generated.layout) baseIR.layout = { ...baseIR.layout, ...generated.layout };
-  if (generated.sectionName) baseIR.sectionName = generated.sectionName;
+  if (generated.sectionName) baseIR.sectionName = generated.sectionName.replace(/\s+/g, '');
   if (Array.isArray(generated.elements)) {
     generated.elements.forEach(ge => {
       const match = baseIR.elements.find(e => e.elementName === ge.elementName);

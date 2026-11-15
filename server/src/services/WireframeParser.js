@@ -20,10 +20,11 @@ export async function parse(file) {
     const imageData = fs.readFileSync(file.path);
     const base64 = imageData.toString('base64');
     
-    const candidateModels = [
+    const geminiModels = [
       process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
+      'gemini-3.1-flash-lite',
       'gemini-flash-lite-latest',
-      'gemini-3.1-flash-lite'
+      'gemini-3.5-flash'
     ];
 
     const prompt = `You are an elite Senior UI/UX Architect and Universal Vision Engine.
@@ -151,7 +152,7 @@ CRITICAL UNIVERSAL VISION RULES:
     let result = null;
     let lastError = null;
 
-    for (const modelName of candidateModels) {
+    for (const modelName of geminiModels) {
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
           const model = genAI.getGenerativeModel({ model: modelName });

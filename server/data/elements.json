@@ -294,79 +294,79 @@
     "updatedAt": "2026-11-15T19:26:40.293Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "heroImage",
-    "fieldId": "2000000229",
-    "content": "https://images.unsplash.com/photo-1542881165-23637dd71e54?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000271",
+    "content": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "brandBadge",
-    "fieldId": "2000000230",
-    "content": "HappyPiggy",
+    "fieldId": "2000000272",
+    "content": "MedPulse Health",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "headlineMain",
-    "fieldId": "2000000231",
-    "content": "Wellness Page Wireframe",
+    "fieldId": "2000000273",
+    "content": "World-Class Care, Just a Click Away",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "headlineSub",
-    "fieldId": "2000000232",
-    "content": "Daily Nutrition and Fitness Tracker",
+    "fieldId": "2000000274",
+    "content": "Expert medical consultations scheduled on your terms.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "description",
-    "fieldId": "2000000233",
-    "content": "Monitor your daily caloric intake and track your scheduled meal and exercise plans through this integrated wellness dashboard.",
+    "fieldId": "2000000275",
+    "content": "At MedPulse Health, we connect you with top-tier medical specialists through a seamless, patient-first booking platform.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "statBadges",
-    "fieldId": "2000000234",
+    "fieldId": "2000000276",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -375,29 +375,45 @@
     "css": null,
     "loop": [
       {
-        "field1": "1999 Calories",
+        "field1": "100+",
         "fieldType1": "Text",
-        "fieldId1": "3000000146",
-        "field2": "Daily Calorie Target",
+        "fieldId1": "3000000174",
+        "field2": "Active Users",
         "fieldType2": "Text",
-        "fieldId2": "3000000147"
+        "fieldId2": "3000000175"
+      },
+      {
+        "field1": "4.9★",
+        "fieldType1": "Text",
+        "fieldId1": "3000000176",
+        "field2": "Top Rated",
+        "fieldType2": "Text",
+        "fieldId2": "3000000177"
+      },
+      {
+        "field1": "24/7",
+        "fieldType1": "Text",
+        "fieldId1": "3000000178",
+        "field2": "Live Support",
+        "fieldType2": "Text",
+        "fieldId2": "3000000179"
       }
     ],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   },
   {
-    "sectionId": "1000000034",
+    "sectionId": "1000000052",
     "elementName": "ctaButton",
-    "fieldId": "2000000235",
-    "content": "GET STARTED",
+    "fieldId": "2000000277",
+    "content": "Book Your Visit",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T21:35:34.464Z",
-    "updatedAt": "2026-11-15T21:35:34.464Z"
+    "createdAt": "2026-11-15T22:32:42.717Z",
+    "updatedAt": "2026-11-15T22:32:42.717Z"
   }
 ]

@@ -110,6 +110,25 @@ export default function PreviewPage() {
             </p>
             <span className="hidden md:inline text-[10px] text-slate-500 font-mono border-l border-white/10 pl-2">Live Render</span>
           </div>
+
+          {/* Multi-Page Navigation Pills in Studio Top Dock */}
+          {currentJob?.ir?.pages && currentJob.ir.pages.length > 1 && (
+            <div className="hidden lg:flex items-center gap-1 bg-white/[0.06] rounded-full p-1 border border-white/10 ml-3 shadow-inner">
+              {currentJob.ir.pages.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => navigate(`/preview/${p}`)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    pageName === p
+                      ? 'bg-blue-600 text-white shadow-sm font-bold'
+                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Center: Mode Switcher + Viewport Switcher */}

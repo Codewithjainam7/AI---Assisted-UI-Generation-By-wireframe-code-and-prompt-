@@ -212,6 +212,24 @@ export async function generate(req, res, next) {
     // Clear old elements for this page and save new ones
     await ElementStore.deleteMany({ pageName: ir.pageName });
     await SectionStore.create(sectionDoc);
+
+    // If multi-page site, create records for all sub-pages so /preview/:pageName works directly
+    if (ir.isMultiPage && Array.isArray(ir.pages) && ir.pages.length > 1) {
+      for (const p of ir.pages) {
+        if (p !== ir.pageName) {
+          const subDoc = {
+            sectionId: IdAllocator.nextSectionId(),
+            sectionName: `${ir.sectionName}_${p}`,
+            pageName: p,
+            isGenerated: true,
+            wireframes: uploadedImageRelativePath || '',
+            cardGridColumns: ir.layout?.columns || 3,
+            jsx: finalJsx
+          };
+          await SectionStore.create(subDoc);
+        }
+      }
+    }
     await ElementStore.insertMany(elementsToInsert);
     
     // Write generated JSX file

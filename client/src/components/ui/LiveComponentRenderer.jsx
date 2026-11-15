@@ -198,6 +198,7 @@ export default function LiveComponentRenderer({ code = '', pageName = 'Home', jo
         <div className="w-full relative">
           <CompiledComponent
             pageName={pageName}
+            initialPage={pageName}
             data={cmsData}
             cssData={cmsCss}
             fetchElementsByIds={boundFetchElementsByIds}
