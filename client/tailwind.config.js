@@ -1,6 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  safelist: [
+    {
+      pattern: /(bg|text|border|ring)-(slate|zinc|gray|neutral|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)/,
+    },
+    {
+      pattern: /(grid-cols)-(1|2|3|4|5|6|7|8|9|10|11|12)/,
+    },
+    {
+      pattern: /(col-span)-(1|2|3|4|5|6|7|8|9|10|11|12)/,
+    },
+    {
+      pattern: /(w|h)-(16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)/,
+    },
+    {
+      pattern: /(rounded)-(none|sm|md|lg|xl|2xl|3xl|full)/,
+    },
+  ],
   theme: {
     extend: {
       fontFamily: {

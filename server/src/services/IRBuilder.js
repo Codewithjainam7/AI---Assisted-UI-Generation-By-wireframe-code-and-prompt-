@@ -20,9 +20,11 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
   const defaultHeroImage = wireframeIR?.content?.suggestedImageUrl || "default/images/hero-placeholder.jpg";
 
   let baseIR = {
-    sectionType: wireframeIR?.sectionType || "split-hero",
+    screenType: wireframeIR?.screenType || "custom",
+    sectionType: wireframeIR?.sectionType || "custom",
     sectionName: sectionName || wireframeIR?.sectionName || "Custom",
     domain: wireframeIR?.domain || "general-saas",
+    formFactor: wireframeIR?.formFactor || "responsive",
     platform: "Website",
     layout: {
       direction: wireframeIR?.layout?.direction || "row",
@@ -34,16 +36,17 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       ...(wireframeIR?.layout || {})
     },
     theme: {
-      accent: wireframeIR?.theme?.accent || "red-500",
-      surface: wireframeIR?.theme?.surface || "dark",
-      text: wireframeIR?.theme?.text || "white"
+      accent: wireframeIR?.theme?.accent || "blue-500",
+      surface: wireframeIR?.theme?.surface || "light",
+      text: wireframeIR?.theme?.text || "slate-900"
     },
     navbar: wireframeIR?.navbar || null,
-    imageConcept: wireframeIR?.content?.imageConcept || "",
-    contentBlocks: wireframeIR?.content?.contentBlocks || null,
-    featureCards: wireframeIR?.content?.featureCards || null,
-    bottomRowItems: wireframeIR?.content?.bottomRowItems || null,
-    ctaBlocks: wireframeIR?.content?.ctaBlocks || null,
+    imageConcept: wireframeIR?.content?.imageConcept || wireframeIR?.imageConcept || "",
+    contentBlocks: wireframeIR?.content?.contentBlocks || wireframeIR?.contentBlocks || null,
+    featureCards: wireframeIR?.content?.featureCards || wireframeIR?.featureCards || null,
+    statCards: wireframeIR?.content?.statCards || wireframeIR?.statCards || null,
+    bottomRowItems: wireframeIR?.content?.bottomRowItems || wireframeIR?.bottomRowItems || null,
+    ctaBlocks: wireframeIR?.content?.ctaBlocks || wireframeIR?.ctaBlocks || null,
     footer: wireframeIR?.content?.footer || wireframeIR?.footer || null,
     elements: [
       {
@@ -57,7 +60,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
       {
         elementName: "brandBadge",
         contentType: "Text",
-        defaultContent: wireframeIR?.content?.brandBadge || "AI STUDIO",
+        defaultContent: wireframeIR?.navbar?.logoText || wireframeIR?.content?.brandBadge || "AI STUDIO",
         fieldId: "TBD-brandBadge"
       },
       {
@@ -83,7 +86,9 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
         contentType: "Cards",
         defaultContent: "",
         fieldId: "TBD-statBadges",
-        statCount: Array.isArray(wireframeIR?.content?.statCards) && wireframeIR.content.statCards.length > 0 ? wireframeIR.content.statCards.length : 3,
+        statCount: Array.isArray(wireframeIR?.content?.statCards) && wireframeIR.content.statCards.length > 0
+          ? wireframeIR.content.statCards.length
+          : (Array.isArray(wireframeIR?.content?.featureCards) ? wireframeIR.content.featureCards.length : 3),
         statCards: wireframeIR?.content?.statCards || null
       },
       {
@@ -95,7 +100,6 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
     ],
     secondaryButton: wireframeIR?.content?.secondaryButton || null,
     inputPlaceholder: wireframeIR?.content?.inputPlaceholder || null,
-    featureCards: wireframeIR?.content?.featureCards || null,
     pageName: pageName || "Home"
   };
 
@@ -104,7 +108,7 @@ export async function buildIR({ promptText, wireframeIR, codeIR, sectionName, pa
     let parsedSuccess = false;
     const irSystemPrompt = getIRSystemPrompt();
 
-    // 1. Try Gemini 2.5 Flash
+    // 1. Try Gemini
     if (process.env.GEMINI_API_KEY) {
       if (!genAI) genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       for (let attempt = 1; attempt <= 2; attempt++) {

@@ -98,79 +98,79 @@
     "updatedAt": "2026-09-13T18:55:11.620Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "heroImage",
-    "fieldId": "2000000054",
-    "content": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000075",
+    "content": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "brandBadge",
-    "fieldId": "2000000055",
-    "content": "ANALYTICS-CORE",
+    "fieldId": "2000000076",
+    "content": "Wellness Page Wireframe",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "headlineMain",
-    "fieldId": "2000000056",
-    "content": "Actionable Data Insights",
+    "fieldId": "2000000077",
+    "content": "Your Calories",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "headlineSub",
-    "fieldId": "2000000057",
-    "content": "Monitor performance metrics and system health in real-time.",
+    "fieldId": "2000000078",
+    "content": "Daily nutritional tracking summary",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "description",
-    "fieldId": "2000000058",
-    "content": "A comprehensive dashboard designed for rapid data visualization and asset management. Built with a modular grid system to prioritize key performance indicators and operational efficiency.",
+    "fieldId": "2000000079",
+    "content": "View your daily meal plans and calorie intake statistics for today.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "statBadges",
-    "fieldId": "2000000059",
+    "fieldId": "2000000080",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -179,45 +179,29 @@
     "css": null,
     "loop": [
       {
-        "field1": "99.9%",
+        "field1": "1999 Calories",
         "fieldType1": "Text",
-        "fieldId1": "3000000043",
-        "field2": "Service Uptime",
+        "fieldId1": "3000000057",
+        "field2": "Daily Total",
         "fieldType2": "Text",
-        "fieldId2": "3000000044"
-      },
-      {
-        "field1": "24/7",
-        "fieldType1": "Text",
-        "fieldId1": "3000000045",
-        "field2": "Live Monitoring",
-        "fieldType2": "Text",
-        "fieldId2": "3000000046"
-      },
-      {
-        "field1": "10ms",
-        "fieldType1": "Text",
-        "fieldId1": "3000000047",
-        "field2": "Response Time",
-        "fieldType2": "Text",
-        "fieldId2": "3000000048"
+        "fieldId2": "3000000058"
       }
     ],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   },
   {
-    "sectionId": "1000000008",
+    "sectionId": "1000000011",
     "elementName": "ctaButton",
-    "fieldId": "2000000060",
-    "content": "View Analytics",
+    "fieldId": "2000000081",
+    "content": "GET STARTED",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T15:47:44.247Z",
-    "updatedAt": "2026-11-15T15:47:44.247Z"
+    "createdAt": "2026-11-15T17:22:45.809Z",
+    "updatedAt": "2026-11-15T17:22:45.809Z"
   }
 ]

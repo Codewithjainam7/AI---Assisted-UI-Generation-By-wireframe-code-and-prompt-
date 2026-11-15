@@ -9,74 +9,80 @@ export async function generate(ir) {
   const prompt = getJSXSystemPrompt();
   let userContent = `Generate the React section component for this IR JSON:\n${JSON.stringify(ir, null, 2)}`;
 
-  const isDashboard = ir.domain === 'dashboard' || ir.layout?.hasSidebar || ir.sectionType === 'dashboard-hero';
+  const layout = ir.layout || {};
+  const isMobile = ir.formFactor === 'mobile' || (layout.direction === 'column' && layout.columns === 1 && !layout.hasSidebar && layout.hasBottomNav);
+  const isAppOrDashboard = layout.hasSidebar || layout.hasTabs || layout.hasCardGrid || ir.screenType === 'desktop-dashboard' || ir.sectionType === 'dashboard-hero';
 
-  if (isDashboard) {
-    userContent += `\n\n=== WIREFRAME VISUAL BLUEPRINT & DASHBOARD ARCHITECTURE ===
-Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-panel workspace dashboard'}
-CRITICAL RECONSTRUCTION DIRECTIVES:
-The wireframe is an interactive Dashboard / Application Workspace. Reconstruct the EXACT layout shown in the wireframe:
-1. Outer Container: Light neutral canvas (bg-[#eef2f6] min-h-screen p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden text-slate-900).
-2. Main Application Window: A large rounded white container (w-full max-w-7xl bg-white rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-slate-200/80 p-5 sm:p-8 flex flex-col gap-6 text-slate-900 relative).
-3. Top Header Bar:
-   - Spans the full width of the main window at the top (header className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4"):
-     * Left side: Brand badge / Logo (<h1 id={ids.brandBadge} className="text-lg font-black tracking-tight text-slate-900" ... />) + category filter pills (e.g. All, Reports, Metrics, Settings).
-     * Right side: Rounded search input with search icon (<input type="text" placeholder="${ir.inputPlaceholder || ir.content?.inputPlaceholder || 'Search...'}" className="w-64 bg-slate-100 border border-slate-200 rounded-full px-4 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400" />).
-4. Main 3-Column Body Row:
-   - The body below the header consists of 3 columns side-by-side (div className="flex flex-col lg:flex-row gap-6 items-stretch w-full"):
-     a) Left Vertical Sidebar Rail:
-        * A vertical capsule rail docked on the left (aside className="w-16 min-w-[4rem] max-w-[4rem] ${ir.layout?.sidebarColor || 'bg-[#f5b800]'} rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg shadow-amber-400/20 flex-shrink-0 self-stretch"):
-          - Top hamburger menu icon (= / ☰),
-          - Triangle up (▲),
-          - Bar chart (📊 / ☲),
-          - Star with active indicator dot (★ •),
-          - Active highlighted grid app square (⊞) with rounded backdrop,
-          - Circle outline (○),
-          - Bottom hexagon nut / gear settings icon (⬡).
-          - Every SVG icon MUST have explicit classes: 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.
-     b) Central Content Area:
-        * Takes the remaining space (div className="flex-1 min-w-0 flex flex-col justify-between gap-6"):
-          - Top: 3x2 Grid of 6 rounded thumbnail cards (div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"):
-            Each card has a gray rounded thumbnail rectangle (h-24 bg-slate-200/80 rounded-xl mb-3 flex items-center justify-center overflow-hidden), a bold high-contrast title (text-slate-900 font-extrabold text-sm sm:text-base truncate), and descriptive metadata (text-slate-600 text-xs mt-0.5 truncate).
-          - Bottom: Collaborator / Activity row (div className="bg-slate-50/90 rounded-2xl border border-slate-200/80 p-4 mt-auto"):
-            Contains a small uppercase header ("Active Collaborators") and a row of 4 rounded user avatar cards (grid grid-cols-2 sm:grid-cols-4 gap-3), each with a circular avatar and 2 lines of high-contrast text. This ensures there are NO empty white gaps below the grid.
-     c) Right Detail Inspector Panel:
-        * A dedicated rounded inspector panel (aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between flex-shrink-0"):
-          - Top large preview image card (<img id={ids.heroImage} className="dynamicStyle2 w-full h-44 object-cover rounded-xl border border-slate-200 mb-3 shadow-sm" ... />),
-          - Main headline (<h3 id={ids.headlineMain} className="dynamicStyle text-base font-extrabold text-slate-900 tracking-tight" ... />),
-          - Subtitle (<p id={ids.headlineSub} className="dynamicStyle text-xs text-slate-500 mt-0.5" ... />),
-          - Star rating row (5 golden stars: ★★★★★ with 4.9/5 score text),
-          - Body description (<p id={ids.description} className="dynamicStyle text-xs text-slate-600 leading-relaxed my-2" ... />),
-          - Bottom action row with Primary CTA (<Button id={ids.ctaButton} className="dynamicStyle flex-1 py-2.5 rounded-xl font-bold bg-[#f5b800] text-slate-950 border-none shadow-sm hover:brightness-105" ... />) and Secondary action button (<Button className="dynamicStyle px-3 py-2.5 rounded-xl font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50" label="Export" ... />).
-5. STRICT CONTRAST & PROPORTIONS:
-   - All text on white/light cards MUST have explicit 'text-slate-900', 'text-slate-600', or 'text-slate-500'. NEVER omit text colors on light backgrounds.
-   - Do NOT generate an unrelated marketing landing page hero headline banner or footer email signup. Reconstruct the EXACT dashboard layout depicted in the wireframe!
-6. Ensure strict adherence to R1–R14 contract rules:
-   - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
-   - Dispatch fetchElementsByIds on mount with all IDs including card field IDs (TBD-cardField1 through TBD-cardField6).
-   - Text nodes use dangerouslySetInnerHTML with default fallback copy.
-   - PrimeReact Button with label from CMS.
-   - Mobile-first responsive Tailwind layout.`;
-  } else if (ir.imageConcept || ir.featureCards || ir.contentBlocks || ir.ctaBlocks) {
-    userContent += `\n\n=== WIREFRAME VISUAL BLUEPRINT & PAGE SECTIONS ===
-Visual Concept & Blueprint: ${ir.imageConcept || 'Custom multi-block UI layout'}
-CRITICAL RECONSTRUCTION DIRECTIVES:
-1. Reconstruct EVERY section and element depicted in the wireframe blueprint:
-   ${ir.layout?.hasNavbar ? '- Sticky top Navigation bar with logo/brand and navigation links.' : ''}
-   - Main section with headline, subhead, body description, primary/secondary CTA, and visual media faithful to the wireframe blueprint.
-   ${ir.contentBlocks ? `- Content blocks / value propositions described in the blueprint.` : ''}
-   ${ir.ctaBlocks ? `- Prominent horizontal 'Below the fold CTA' banner.` : ''}
-   ${ir.featureCards ? `- Feature / Stat cards grid faithful to the wireframe layout.` : ''}
-   ${ir.footer ? `- Comprehensive footer with email signup input, subscribe CTA button, nav links, and social links.` : ''}
-2. Ensure strict adherence to R1–R14 contract rules:
-   - Provide valid IDs in 'const ids = { ... }' for all editable nodes.
-   - Dispatch fetchElementsByIds on mount with all IDs including card field IDs.
-   - Text nodes use dangerouslySetInnerHTML with default fallback copy.
-   - PrimeReact Button with label from CMS.
-   - Mobile-first responsive Tailwind layout (strictly stacked on 375px mobile, flex-row or responsive grids on desktop).`;
-  }
+  userContent += `\n\n=== UNIVERSAL WIREFRAME RECONSTRUCTION DIRECTIVES ===
+Visual Concept & Blueprint: ${ir.imageConcept || ir.content?.imageConcept || 'Custom UI wireframe layout'}
+Domain: ${ir.domain || 'general'}
+Screen Type: ${ir.screenType || ir.sectionType || 'custom'}
+Form Factor: ${isMobile ? 'Mobile App Screen' : 'Desktop / Responsive Web Application'}
 
-  // 1. Primary Engine: Gemini 2.5 Flash (Fast, reliable, large context, zero credit limit)
+CRITICAL FIDELITY DIRECTIVES:
+You MUST reconstruct the EXACT user interface shown in the wireframe blueprint without forcing any extraneous templates:
+
+1. Layout Shell & Container:
+${isMobile ? `   - Mobile Shell: Outer wrapper 'min-h-screen bg-slate-950 p-2 sm:p-6 flex items-center justify-center font-sans overflow-x-hidden text-slate-900'.
+   - Phone Frame Container: 'w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl border-4 border-slate-800 overflow-hidden flex flex-col relative min-h-[750px]'.`
+: `   - Outer Canvas: '${ir.theme?.surface === 'light' ? 'bg-[#f1f5f9]' : 'bg-slate-950'} min-h-screen p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans overflow-x-hidden ${ir.theme?.surface === 'light' ? 'text-slate-900' : 'text-white'}'.
+   - Application Window: '${ir.theme?.surface === 'light' ? 'w-full max-w-7xl bg-white rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-slate-200 p-5 sm:p-8 flex flex-col gap-6 text-slate-900 relative' : 'w-full max-w-7xl bg-slate-900 rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-slate-800 p-5 sm:p-8 flex flex-col gap-6 text-white relative'}'.`}
+
+2. Top Navigation Bar / Header:
+${(layout.hasNavbar || ir.navbar?.logoText || ir.brandBadge) ? `   - Full-width header spanning the top (header className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4"):
+     * Brand / App Title: <h1 id={ids.brandBadge} className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dynamicStyle">${ir.navbar?.logoText || ir.brandBadge || 'App'}</h1>
+     ${ir.navbar?.links?.length ? `* Nav links: ${ir.navbar.links.map(l => `<a href="#" className="text-sm font-semibold text-slate-600 hover:text-slate-900">${l}</a>`).join(' ')}` : ''}
+     ${ir.inputPlaceholder ? `* Search input: <input type="text" placeholder="${ir.inputPlaceholder}" className="w-64 bg-slate-100 border border-slate-200 rounded-full px-4 py-2 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400" />` : ''}`
+: `   - Top header with brand/title: <h1 id={ids.brandBadge} className="text-xl font-black text-slate-900">${ir.brandBadge || 'App'}</h1>`}
+
+3. Sidebar Navigation:
+${layout.hasSidebar ? (
+  layout.sidebarType === 'profile-sidebar' ? `   - Left Profile Sidebar:
+     * Dedicated vertical sidebar (aside className="w-full sm:w-56 md:w-64 ${layout.sidebarColor ? (layout.sidebarColor.includes('pink') ? 'bg-pink-100 border-pink-200' : `bg-${layout.sidebarColor}`) : 'bg-pink-100 border-pink-200'} rounded-2xl p-5 flex flex-col gap-6 flex-shrink-0 self-stretch border shadow-sm"):
+     * User Profile Info: Avatar circle (<div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-300 flex items-center justify-center text-slate-700 font-black text-xl mx-auto shadow-inner">${(layout.sidebarUser?.name || 'U')[0]}</div>) and username (<h2 className="text-center font-bold text-slate-800 text-base mt-2">${layout.sidebarUser?.name || 'User'}</h2>).
+     * Menu Navigation List: Render each menu item vertically: ${(layout.sidebarItems || ['Overview', 'Settings']).map(item => `• "${item}"`).join(', ')}. Each item should have a bullet dot or icon, high-contrast dark text (text-slate-800 font-medium text-sm hover:text-slate-950 py-1.5 cursor-pointer flex items-center gap-2).`
+  : layout.sidebarType === 'icon-rail' ? `   - Left Vertical Icon Rail:
+     * Dedicated vertical capsule rail (aside className="w-16 min-w-[4rem] max-w-[4rem] ${layout.sidebarColor ? `bg-${layout.sidebarColor}` : 'bg-amber-400'} rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch"):
+     * Render SVG action icons matching: ${(layout.sidebarIcons || ['menu', 'chart', 'star', 'grid', 'settings']).join(', ')}. Every SVG icon MUST have explicit classes: 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.`
+  : `   - Left Sidebar matching the wireframe: (aside className="w-full sm:w-56 bg-slate-100 rounded-2xl p-4 flex flex-col gap-4 flex-shrink-0").`
+) : `   - NO sidebar. The layout spans full width without a sidebar.`}
+
+4. Central Workspace & Content:
+   - Container: (div className="flex-1 min-w-0 flex flex-col gap-6")
+${layout.hasTabs ? `   - Tab Navigation Bar:
+     * Render tab switcher with ${(layout.tabs || ['Tab 1', 'Tab 2']).map(t => `"${t}"`).join(', ')}.
+     * Highlight active tab "${layout.activeTab || layout.tabs?.[0] || 'Tab 1'}" with bold text and bottom border underline indicator (border-b-2 border-slate-900 font-bold).` : ''}
+${layout.dateNavigator ? `   - Date Navigator / Subheader:
+     * Render date picker / status switcher: "${layout.dateNavigator}" (e.g. left chevron <, date text, right chevron >, Today badge).` : ''}
+${(ir.statCards?.length > 0 || /calor|track|pie|metric|chart/i.test(ir.imageConcept || '')) ? `   - Metrics / Tracker Widget:
+     * Prominent metric container (bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4).
+     * High-contrast title and metric values (e.g. pie chart SVG or progress ring + stat values).` : ''}
+${(Array.isArray(ir.featureCards) && ir.featureCards.length > 0) ? `   - Feature / Content Cards (${ir.featureCards.length} cards):
+     * Grid Layout: ${layout.cardGridCols || (ir.featureCards.length <= 2 ? 2 : 3)} columns (div className="grid grid-cols-1 ${ir.featureCards.length === 2 ? 'sm:grid-cols-2' : ir.featureCards.length === 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2 lg:grid-cols-4'} gap-6").
+     * Render EXACTLY these ${ir.featureCards.length} cards:
+       ${ir.featureCards.map((card, idx) => `Card ${idx + 1}: Title "${card.title}", Description "${card.description || ''}", category banner (bg-slate-700 text-white text-xs font-bold uppercase px-3 py-1.5 rounded-t-lg inline-block), and large image placeholder or photo container (h-48 bg-slate-200 rounded-xl flex items-center justify-center text-slate-500 overflow-hidden).`).join('\n       ')}
+     * DO NOT generate extra cards beyond these ${ir.featureCards.length} cards.` : ''}
+
+5. Detail / Inspector Panel:
+${layout.hasDetailPanel ? `   - Right-hand Inspector Panel: (aside className="w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between flex-shrink-0") with preview card, headline, description, ratings, and CTA buttons.`
+: `   - DO NOT render any right-hand detail inspector panel. The central content area spans the full remaining width.`}
+
+6. Collaborator / Bottom Row:
+${layout.hasBottomRow && Array.isArray(ir.bottomRowItems) && ir.bottomRowItems.length > 0 ? `   - Bottom Activity / Collaborator Row: (div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 mt-auto") with ${ir.bottomRowItems.length} user avatar cards.`
+: `   - DO NOT render any bottom collaborator or activity row.`}
+
+7. Mobile Bottom Navigation:
+${layout.hasBottomNav ? `   - Sticky Mobile Bottom Navigation: (nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 h-16 flex items-center justify-around px-4") with icons for ${(layout.bottomNavItems || ['Home', 'Search', 'Profile']).join(', ')}.` : ''}
+
+8. Mandatory High-Contrast Styling & Contract Rules (R1–R14):
+   - All text on white/light backgrounds MUST have explicit dark text colors ('text-slate-900', 'text-slate-800', 'text-slate-600').
+   - Declare const ids = { heroImage: "TBD-heroImage", brandBadge: "TBD-brandBadge", headlineMain: "TBD-headlineMain", headlineSub: "TBD-headlineSub", description: "TBD-description", statBadges: "TBD-statBadges", ctaButton: "TBD-ctaButton" };
+   - On mount, dispatch fetchElementsByIds with all IDs and cardField IDs (TBD-cardField1 to TBD-cardField6).
+   - Use dangerouslySetInnerHTML for text nodes.
+   - Use PrimeReact Button with label from CMS and styling matching theme.
+   - Mobile-first responsive layout (stacks cleanly on 375px screens).`;
+
+  // 1. Primary Engine: Gemini 2.5 Flash
   if (process.env.GEMINI_API_KEY) {
     if (!genAIClient) {
       genAIClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -104,7 +110,7 @@ CRITICAL RECONSTRUCTION DIRECTIVES:
     }
   }
 
-  // 2. Secondary Engine: OpenRouter (with free reasoning models)
+  // 2. Secondary Engine: OpenRouter
   if (process.env.LLM_API_KEY) {
     if (!openAIClient) {
       openAIClient = new OpenAI({
@@ -130,7 +136,7 @@ CRITICAL RECONSTRUCTION DIRECTIVES:
             { role: 'user', content: userContent }
           ],
           temperature: 0.2,
-          max_tokens: 2200
+          max_tokens: 3000
         });
 
         let jsx = completion.choices?.[0]?.message?.content || '';

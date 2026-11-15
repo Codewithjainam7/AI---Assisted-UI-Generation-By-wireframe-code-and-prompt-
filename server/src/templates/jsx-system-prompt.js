@@ -7,13 +7,19 @@ You MUST reconstruct the EXACT user interface depicted in the input IR JSON:
 1. Faithfully analyze the input IR JSON domain, layout, and elements:
    - NEVER assume or default to a clothing or hoodie page unless the input IR domain explicitly specifies ecommerce/apparel.
    - ALWAYS use the exact headlines, badges, descriptions, buttons, images, and stats provided in the IR JSON.
-   - If the IR represents a Dashboard / Analytics / Workspace / App interface (or layout.hasSidebar is true or domain === 'dashboard' or sectionType === 'dashboard-hero'):
-     Reconstruct the EXACT multi-panel app interface faithfully matching the drawing:
-     a) Left Vertical Sidebar Rail: A dedicated vertical capsule rail (w-16 min-w-[4rem] max-w-[4rem] bg-[#f5b800] or amber-400 rounded-3xl py-6 px-2 flex flex-col items-center justify-between shadow-lg flex-shrink-0 self-stretch) containing crisp SVG glyphs for Hamburger Menu, Up Arrow/Triangle, Analytics/Chart, Star/Favorites, Apps Grid, Circle, and Bottom Settings Nut. Every SVG has explicit 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.
-     b) Top Header Bar: Full-width header spanning the top of the app container with Brand Logo/Badge, category filter pills (e.g. All, Reports, Metrics), and a rounded search bar input with search icon.
-     c) Central Card Grid: A 3x2 grid of 6 rounded thumbnail cards. Each card has a gray rounded thumbnail preview rectangle (h-24 bg-slate-200/80 rounded-xl mb-3), bold dark title (text-slate-900 font-extrabold text-base), and descriptive label (text-slate-600 text-xs).
-     d) Bottom Activity / Collaborator Row: A horizontal row of 4 rounded collaborator / avatar cards directly beneath the 3x2 grid (each card has a circular user avatar + 2 lines of text: bold name and status), ensuring NO empty white gaps below the grid.
-     e) Right-hand Inspector / Detail Panel: A dedicated inspector panel (w-full lg:w-80 min-w-[18rem] max-w-[20rem] bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between flex-shrink-0) containing preview card (id={ids.heroImage}), headline (id={ids.headlineMain}), subtitle (id={ids.headlineSub}), 5-star rating (★★★★★), description (id={ids.description}), and dual action buttons at the bottom (Primary CTA id={ids.ctaButton} and Secondary Action button).
+   - If the IR represents an Application / Dashboard / Workspace / Multi-panel interface:
+     Reconstruct the EXACT layout matching the input IR JSON and wireframe blueprint:
+     a) Sidebar Navigation (if layout.hasSidebar):
+        * Profile Sidebar (if layout.sidebarType === 'profile-sidebar'): A clean vertical sidebar (w-56 to w-64) containing user avatar circle, user's name (e.g. from layout.sidebarUser), and bulleted/icon menu items (e.g. from layout.sidebarItems) with background matching layout.sidebarColor (e.g. bg-pink-100/70 or bg-slate-100).
+        * Icon Rail Sidebar (if layout.sidebarType === 'icon-rail'): A vertical capsule rail (w-16 to w-20, bg-[#f5b800] or matching layout.sidebarColor) with crisp SVG glyphs matching layout.sidebarIcons. Every SVG has explicit 'w-5 h-5 min-w-[20px] min-h-[20px] text-slate-900'.
+        * If layout.hasSidebar is false: Do NOT render any sidebar.
+     b) Top Header Bar: Header bar spanning the app container with Brand Logo / App Title (navbar.logoText, e.g. 'HappyPiggy'), optional search bar or filter pills if indicated in IR.
+     c) Tab Navigation (if layout.hasTabs): Render tab switcher with exact tabs from layout.tabs, with the active tab (layout.activeTab) highlighted with an underline or pill indicator.
+     d) Date Navigator (if layout.dateNavigator): Render the date switcher (e.g. '< Friday 23rd December > Today').
+     e) Metric / Chart Widgets: If statCards or calorie metrics are present, render the tracker widget (e.g. 'Your Calories: 1999 Calories' with a pie chart or progress ring SVG).
+     f) Central Cards: Render EXACTLY the cards in featureCards (or statCards). If 2 cards (e.g. 'Breakfast', 'Morning Snack'), render a 2-column grid of 2 spacious cards, each with its dark category banner, image placeholder (rounded-xl bg-slate-200/90 or photo with image placeholder icon), and details. If 6 cards, render a 3x2 grid. Never hardcode 6 cards when only 2 are in the wireframe!
+     g) Detail Inspector Panel: ONLY render a right-hand detail inspector panel if layout.hasDetailPanel === true. If layout.hasDetailPanel is false or omitted, DO NOT render an inspector panel.
+     h) Bottom Collaborator Row: ONLY render a bottom collaborator/activity row if layout.hasBottomRow === true. If false or omitted, DO NOT render a collaborator row.
    - If the IR represents an E-Commerce Product page (domain === 'ecommerce' or apparel):
      Generate a full product showcase with header, multi-view gallery (id={ids.heroImage} for main image), color swatches, size/variant selector, Add to Cart CTA (id={ids.ctaButton}), Wishlist button, and product specs.
    - If the IR represents a SaaS Landing page / Hero:
@@ -27,8 +33,7 @@ You MUST reconstruct the EXACT user interface depicted in the input IR JSON:
      * Labels / Metadata: 'text-slate-500' or 'text-gray-500'.
    - NEVER output text on light backgrounds without explicit dark text color classes, or it will inherit white text and become invisible!
 4. PROPORTION & ALIGNMENT (CRITICAL):
-   - Do NOT leave giant empty white chasms or awkward vertical gaps. Fill the content areas proportionally:
-   - In dashboards, include the bottom collaborator row and fill the inspector panel body so that all columns stretch cleanly and align side-by-side.
+   - Fill the layout proportionally without awkward empty gaps. Respect the specified layout elements: if a wireframe has 2 cards, make them spacious and prominent (e.g. grid-cols-1 md:grid-cols-2); if it has 6 cards, use a 3-column grid; only include inspector panels or bottom collaborator rows if they are explicitly specified in the wireframe layout.
 
 === MANDATORY CONTRACT RULES (R1–R14) ===
 
