@@ -3,14 +3,23 @@ import Navbar from './Navbar';
 
 export default function PageShell({ children, showNav = true, className = '' }) {
   return (
-    <div className="min-h-screen bg-[#04060a] text-slate-100 relative overflow-x-hidden selection:bg-blue-500/30 selection:text-white">
-      {/* iOS 26 Atmospheric Liquid Lighting Mesh */}
+    <div className="min-h-screen bg-[#03060c] text-slate-100 relative overflow-x-hidden selection:bg-cyan-500/30 selection:text-white">
+      {/* iOS 26 Atmospheric Luminous Liquid Mesh */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <div className="absolute top-[-15%] right-[-5%] w-[650px] h-[650px] rounded-full bg-blue-600/15 blur-[160px] animate-pulse-subtle" />
-        <div className="absolute top-[25%] left-[-10%] w-[550px] h-[550px] rounded-full bg-indigo-600/12 blur-[170px]" />
-        <div className="absolute bottom-[-10%] right-[15%] w-[600px] h-[600px] rounded-full bg-cyan-500/10 blur-[180px]" />
-        {/* Subtle noise grid texture overlay for physical glass grain */}
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
+        {/* Electric Indigo/Cobalt Orb */}
+        <div className="absolute top-[-10%] right-[-5%] w-[750px] h-[750px] rounded-full bg-gradient-to-br from-indigo-600/25 via-blue-600/20 to-transparent blur-[140px] animate-pulse-subtle" />
+        
+        {/* Luminous Cyan Orb */}
+        <div className="absolute top-[20%] left-[-10%] w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-cyan-500/22 via-sky-600/18 to-transparent blur-[140px]" />
+        
+        {/* Deep Violet / Rose Orb */}
+        <div className="absolute bottom-[-10%] right-[10%] w-[700px] h-[700px] rounded-full bg-gradient-to-tl from-purple-600/20 via-rose-500/12 to-transparent blur-[160px]" />
+        
+        {/* Subtle center ambient light highlight */}
+        <div className="absolute top-[40%] left-[30%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[170px]" />
+
+        {/* Physical glass fine noise overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:20px_20px] opacity-35 pointer-events-none" />
       </div>
 
       {showNav && <Navbar />}

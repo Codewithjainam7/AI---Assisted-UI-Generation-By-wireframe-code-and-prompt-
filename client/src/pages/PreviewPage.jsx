@@ -206,14 +206,22 @@ export default function PreviewPage() {
         {/* Canvas & Code Container */}
         <div className={`flex-1 flex ${viewMode === 'split' ? 'flex-col md:flex-row' : 'flex-row'} gap-6 overflow-hidden min-h-0 h-full`}>
 
-          {/* Rendered Live Canvas */}
+          {/* Rendered Live Canvas with Apple Device Glass Frame */}
           {(viewMode === 'split' || viewMode === 'preview') && (
-            <div className={`flex-1 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden min-h-0 h-full w-full pr-1 scroll-smooth ${viewMode === 'split' ? 'h-1/2 md:h-full md:w-1/2' : 'w-full'}`}>
+            <div className={`flex-1 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden min-h-0 h-full w-full py-4 pr-1 scroll-smooth ${viewMode === 'split' ? 'h-1/2 md:h-full md:w-1/2' : 'w-full'}`}>
               <div
-                className={`transition-all duration-300 w-full flex-shrink-0 mb-12 shadow-2xl ${
-                  viewportSize === 'mobile' ? 'max-w-[375px] my-4 rounded-[2.5rem] overflow-hidden border-4 border-slate-800' : 'max-w-full rounded-2xl'
+                className={`transition-all duration-300 flex-shrink-0 mb-12 ${
+                  viewportSize === 'mobile'
+                    ? 'w-[390px] max-w-[390px] my-4 rounded-[3.2rem] overflow-hidden border-[9px] border-[#1c1d22] shadow-[0_25px_80px_rgba(0,0,0,0.8)] bg-white relative'
+                    : 'w-full max-w-6xl mx-auto rounded-[2.5rem] overflow-hidden border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.65)] bg-white'
                 }`}
               >
+                {/* Mobile Dynamic Island Bar */}
+                {viewportSize === 'mobile' && (
+                  <div className="w-full bg-white h-7 flex items-center justify-center pt-1.5 pb-0.5 px-6">
+                    <div className="w-24 h-4 bg-black rounded-full shadow-inner" />
+                  </div>
+                )}
                 <LiveComponentRenderer code={jsxCode || currentJob?.jsx} pageName={pageName} job={currentJob} />
               </div>
             </div>

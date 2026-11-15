@@ -4,14 +4,14 @@
 
 :root {
   --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.35);
-  --glass-bg: rgba(255, 255, 255, 0.035);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.2);
+  --accent-glow: rgba(59, 130, 246, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-highlight: rgba(255, 255, 255, 0.25);
 }
 
 body {
-  background: #04060a;
+  background: #03060c;
   color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -33,102 +33,94 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 99px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* iOS 26 Liquid Glass Surfaces */
 .glass-liquid {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3),
-    0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 24px 48px -12px rgba(0, 0, 0, 0.55);
 }
 
 .glass-liquid-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.015) 100%);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
-    0 16px 32px -10px rgba(0, 0, 0, 0.5);
+    0 16px 36px -10px rgba(0, 0, 0, 0.45);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-liquid-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.025) 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
   box-shadow: 
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
-    0 24px 48px -12px rgba(0, 0, 0, 0.7);
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
+    0 20px 48px -10px rgba(0, 180, 255, 0.15);
 }
 
+/* Floating VisionOS / iOS 26 Dock */
 .glass-dock {
-  background: rgba(10, 15, 26, 0.65);
-  backdrop-filter: blur(36px) saturate(210%);
-  -webkit-backdrop-filter: blur(36px) saturate(210%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 16, 28, 0.65);
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-    0 25px 50px -12px rgba(0, 0, 0, 0.85);
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    0 24px 60px -15px rgba(0, 0, 0, 0.7);
 }
 
-.glass-pill {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
-}
-
-/* Liquid Gradient Text */
-.gradient-text-liquid {
-  background: linear-gradient(135deg, #ffffff 10%, #93c5fd 60%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-accent {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Apple Liquid Action Button */
+/* Iridescent Liquid Button */
 .liquid-button {
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #0284c7 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #06b6d4 100%);
+  background-size: 200% 200%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
-    0 10px 25px -5px rgba(37, 99, 235, 0.45);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    0 10px 25px -5px rgba(37, 99, 235, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .liquid-button:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0369a1 100%);
+  background-position: 100% 100%;
+  filter: brightness(1.1);
   box-shadow: 
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
-    0 14px 30px -4px rgba(37, 99, 235, 0.6);
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    0 15px 35px -5px rgba(6, 182, 212, 0.6);
   transform: translateY(-1px);
 }
 
 .liquid-button:active {
-  transform: scale(0.985);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transform: scale(0.98);
 }
 
-/* PrimeReact dark glass overrides */
-.p-button {
-  border-radius: 9999px !important;
-  font-family: inherit !important;
+/* Apple Pro Gradient Typography */
+.gradient-text-liquid {
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, #38bdf8 70%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Pulse Animation */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 8s ease-in-out infinite;
 }
