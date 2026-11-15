@@ -61,10 +61,21 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
     }
   }, [dispatch, pageName, job?.sectionId]);
 
-  // 1. Multi-Screen Mobile Onboarding Flow
+  // Core archetype identification (declared upfront to prevent TDZ)
   const isMultiMobile = ir?.screenArchetype === 'multi-screen-mobile' ||
     layout.isMultiScreenMobile ||
     (ir?.formFactor === 'mobile' && layout.columns === 3 && /browse|order|enjoy/i.test((ir?.content?.featureCards || []).map(c => c.title).join(' ')));
+
+  const isPortal = ir?.screenArchetype === 'corporate-portal' ||
+    layout.isPortal ||
+    (/company|intranet|portal|application/i.test((job?.sectionName || '') + ' ' + (ir?.content?.headlineMain || '')) && !isMultiMobile) ||
+    ir?.content?.headlineMain === 'My applications';
+
+  const isWellness = ir?.screenArchetype === 'wellness-tracker' ||
+    ir?.domain === 'fitness' ||
+    /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((job?.sectionName || '') + ' ' + (ir?.domain || '') + ' ' + (ir?.imageConcept || ''));
+
+  // 1. Multi-Screen Mobile Onboarding Flow
 
   if (isMultiMobile) {
     const screens = [
@@ -127,10 +138,6 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
   }
 
   // 2. Corporate Portal
-  const isPortal = ir?.screenArchetype === 'corporate-portal' ||
-    layout.isPortal ||
-    (/company|intranet|portal|application/i.test((job?.sectionName || '') + ' ' + (ir?.content?.headlineMain || '')) && !isMultiMobile) ||
-    ir?.content?.headlineMain === 'My applications';
 
   if (isPortal) {
     const portal = layout.portal || {};
@@ -632,9 +639,6 @@ export default function DynamicSectionPreview({ pageName = 'Home', job = null })
     );
   }
 // 3. UNIVERSAL HIGH-FIDELITY DESIGN
-  const isWellness = ir?.screenArchetype === 'wellness-tracker' ||
-    ir?.domain === 'fitness' ||
-    /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((job?.sectionName || '') + ' ' + (ir?.domain || '') + ' ' + (ir?.imageConcept || ''));
 
   const defaultWellnessCards = [
     {

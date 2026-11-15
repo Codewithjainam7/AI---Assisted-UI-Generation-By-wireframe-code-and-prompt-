@@ -37,10 +37,21 @@ export function generateFallback(ir) {
   const descriptionVal = cleanStr(getDefault('description', 'Construct high-performance, responsive interfaces with automated Redux CMS state synchronization.'));
   const ctaButtonVal = cleanStr(getDefault('ctaButton', 'GET STARTED'));
 
-  // 1. Multi-Screen Mobile Onboarding Flow
+  // Core archetype identification (declared upfront to prevent TDZ)
   const isMultiMobile = ir.screenArchetype === 'multi-screen-mobile' ||
     layout.isMultiScreenMobile ||
     (ir.formFactor === 'mobile' && layout.columns === 3 && /browse|order|enjoy/i.test((ir.content?.featureCards || []).map(c => c.title).join(' ')));
+
+  const isPortal = ir.screenArchetype === 'corporate-portal' ||
+    layout.isPortal ||
+    (/company|intranet|portal|application/i.test((ir.sectionName || '') + ' ' + (ir.content?.headlineMain || '')) && !isMultiMobile) ||
+    ir.content?.headlineMain === 'My applications';
+
+  const isWellness = ir.screenArchetype === 'wellness-tracker' ||
+    ir.domain === 'fitness' ||
+    /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((ir.sectionName || '') + ' ' + (ir.domain || '') + ' ' + (ir.imageConcept || ''));
+
+  // 1. Multi-Screen Mobile Onboarding Flow
 
   if (isMultiMobile) {
     const screens = [
@@ -141,10 +152,6 @@ export default ${sectionName}Section;`;
   }
 
   // 2. Corporate Portal
-  const isPortal = ir.screenArchetype === 'corporate-portal' ||
-    layout.isPortal ||
-    (/company|intranet|portal|application/i.test((ir.sectionName || '') + ' ' + (ir.content?.headlineMain || '')) && !isMultiMobile) ||
-    ir.content?.headlineMain === 'My applications';
 
   if (isPortal) {
     const portal = layout.portal || {};
@@ -731,9 +738,6 @@ export default ${sectionName}Section;`;
 // 3. UNIVERSAL HIGH-FIDELITY WIREFRAME RECONSTRUCTION
   // (Handles Wellness / Nutrition, E-Commerce, SaaS, Dashboards, and ANY Wireframe)
 
-  const isWellness = ir.screenArchetype === 'wellness-tracker' ||
-    ir.domain === 'fitness' ||
-    /calor|nutrition|diet|meal|kiraa|happypiggy/i.test((ir.sectionName || '') + ' ' + (ir.domain || '') + ' ' + (ir.imageConcept || ''));
 
   // Cards determination
   const defaultWellnessCards = [

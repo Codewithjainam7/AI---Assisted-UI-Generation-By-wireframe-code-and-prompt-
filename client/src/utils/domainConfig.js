@@ -11,6 +11,34 @@ export function resolveDomainConfig(ir = {}, job = {}) {
     domain
   ].filter(Boolean).join(' ').toLowerCase();
 
+    // 0. Portfolio / Creative Agency / Designer / Developer Showcase
+  if (/portfolio|designer|developer|freelance|creative|resume|showcase/i.test(rawText)) {
+    return {
+      domainType: 'portfolio',
+      brand: ir.navbar?.logoText || ir.brandBadge || 'Alex Rivera Studio',
+      badge: 'Award-Winning Product Designer & Full-Stack Engineer',
+      heroHeadline: ir.content?.headlineMain || 'Designing & Engineering Modern Digital Products',
+      heroSub: ir.content?.headlineSub || 'Bridging the gap between brand elegance and scalable architecture.',
+      heroDesc: ir.content?.description || 'Crafting world-class design systems, responsive web applications, and intuitive user experiences for high-velocity teams.',
+      heroImage: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+      actionLabel: 'Send Inquiry',
+      bookingPageName: 'Contact',
+      teamPageName: 'Projects',
+      specialistLabel: 'Featured Case Study',
+      specialists: [
+        { name: 'Nova Fintech App', role: 'Lead Architect', specialty: 'Mobile Design System & Core API', exp: '2026 Release', rating: '5.0 ★', photo: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80' },
+        { name: 'Lumina Cloud Engine', role: 'Product Designer', specialty: 'Real-Time Visualization & UX', exp: '2026 Release', rating: '4.9 ★', photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80' },
+        { name: 'Kinesis Motion Studio', role: 'Creative Director', specialty: 'Brand Identity & Web Experience', exp: '2025 Release', rating: '5.0 ★', photo: 'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=400&q=80' }
+      ],
+      categoriesTitle: 'Service / Project Inquiry',
+      categories: ['Product Design & UI/UX', 'Full-Stack Web Development', 'Brand Systems & Visual Direction', 'Technical Architecture Review'],
+      timeSlots: ['10:00 AM', '01:30 PM', '03:30 PM', '05:00 PM'],
+      formNotice: 'Inquiries are answered within 24 hours Monday to Friday.',
+      confirmedTitle: 'Message Delivered Successfully!',
+      confirmedSub: 'Thank you for reaching out. I will review your project requirements and respond promptly.'
+    };
+  }
+
   // 1. Restaurant / Dining / Bistro / Culinary
   if (/restaurant|dining|food|bistro|cafe|culinary|chef|menu|table|reservation/i.test(rawText)) {
     return {
