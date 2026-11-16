@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -10,6 +10,7 @@ import {
   Eye,
   Columns2,
   Smartphone,
+  Tablet,
   Monitor,
   CheckCircle2,
   Download,
@@ -24,7 +25,11 @@ import {
   ChevronDown,
   ChevronUp,
   FileCode,
-  ArrowRight
+  ArrowRight,
+  Activity,
+  Maximize2,
+  Zap,
+  LayoutGrid
 } from 'lucide-react';
 import PageShell from '../components/layout/PageShell';
 import PillTab from '../components/ui/PillTab';
@@ -35,61 +40,158 @@ import GlassCard from '../components/ui/GlassCard';
 import StepProgress from '../components/ui/StepProgress';
 import JobHistoryCard from '../components/ui/JobHistoryCard';
 import LiveComponentRenderer from '../components/ui/LiveComponentRenderer';
+import NeuralSynthesisCanvas from '../components/ui/NeuralSynthesisCanvas';
 import { submitGenerateJob, clearHistory } from '../features/generate/generateSlice';
 
 const MODES = [
-  { id: 'wireframe', label: 'Wireframe', iconComponent: ImageIcon },
-  { id: 'code',      label: 'Code',      iconComponent: Code2 },
-  { id: 'prompt',    label: 'Prompt',    iconComponent: Sparkles },
-  { id: 'combined',  label: 'Combined',  iconComponent: Layers },
+  { id: 'wireframe', label: 'Wireframe Sketch', iconComponent: ImageIcon },
+  { id: 'prompt',    label: 'Natural Prompt',   iconComponent: Sparkles },
+  { id: 'code',      label: 'Existing JSX',     iconComponent: Code2 },
+  { id: 'combined',  label: 'Multimodal',       iconComponent: Layers },
 ];
 
-const STEPS = ['Parsing Vision/AST', 'Synthesizing IR', 'Generating JSX', 'Allocating Field IDs', 'Syncing CMS Store'];
+const PRESET_PROMPTS = [
+  {
+    id: 'doctor',
+    badge: 'Doctor Portal',
+    sectionName: 'DoctorAppointmentHero',
+    pageName: 'Home',
+    prompt: 'Design a modern doctor appointment portal with doctor profile, specialized care departments, and an interactive booking appointment form with patient details, date, and time slot.'
+  },
+  {
+    id: 'fitness',
+    badge: 'Fitness Tracker',
+    sectionName: 'WellnessDashboard',
+    pageName: 'Home',
+    prompt: 'Create a high-end wellness and fitness dashboard with calorie ring gauge, meal tracking cards (Breakfast, Morning Snack, Dinner), active workout log, and metrics.'
+  },
+  {
+    id: 'portfolio',
+    badge: 'Portfolio Showcase',
+    sectionName: 'PortfolioShowcase',
+    pageName: 'Home',
+    prompt: 'Create a minimalist developer & designer portfolio with featured case studies, skills grid, interactive project cards, and an interactive contact inquiry form.'
+  },
+  {
+    id: 'dining',
+    badge: 'Luxury Dining',
+    sectionName: 'LuxuryDiningExperience',
+    pageName: 'Home',
+    prompt: 'Design an opulent luxury fine-dining restaurant site with tasting menu showcase, chef philosophy card, and a table reservation form with party size and date.'
+  },
+  {
+    id: 'legal',
+    badge: 'Legal Counsel',
+    sectionName: 'LegalCounselPortal',
+    pageName: 'Home',
+    prompt: 'Design an authoritative corporate and legal counsel website with practice areas, lead attorney profiles, and a consultation retainer form.'
+  }
+];
 
-const SAMPLE_PROMPT = `Create a fitness hero for Pulse Fit. Layout: two columns on desktop, stacked on mobile.
-Left: athlete image. Right: uppercase red badge "PULSE FIT", bold headline "CHALLENGE YOUR LIMITS",
-subheading "Be a part of the tribe that's limitless.", body paragraph about trainer-led workout sessions,
-three stat cards (1000+ Community Members / 40+ Fitness Programmes / 150+ Fitness Channels),
-and a red filled CTA button "FIND A WORKOUT". White background, red accent.`;
+const SAMPLE_PROMPT = PRESET_PROMPTS[0].prompt;
 
 const SAMPLE_CODE = `import React from 'react';
 
 export default function HeroSection() {
   return (
-    <section className="flex flex-col md:flex-row min-h-screen">
+    <section className="flex flex-col md:flex-row min-h-screen bg-slate-950 text-white">
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
-        <img src="/hero.jpg" alt="Athlete" className="max-w-full h-auto" />
+        <div className="w-full max-w-md h-72 rounded-3xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+          <span className="text-cyan-400 font-mono text-sm">Visual Asset Showcase</span>
+        </div>
       </div>
       <div className="w-full md:w-1/2 flex flex-col justify-center p-8 space-y-4">
-        <span className="text-red-500 uppercase font-bold">PULSE FIT</span>
-        <h1 className="text-5xl font-black">CHALLENGE YOUR LIMITS</h1>
-        <p className="text-gray-500">Join our community of fitness enthusiasts.</p>
-        <button className="bg-red-500 text-white px-8 py-3 rounded-full">FIND A WORKOUT</button>
+        <span className="text-cyan-400 uppercase font-bold tracking-wider text-xs">AI UI GENERATOR</span>
+        <h1 className="text-5xl font-black tracking-tight">Transform Wireframes into Code</h1>
+        <p className="text-slate-400 leading-relaxed">Turn sketches and ideas into production React components in seconds.</p>
+        <button className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-3 rounded-full font-bold shadow-lg">EXPLORE CANVAS</button>
       </div>
     </section>
   );
 }`;
 
 export default function GeneratePage() {
-  const dispatch  = useDispatch();
-  const navigate  = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { status, currentJob, error, jobs, currentStep } = useSelector(state => state.generate);
 
-  const [activeMode,     setActiveMode]     = useState('wireframe');
-  const [wireframeFile,  setWireframeFile]  = useState(null);
-  const [codeValue,      setCodeValue]      = useState('');
-  const [promptValue,    setPromptValue]    = useState('');
+  const [activeMode, setActiveMode] = useState('wireframe');
+  const [wireframeFile, setWireframeFile] = useState(null);
+  const [codeValue, setCodeValue] = useState('');
+  const [promptValue, setPromptValue] = useState('');
   const [optionalPrompt, setOptionalPrompt] = useState('');
-  const [pageName,       setPageName]       = useState('Home');
-  const [sectionName,    setSectionName]    = useState('Custom');
-  const [showOptions,    setShowOptions]    = useState(false);
-  const [copySuccess,    setCopySuccess]    = useState(false);
-  const [loadingSample,  setLoadingSample]  = useState(false);
+  const [pageName, setPageName] = useState('Home');
+  const [sectionName, setSectionName] = useState('Custom');
+  const [showOptions, setShowOptions] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [loadingSample, setLoadingSample] = useState(false);
 
-  // Results view mode: 'split' | 'preview' | 'code'
-  const [resultViewMode, setResultViewMode] = useState('split');
+  // Results view mode: 'preview' | 'split' | 'code'
+  const [resultViewMode, setResultViewMode] = useState('preview');
   const [previewViewport, setPreviewViewport] = useState('desktop');
+
+  // Cinematic Synthesis State
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [progressPercent, setProgressPercent] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [showSuccessBloom, setShowSuccessBloom] = useState(false);
+  const [synthesisDuration, setSynthesisDuration] = useState(0);
+
+  const canvasRef = useRef(null);
+  const synthesisIntervalRef = useRef(null);
+
+  // Smooth Synthesis Progress Controller
+  useEffect(() => {
+    if (isSynthesizing) {
+      const startTime = Date.now();
+      synthesisIntervalRef.current = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        setElapsedSeconds(elapsed);
+
+        // Smooth asymptotic progress up to 92% while waiting for network
+        setProgressPercent(prev => {
+          if (prev < 30) return prev + 2.2;
+          if (prev < 60) return prev + 1.2;
+          if (prev < 85) return prev + 0.6;
+          if (prev < 93) return prev + 0.15;
+          return prev;
+        });
+      }, 50);
+    } else {
+      if (synthesisIntervalRef.current) {
+        clearInterval(synthesisIntervalRef.current);
+      }
+    }
+
+    return () => {
+      if (synthesisIntervalRef.current) {
+        clearInterval(synthesisIntervalRef.current);
+      }
+    };
+  }, [isSynthesizing]);
+
+  // When Redux status transitions to success, complete the synthesis animation smoothly
+  useEffect(() => {
+    if (status === 'success' && isSynthesizing) {
+      // Rapid sweep to 100%
+      setProgressPercent(100);
+      setShowSuccessBloom(true);
+      setSynthesisDuration(elapsedSeconds > 0 ? elapsedSeconds : 1.4);
+
+      const finishTimer = setTimeout(() => {
+        setIsSynthesizing(false);
+        // Scroll canvas smoothly into view if needed
+        if (canvasRef.current) {
+          canvasRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 450);
+
+      return () => clearTimeout(finishTimer);
+    } else if (status === 'error' && isSynthesizing) {
+      setIsSynthesizing(false);
+    }
+  }, [status]);
 
   const loadSampleWireframe = async () => {
     setLoadingSample(true);
@@ -100,6 +202,7 @@ export default function GeneratePage() {
       const sampleFile = new File([blob], 'sample-hero-wireframe.jpg', { type: 'image/jpeg' });
       setWireframeFile(sampleFile);
       setOptionalPrompt('Hero section with athlete image on left, pulse fit branding and 3 stats');
+      setSectionName('WellnessDashboard');
     } catch (e) {
       console.warn('Failed to load sample wireframe', e);
     } finally {
@@ -107,10 +210,17 @@ export default function GeneratePage() {
     }
   };
 
+  const applyPresetPrompt = (preset) => {
+    setActiveMode('prompt');
+    setPromptValue(preset.prompt);
+    setSectionName(preset.sectionName);
+    setPageName(preset.pageName);
+  };
+
   const handleGenerate = async () => {
     const formData = new FormData();
-    formData.append('mode',        activeMode);
-    formData.append('pageName',    pageName);
+    formData.append('mode', activeMode);
+    formData.append('pageName', pageName);
     formData.append('sectionName', sectionName.replace(/\s+/g, '') || 'Custom');
 
     if (activeMode === 'wireframe') {
@@ -149,6 +259,16 @@ export default function GeneratePage() {
       if (codeValue.trim()) formData.append('code', codeValue);
     }
 
+    // Trigger synthesis animation stage & smooth scroll to canvas
+    setIsSynthesizing(true);
+    setProgressPercent(10);
+    setElapsedSeconds(0);
+    setShowSuccessBloom(false);
+
+    if (canvasRef.current) {
+      canvasRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
     dispatch(submitGenerateJob(formData));
   };
 
@@ -171,25 +291,33 @@ export default function GeneratePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
 
         {/* Studio Workspace Header */}
-        <div className="py-8 md:py-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/8">
+        <div className="py-8 md:py-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/8 relative">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-semibold text-cyan-300 mb-4 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-              <span>Neural Vision 3.1 &bull; Redux CMS Pipeline</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-cyan-500/25 text-xs font-semibold text-cyan-300 mb-4 shadow-[0_0_20px_rgba(6,182,212,0.15)] backdrop-blur-2xl">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+              <span>Gemini 3.1 Flash Neural Pipeline &bull; Redux Dynamic CMS</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-2">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-2.5">
               Studio <span className="gradient-text-liquid">Workspace</span>
             </h1>
             <p className="text-slate-400 text-sm md:text-base max-w-2xl leading-relaxed">
-              Synthesize production-grade React components with live Redux CMS state from wireframes, code, or natural language prompts.
+              Synthesize production React components with live Redux CMS state from wireframes, code, or natural intent.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs text-slate-400 font-medium">Target Page:</span>
-            <span className="px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-bold text-white font-mono shadow-sm">
-              {pageName}
-            </span>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/[0.04] border border-white/10 shadow-sm backdrop-blur-xl">
+              <span className="text-xs text-slate-400 font-medium">Target Page:</span>
+              <span className="px-2.5 py-0.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-xs font-bold text-cyan-300 font-mono">
+                {pageName}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/[0.04] border border-white/10 shadow-sm backdrop-blur-xl">
+              <span className="text-xs text-slate-400 font-medium">Section:</span>
+              <span className="px-2.5 py-0.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-xs font-bold text-indigo-300 font-mono">
+                {sectionName}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -199,13 +327,14 @@ export default function GeneratePage() {
           {/* Left Column: Generation Studio Canvas */}
           <div className="lg:col-span-3 flex flex-col gap-6">
 
-            {/* Mode Selector & Quick Fill Controls */}
+            {/* Mode Selector & Quick Actions */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <PillTab tabs={MODES} active={activeMode} onChange={setActiveMode} />
 
               <div className="flex items-center gap-2">
                 {activeMode === 'wireframe' && (
                   <button
+                    type="button"
                     onClick={loadSampleWireframe}
                     disabled={loadingSample}
                     className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
@@ -216,15 +345,17 @@ export default function GeneratePage() {
                 )}
                 {activeMode === 'prompt' && (
                   <button
-                    onClick={() => setPromptValue(SAMPLE_PROMPT)}
+                    type="button"
+                    onClick={() => applyPresetPrompt(PRESET_PROMPTS[0])}
                     className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Load Sample Prompt</span>
+                    <span>Doctor Preset</span>
                   </button>
                 )}
                 {activeMode === 'code' && (
                   <button
+                    type="button"
                     onClick={() => setCodeValue(SAMPLE_CODE)}
                     className="px-4 py-2 rounded-full text-xs font-semibold bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-cyan-400 hover:text-cyan-300 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                   >
@@ -236,7 +367,7 @@ export default function GeneratePage() {
             </div>
 
             {/* Input Card Container */}
-            <GlassCard className="flex flex-col gap-6">
+            <GlassCard className="flex flex-col gap-6 shadow-2xl">
 
               {/* 1. Wireframe Mode */}
               {activeMode === 'wireframe' && (
@@ -248,9 +379,9 @@ export default function GeneratePage() {
                         <span>Wireframe Sketch or Screenshot</span>
                       </label>
                       {wireframeFile && (
-                        <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                        <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Image Staged</span>
+                          <span>Image Staged for Vision Analysis</span>
                         </span>
                       )}
                     </div>
@@ -265,14 +396,59 @@ export default function GeneratePage() {
                       type="text"
                       value={optionalPrompt}
                       onChange={(e) => setOptionalPrompt(e.target.value)}
-                      placeholder="e.g. Ensure 2 large meal cards, pink profile sidebar, and calorie gauge"
-                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 transition-all shadow-inner"
+                      placeholder="e.g. Include 2 highlight cards, booking appointment form, and cyan liquid buttons"
+                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/60 focus:ring-4 focus:ring-cyan-500/15 transition-all shadow-inner"
                     />
                   </div>
                 </div>
               )}
 
-              {/* 2. Code Mode */}
+              {/* 2. Prompt Mode with Preset Chips */}
+              {activeMode === 'prompt' && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-cyan-400" />
+                      <span>Natural Language Specification</span>
+                    </label>
+                    <span className="text-xs text-slate-400 font-mono">
+                      {promptValue.length} characters
+                    </span>
+                  </div>
+
+                  {/* Preset Domain Chips */}
+                  <div className="flex flex-wrap items-center gap-2 pb-1">
+                    <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1 mr-1">
+                      <Zap className="w-3 h-3 text-amber-400" />
+                      <span>Quick Presets:</span>
+                    </span>
+                    {PRESET_PROMPTS.map((preset) => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => applyPresetPrompt(preset)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 border shadow-sm ${
+                          sectionName === preset.sectionName
+                            ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.25)]'
+                            : 'bg-white/[0.04] text-slate-400 hover:text-white border-white/10 hover:bg-white/[0.08]'
+                        }`}
+                      >
+                        <span>{preset.badge}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <textarea
+                    rows={5}
+                    value={promptValue}
+                    onChange={(e) => setPromptValue(e.target.value)}
+                    placeholder="Describe your desired layout, color scheme, sections, card metrics, or forms..."
+                    className="w-full bg-black/40 backdrop-blur-2xl border border-white/12 rounded-2xl p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/60 focus:ring-4 focus:ring-cyan-500/15 transition-all resize-none shadow-inner leading-relaxed"
+                  />
+                </div>
+              )}
+
+              {/* 3. Code Mode */}
               {activeMode === 'code' && (
                 <div className="flex flex-col gap-4">
                   <div className="flex justify-between items-center">
@@ -283,83 +459,71 @@ export default function GeneratePage() {
                     <span className="text-xs text-slate-400 font-mono">React 18 / Tailwind</span>
                   </div>
                   <textarea
+                    rows={8}
                     value={codeValue}
                     onChange={(e) => setCodeValue(e.target.value)}
-                    placeholder="Paste JSX code here. The parser extracts content elements, binds CMS IDs, and outputs clean dynamic components..."
-                    className="w-full h-52 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white font-mono text-xs placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
+                    placeholder="Paste your JSX code here to parse and re-synthesize..."
+                    className="w-full bg-black/50 backdrop-blur-2xl border border-white/12 rounded-2xl p-4 text-xs font-mono text-cyan-300 placeholder-slate-600 focus:outline-none focus:border-cyan-400/60 focus:ring-4 focus:ring-cyan-500/15 transition-all resize-none shadow-inner leading-relaxed"
                   />
                   <div>
                     <label className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block mb-2">
-                      Enhancement Notes (Optional)
+                      Code Refactoring Directives (Optional)
                     </label>
                     <input
                       type="text"
                       value={optionalPrompt}
                       onChange={(e) => setOptionalPrompt(e.target.value)}
-                      placeholder="e.g. Add 3 responsive stat badges and upgrade styling"
-                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 transition-all shadow-inner"
+                      placeholder="e.g. Convert to dark glass theme and add interactive booking modal"
+                      className="w-full bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/60 focus:ring-4 focus:ring-cyan-500/15 transition-all shadow-inner"
                     />
                   </div>
                 </div>
               )}
 
-              {/* 3. Prompt Mode */}
-              {activeMode === 'prompt' && (
-                <div className="flex flex-col gap-4">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-400" />
-                      <span>Natural Language Design Specification</span>
-                    </label>
-                  </div>
-                  <textarea
-                    value={promptValue}
-                    onChange={(e) => setPromptValue(e.target.value)}
-                    placeholder="Describe the desired layout, hierarchy, sections, content copy, brand colors, and interactive elements..."
-                    className="w-full h-44 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
-                  />
-                </div>
-              )}
-
-              {/* 4. Combined Mode */}
+              {/* 4. Combined Multimodal Mode */}
               {activeMode === 'combined' && (
                 <div className="flex flex-col gap-5">
-                  <div>
-                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2 mb-2.5">
-                      <ImageIcon className="w-4 h-4 text-cyan-400" />
-                      <span>1. Spatial Blueprint (Wireframe Image)</span>
-                    </label>
-                    <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/*" maxSizeMB={8} />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-amber-400" />
-                      <span>2. Visual Polish & Copy Overrides (Prompt)</span>
-                    </label>
-                    <textarea
-                      value={promptValue}
-                      onChange={(e) => setPromptValue(e.target.value)}
-                      placeholder="Prompt instructions take precedence for colors, typography, button copy, and interactive behavior..."
-                      className="w-full h-28 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-blue-500/60 focus:ring-4 focus:ring-blue-500/15 resize-none transition-all shadow-inner leading-relaxed"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider block mb-2">
+                        Wireframe Image
+                      </label>
+                      <DropZone onFile={setWireframeFile} currentFile={wireframeFile} accept="image/*" maxSizeMB={8} />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-slate-300 font-bold uppercase tracking-wider block mb-2">
+                        Guiding Intent / Spec
+                      </label>
+                      <textarea
+                        rows={6}
+                        value={promptValue}
+                        onChange={(e) => setPromptValue(e.target.value)}
+                        placeholder="Specify brand colors, text hierarchy, or special form requirements..."
+                        className="w-full bg-black/40 backdrop-blur-2xl border border-white/12 rounded-2xl p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/60 focus:ring-4 focus:ring-cyan-500/15 transition-all resize-none shadow-inner"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Target Metadata Configuration Drawer */}
-              <div className="border border-white/10 rounded-2xl overflow-hidden bg-white/[0.02]">
+              {/* Collapsible Target Page & Section Configuration Drawer */}
+              <div className="rounded-2xl border border-white/8 overflow-hidden bg-white/[0.02]">
                 <button
+                  type="button"
                   onClick={() => setShowOptions(!showOptions)}
-                  className="w-full px-5 py-3.5 flex justify-between items-center hover:bg-white/[0.04] transition-colors text-left"
+                  className="w-full px-5 py-3.5 flex items-center justify-between text-xs font-semibold text-slate-300 hover:text-white transition-colors"
                 >
-                  <span className="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-slate-400" />
+                  <span className="flex items-center gap-2">
+                    <Sliders className="w-4 h-4 text-cyan-400" />
                     <span>Target Page & Component Architecture</span>
+                    <span className="text-[11px] font-mono text-slate-500">
+                      ({pageName} / {sectionName})
+                    </span>
                   </span>
                   {showOptions ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                 </button>
                 {showOptions && (
-                  <div className="p-5 bg-black/20 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/8 animate-fade-up">
+                  <div className="p-5 bg-black/30 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/8 animate-fade-up">
                     <GlassInput
                       label="Page Name"
                       value={pageName}
@@ -370,7 +534,7 @@ export default function GeneratePage() {
                       label="Section Name (PascalCase)"
                       value={sectionName}
                       onChange={(e) => setSectionName(e.target.value)}
-                      placeholder="Custom"
+                      placeholder="CustomSection"
                     />
                   </div>
                 )}
@@ -378,41 +542,33 @@ export default function GeneratePage() {
 
               {/* Primary Synthesize Action Button */}
               <button
+                type="button"
                 onClick={handleGenerate}
-                disabled={status === 'loading'}
-                className={`w-full py-4 rounded-2xl font-bold text-base transition-all flex items-center justify-center gap-2.5 ${
-                  status === 'loading'
-                    ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                disabled={isSynthesizing || status === 'loading'}
+                className={`w-full py-4.5 rounded-2xl font-bold text-base transition-all flex items-center justify-center gap-3 relative overflow-hidden select-none ${
+                  isSynthesizing || status === 'loading'
+                    ? 'liquid-button-generating text-white cursor-wait'
                     : 'liquid-button text-white shadow-liquid-glow active:scale-[0.99]'
                 }`}
               >
-                {status === 'loading' ? (
+                {isSynthesizing || status === 'loading' ? (
                   <>
-                    <RefreshCw className="w-5 h-5 animate-spin text-cyan-300" />
-                    <span>Analyzing Blueprint & Synthesizing React Section...</span>
+                    <div className="relative flex items-center justify-center">
+                      <RefreshCw className="w-5 h-5 animate-spin text-cyan-200" />
+                      <span className="absolute w-2 h-2 rounded-full bg-white animate-ping opacity-75" />
+                    </div>
+                    <span className="tracking-wide">
+                      Synthesizing Neural Blueprint... ({elapsedSeconds.toFixed(1)}s)
+                    </span>
                   </>
                 ) : (
                   <>
-                    <Wand2 className="w-5 h-5 text-cyan-300" />
-                    <span>Synthesize React Section ✦</span>
+                    <Wand2 className="w-5 h-5 text-cyan-300 animate-pulse" />
+                    <span className="tracking-wide">Synthesize React Section ✦</span>
                   </>
                 )}
               </button>
             </GlassCard>
-
-            {/* Pipeline Step Progress Bar */}
-            {status === 'loading' && (
-              <GlassCard className="animate-fade-up">
-                <div className="flex justify-between items-center mb-3">
-                  <p className="text-[11px] text-slate-300 font-bold uppercase tracking-wider flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                    <span>Neural Pipeline Active</span>
-                  </p>
-                  <span className="text-xs text-cyan-400 font-mono animate-pulse">Running Gemini Vision 3.1...</span>
-                </div>
-                <StepProgress currentStep={currentStep} steps={STEPS} />
-              </GlassCard>
-            )}
 
             {/* Error Message Card */}
             {status === 'error' && (
@@ -428,34 +584,57 @@ export default function GeneratePage() {
               </GlassCard>
             )}
 
-            {/* Live Studio Result Panel */}
-            {currentJob && (
-              <div className="flex flex-col gap-5 animate-fade-up">
+            {/* Canvas Target Anchor */}
+            <div ref={canvasRef} className="scroll-mt-8" />
+
+            {/* Dynamic Synthesis State or Live Studio Result Panel */}
+            {isSynthesizing ? (
+              <div className="animate-fade-up">
+                <NeuralSynthesisCanvas
+                  progressPercent={progressPercent}
+                  elapsedSeconds={elapsedSeconds}
+                  targetPage={pageName}
+                  sectionName={sectionName}
+                />
+              </div>
+            ) : currentJob ? (
+              <div className={`flex flex-col gap-5 ${showSuccessBloom ? 'animate-liquid-bloom' : 'animate-fade-up'}`}>
                 
-                {/* Result Status Banner */}
-                <GlassCard className="border border-emerald-500/30 py-4.5 bg-emerald-500/[0.03]">
+                {/* Result Status Chrome Banner */}
+                <GlassCard className="border border-emerald-500/30 py-4 bg-emerald-500/[0.03]">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>Section Generated & Bound to Redux Store</span>
-                      </h3>
-                      <p className="text-xs text-slate-400 mt-1 flex items-center gap-2 font-mono">
-                        <span>Section ID:</span>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <h3 className="text-sm font-bold text-emerald-300">
+                          Section Synthesized & Hydrated to Redux CMS
+                        </h3>
+                        {synthesisDuration > 0 && (
+                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                            Completed in {synthesisDuration.toFixed(1)}s
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-2 font-mono">
+                        <span>ID:</span>
                         <span className="font-bold text-white px-2 py-0.5 rounded bg-white/10">{currentJob.sectionId}</span>
-                        <span>•</span>
+                        <span>&bull;</span>
                         <span>Page:</span>
-                        <span className="font-bold text-white px-2 py-0.5 rounded bg-white/10">{currentJob.pageName || pageName}</span>
+                        <span className="font-bold text-cyan-300 px-2 py-0.5 rounded bg-cyan-500/10">{currentJob.pageName || pageName}</span>
+                        <span>&bull;</span>
+                        <span>Component:</span>
+                        <span className="text-slate-300">{currentJob.componentFile || 'CustomSection.jsx'}</span>
                       </p>
                     </div>
 
                     {/* View mode switcher */}
-                    <div className="flex items-center gap-1 bg-white/[0.05] rounded-full p-1 border border-white/10 shadow-inner">
+                    <div className="flex items-center gap-1 bg-black/40 rounded-full p-1 border border-white/10 shadow-inner">
                       <button
+                        type="button"
                         onClick={() => setResultViewMode('preview')}
                         className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                           resultViewMode === 'preview'
-                            ? 'bg-blue-600 text-white shadow-sm'
+                            ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-sm'
                             : 'text-slate-400 hover:text-white'
                         }`}
                       >
@@ -463,10 +642,11 @@ export default function GeneratePage() {
                         <span>Preview</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => setResultViewMode('split')}
                         className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                           resultViewMode === 'split'
-                            ? 'bg-blue-600 text-white shadow-sm'
+                            ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-sm'
                             : 'text-slate-400 hover:text-white'
                         }`}
                       >
@@ -474,10 +654,11 @@ export default function GeneratePage() {
                         <span>Split</span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => setResultViewMode('code')}
                         className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                           resultViewMode === 'code'
-                            ? 'bg-blue-600 text-white shadow-sm'
+                            ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-sm'
                             : 'text-slate-400 hover:text-white'
                         }`}
                       >
@@ -491,6 +672,7 @@ export default function GeneratePage() {
                   <div className="flex flex-wrap gap-2.5 pt-4 mt-4 border-t border-white/8 items-center justify-between">
                     <div className="flex flex-wrap gap-2">
                       <button
+                        type="button"
                         onClick={() => navigate(`/preview/${currentJob.pageName || pageName}`)}
                         className="px-4 py-2 rounded-full bg-white text-slate-950 font-bold text-xs hover:bg-slate-200 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                       >
@@ -498,6 +680,7 @@ export default function GeneratePage() {
                         <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                       <button
+                        type="button"
                         onClick={downloadZip}
                         className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs text-white font-medium transition-all flex items-center gap-1.5 shadow-sm"
                       >
@@ -505,6 +688,7 @@ export default function GeneratePage() {
                         <span>Download ZIP</span>
                       </button>
                       <button
+                        type="button"
                         onClick={copyJsx}
                         className="px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs text-white font-medium transition-all flex items-center gap-1.5 shadow-sm"
                       >
@@ -514,20 +698,32 @@ export default function GeneratePage() {
                     </div>
 
                     {resultViewMode !== 'code' && (
-                      <div className="flex items-center gap-1 bg-white/[0.04] rounded-full p-0.5 border border-white/10">
+                      <div className="flex items-center gap-1 bg-white/[0.04] rounded-full p-1 border border-white/10">
                         <button
+                          type="button"
                           onClick={() => setPreviewViewport('mobile')}
                           className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
-                            previewViewport === 'mobile' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
+                            previewViewport === 'mobile' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
                           }`}
                         >
                           <Smartphone className="w-3 h-3" />
-                          <span>375px</span>
+                          <span>Mobile</span>
                         </button>
                         <button
+                          type="button"
+                          onClick={() => setPreviewViewport('tablet')}
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                            previewViewport === 'tablet' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          <Tablet className="w-3 h-3" />
+                          <span>Tablet</span>
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => setPreviewViewport('desktop')}
                           className={`px-3 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
-                            previewViewport === 'desktop' ? 'bg-white/20 text-white' : 'text-slate-400 hover:text-white'
+                            previewViewport === 'desktop' ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
                           }`}
                         >
                           <Monitor className="w-3 h-3" />
@@ -551,13 +747,29 @@ export default function GeneratePage() {
                         </span>
                         <span className="text-[11px] text-slate-500 font-mono">React 18 &bull; Redux CMS</span>
                       </div>
-                      <div className="w-full bg-[#030508] rounded-3xl border border-white/12 p-3.5 shadow-2xl flex justify-center min-h-[550px] max-h-[850px] overflow-y-auto overflow-x-hidden scroll-smooth">
-                        <div
-                          className={`bg-slate-950 rounded-2xl transition-all duration-300 w-full pb-8 ${
-                            previewViewport === 'mobile' ? 'max-w-[375px]' : 'max-w-full'
-                          }`}
-                        >
-                          <LiveComponentRenderer code={currentJob?.jsx} pageName={currentJob.pageName || pageName} job={currentJob} />
+                      
+                      {/* Window Frame with macOS traffic dots */}
+                      <div className="w-full bg-[#02050b] rounded-3xl border border-white/12 overflow-hidden shadow-2xl flex flex-col min-h-[550px] max-h-[850px]">
+                        <div className="px-4 py-2.5 bg-black/60 border-b border-white/8 flex items-center justify-between text-xs font-mono text-slate-400 select-none">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                            <span className="ml-2 text-slate-400 text-[11px] font-semibold">{currentJob.pageName || pageName} &bull; {currentJob.sectionName || sectionName}</span>
+                          </div>
+                          <span className="text-[11px] text-slate-500">
+                            {previewViewport === 'mobile' ? '375px (Mobile)' : previewViewport === 'tablet' ? '768px (Tablet)' : '100% (Responsive Desktop)'}
+                          </span>
+                        </div>
+
+                        <div className="flex-1 p-3.5 flex justify-center overflow-y-auto overflow-x-hidden scroll-smooth">
+                          <div
+                            className={`bg-slate-950 rounded-2xl transition-all duration-300 w-full pb-8 ${
+                              previewViewport === 'mobile' ? 'max-w-[375px]' : previewViewport === 'tablet' ? 'max-w-[768px]' : 'max-w-full'
+                            }`}
+                          >
+                            <LiveComponentRenderer code={currentJob?.jsx} pageName={currentJob.pageName || pageName} job={currentJob} />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -578,12 +790,31 @@ export default function GeneratePage() {
                         readOnly={true}
                         language="jsx"
                         fileName={currentJob.componentFile || 'CustomSection.jsx'}
-                        maxHeight={resultViewMode === 'split' ? '650px' : '700px'}
+                        maxHeight={resultViewMode === 'split' ? '650px' : '720px'}
                       />
                     </div>
                   )}
 
                 </div>
+              </div>
+            ) : (
+              /* Idle Empty Canvas Placeholder */
+              <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.01] p-12 text-center flex flex-col items-center justify-center gap-3 min-h-[380px]">
+                <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-slate-500 shadow-inner">
+                  <LayoutGrid className="w-7 h-7" />
+                </div>
+                <h3 className="text-base font-bold text-white tracking-tight">Studio Canvas Ready</h3>
+                <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+                  Drop a wireframe sketch above or select a preset prompt to synthesize a production React component with live Redux state.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => applyPresetPrompt(PRESET_PROMPTS[0])}
+                  className="mt-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-semibold text-cyan-400 transition-all flex items-center gap-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Try Doctor Appointment Preset</span>
+                </button>
               </div>
             )}
           </div>
@@ -597,6 +828,7 @@ export default function GeneratePage() {
               </p>
               {jobs.length > 0 && (
                 <button
+                  type="button"
                   onClick={() => dispatch(clearHistory())}
                   className="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 transition-colors"
                   title="Clear history"

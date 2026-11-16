@@ -294,79 +294,79 @@
     "updatedAt": "2026-11-15T19:26:40.293Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "heroImage",
-    "fieldId": "2000000285",
-    "content": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80",
+    "fieldId": "2000000299",
+    "content": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1200&q=80",
     "contentType": "Image",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "brandBadge",
-    "fieldId": "2000000286",
-    "content": "CreativePortfolio",
+    "fieldId": "2000000300",
+    "content": "MedPulse Health",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "headlineMain",
-    "fieldId": "2000000287",
-    "content": "Elevating Digital Experiences",
+    "fieldId": "2000000301",
+    "content": "World-Class Care, Just a Click Away",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "headlineSub",
-    "fieldId": "2000000288",
-    "content": "Professional design and development solutions for modern brands.",
+    "fieldId": "2000000302",
+    "content": "Connecting you with elite specialists for personalized healthcare excellence.",
     "contentType": "Text",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "description",
-    "fieldId": "2000000289",
-    "content": "I specialize in crafting intuitive web experiences that bridge the gap between complex functionality and elegant design. Every project is a journey toward innovation and digital excellence.",
+    "fieldId": "2000000303",
+    "content": "Experience seamless medical consultations with our board-certified experts. From routine check-ups to specialized departments, we prioritize your well-being with state-of-the-art infrastructure and patient-first care.",
     "contentType": "Textfield",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "statBadges",
-    "fieldId": "2000000290",
+    "fieldId": "2000000304",
     "content": "",
     "contentType": "Cards",
     "projectName": "sample-brand",
@@ -377,43 +377,43 @@
       {
         "field1": "100+",
         "fieldType1": "Text",
-        "fieldId1": "3000000186",
+        "fieldId1": "3000000200",
         "field2": "Active Users",
         "fieldType2": "Text",
-        "fieldId2": "3000000187"
+        "fieldId2": "3000000201"
       },
       {
         "field1": "4.9★",
         "fieldType1": "Text",
-        "fieldId1": "3000000188",
+        "fieldId1": "3000000202",
         "field2": "Top Rated",
         "fieldType2": "Text",
-        "fieldId2": "3000000189"
+        "fieldId2": "3000000203"
       },
       {
         "field1": "24/7",
         "fieldType1": "Text",
-        "fieldId1": "3000000190",
+        "fieldId1": "3000000204",
         "field2": "Live Support",
         "fieldType2": "Text",
-        "fieldId2": "3000000191"
+        "fieldId2": "3000000205"
       }
     ],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   },
   {
-    "sectionId": "1000000062",
+    "sectionId": "1000000067",
     "elementName": "ctaButton",
-    "fieldId": "2000000291",
-    "content": "View Projects",
+    "fieldId": "2000000305",
+    "content": "Book Appointment",
     "contentType": "Button",
     "projectName": "sample-brand",
     "pageName": "Home",
     "isCustom": true,
     "css": null,
     "loop": [],
-    "createdAt": "2026-11-15T22:47:57.251Z",
-    "updatedAt": "2026-11-15T22:47:57.251Z"
+    "createdAt": "2026-11-16T20:03:20.685Z",
+    "updatedAt": "2026-11-16T20:03:20.685Z"
   }
 ]
